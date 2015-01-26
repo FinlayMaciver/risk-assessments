@@ -236,6 +236,7 @@
 {/if}
 {if $mode eq "coshhadmin"}
     <p><a href="index.php?id={$formdata.uuid}&amp;godmode=1">Re-edit form</a></p>
+    <p style="text-align:right"><a href="admin.php?action=remove&amp;id={$formdata.uuid}" style="color:white; background-color: red; font-weight:bold; border:1px solid red; padding:3px">Delete form</a></p>
 {/if}
 </fieldset>
 </form>
