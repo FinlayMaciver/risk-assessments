@@ -154,13 +154,13 @@
 
 <fieldset>
     <legend>Attach{if $forapproval}ed{/if} documents (e.g. MSDS's)</legend>
-    {if $forapproval || $foredit}
+    {* if $forapproval || $foredit *}
         <ul>
         {foreach from=$files item=file}
             <li><a href="sendfile.php?id={$file.id}">{$file.filename}</a></li>
         {/foreach}
         </ul>
-    {/if}
+    {* /if *}
     {if ! $forapproval}
         <input type="file" name="Filedata1" /><br />
         <input type="file" name="Filedata2" /><br />
