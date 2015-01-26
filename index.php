@@ -13,6 +13,12 @@ else {
     $action = "";
 }
 
+// short-curcuit if we are re-sending email alerts
+if ($action == 'resendalert') {
+    $coshh->resendAlerts($_GET['id']);
+    exit;
+}
+
 // if we have a $_GET['id'] then we are in edit/re-submit mode, so ignore the $action
 if (array_key_exists('id',$_GET)) {
     $coshh->editForm($_GET['id']);
