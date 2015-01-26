@@ -195,6 +195,17 @@ class coshhDB
 
     }
 
+    function resendAlerts($uuid)
+    {
+        $form = $this->findItem("uuid",$uuid);
+        if (!is_array($form)) {
+            return false;
+        }
+        $this->sendAlert($form['data']['supervisor'],"COSHH Form approval required",$form['uuid'],"supervisor");
+        $this->sendAlert($form['data']['labguardian'],"COSHH Form approval required",$form['uuid'],"guardian");
+        $this->sendAlert($this->coshhadmin,"COSHH Form approval required",$form['uuid'],"coshhadmin");
+        return true;
+    }
 
     function sendAlert($to,$subject,$uuid,$mode)
     {
