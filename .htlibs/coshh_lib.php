@@ -377,6 +377,14 @@ class coshhDB
     }
 
 
+    function removeItem($uuid)
+    {
+        // remove a form from the collection
+        $this->collection->remove(array("uuid" => $uuid),array("justOne" => true));
+        return true;
+    }
+
+
     function showFormList($sortfield = "LastUpdated")
     {
         // function to list all of the forms - sorted by $sortfield

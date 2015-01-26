@@ -27,6 +27,9 @@ switch ($action) {
     case 'search':
         $coshh->searchForms($_REQUEST['q'],$_REQUEST['f']);
         break;
+    case 'remove':
+        $coshh->removeItem($_REQUEST['id']);
+        $coshh->showFormList();
     default:
         $coshh->showFormList();
         break;
