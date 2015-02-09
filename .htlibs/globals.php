@@ -1,6 +1,6 @@
 <?php
 
-    $developmode = "devel";  // or "devel" or "production"
+    $developmode = "production";  // or "devel" or "production"
     //$developmode = "devel";  // or "devel" or "production"
 
     if ($developmode == "production") {
