@@ -54,7 +54,7 @@ class coshhDB
         $this->tpl->assign("risk_likely_opt",array("---","Improbable","Unlikely","Likely","Very Likely"));
         $this->tpl->assign("risk_severity_opt",array("---","Slight","Moderate","Very","Extremely"));
         $this->tpl->assign("haz_level_opt",array("---","Very toxic","Toxic","Harmful","Corrosive","Irritant"));
-        $this->tpl->assign("haz_type_opt",array("---","Carcinogen", "MEL, OEL", "Dust", "Nanoparticle", "Micro-organism","Flammable"));
+        $this->tpl->assign("haz_type_opt",array("---","Carcinogen", "MEL, OEL", "Dust", "Nanoparticle", "Micro-organism","Flammable","Reproductive","Teratogen"));
         $this->tpl->assign("haz_quant_val",array("---","Small","Moderate","Large","Very Large"));
         $this->tpl->assign("haz_quant_out",array("---","Small &lt; 10mg","Moderate 10mg - 10g","Large 10g - 100g","Very Large &gt; 100g"));
         $this->tpl->assign("haz_route_opt",array("---","Inhalation","Ingestion","Skin absorption","Eye/Skin contact","Injection"));
