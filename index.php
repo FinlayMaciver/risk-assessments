@@ -28,6 +28,9 @@ else {
         case 'submit_coshh':
             $coshh->submitForm();
             break;
+        case 'submit_jwnc':
+            $coshh->submitJwnc();
+            break;
         case 'do-chem':
             $coshh->showForm("chemical");
             break;
@@ -36,6 +39,9 @@ else {
             break;
         case 'do-general':
             $coshh->showForm("general");
+            break;
+        case 'do-jwnc':
+            $coshh->showJwnc($_GET['type']);
             break;
         default:
             $coshh->showIndex();

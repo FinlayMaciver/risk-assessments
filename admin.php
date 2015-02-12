@@ -30,6 +30,7 @@ switch ($action) {
     case 'remove':
         $coshh->removeItem($_REQUEST['id']);
         $coshh->showFormList();
+        break;
     default:
         $coshh->showFormList();
         break;

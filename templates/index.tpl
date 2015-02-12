@@ -13,7 +13,7 @@
 <body>
 <div id="container">
     <div id="header">
-        <h1>{if $admin}<a href="admin.php">{/if}Risk Assessment - {$page_title}{if $admin}</a>{/if}</h1>
+        <h1>{if $admin}<a href="admin.php">{/if}Risk Assessment - {$page_title}{if $multiuser} (Multi-user){/if}{if $admin}</a>{/if}</h1>
     </div>
     <div id="maindiv">
         {include file=$sub_page}

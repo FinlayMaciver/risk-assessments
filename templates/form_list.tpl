@@ -6,6 +6,9 @@
 <input type="text" name="q" value="" size="30" /> <input type="submit" name="search" value="Search" />
 </form>
 </p>
+<p>
+    <a href="{$smarty.server.PHP_SELF}?action=listmulti{if $admin}&amp;admin=true{/if}">Click here for multi-user forms</a>
+</p>
 <table width="100%">
 <tr>
     <th class="adminth"><a href="{$smarty.server.PHP_SELF}?sf=data.title">Title</a></th>

@@ -111,6 +111,7 @@ class coshhDB
     {
         // handle a new form submission
 
+        error_log("############################################");
         // create our assoc array to dump into the DB
         $form = array();
 
@@ -130,6 +131,12 @@ class coshhDB
             $form['UploadDate'] = new MongoDate();
             $form['uuid'] = md5($_POST['title'] . mt_rand());
             $form['Files'] = array();
+            if (array_key_exists('multiuser',$_POST)) {
+                $form['MultiUser'] = true;
+                $form['Users'] = array();
+            } else {
+                $form['MultiUser'] = false;
+            }
         }
         $form['data'] = $_POST;
 
@@ -143,6 +150,20 @@ class coshhDB
                     $form['data'][$addr] = "INVALID - " . $form['data'][$addr];
                 }
             }
+        }
+        if (array_key_exists('multiuser', $_POST)) {
+            if (preg_match('/\@/',$_POST['multiemail'])) {
+                if (!array_key_exists('Users', $form)) {
+                    $form['Users'] = array();
+                    error_log("ZZZZZZZZZZZZZZZZZZZ created Users[]");
+                }
+                $form['Users'][] = $_POST['multiemail'];
+                error_log("ZZZZZZZZZZZZZZZZZZZ added to Users[] : " . $_POST['multiemail']);
+            } else {
+                error_log("Invalid multiemail");
+            }
+        } else {
+            error_log("Not multiuser");
         }
 
         // check that we have a title set
@@ -166,17 +187,16 @@ class coshhDB
 
                 if (preg_match("/[a-z0-9]/i",$name)) {
                 // upload the file to Mongo's "gridFS"
-                try {
-                    $fileid = $this->grid->storeUpload($fname, array("metadata" => array("filename" => $name, "ContentType" => $type, "FormUUID" => $form['uuid'])));
-                    $fileid = $fileid->{'$id'};
-                    $form['Files'][] = $fileid;     // add the file id to the $form data
-                }
-                catch (Exception $e) {
-                    print "Failed to upload files! :-(";
-                    error_log("COSHH Upload files failed : " . $e->getMessage() . " # $name # $type # $fname");
-                    exit();
-                }
-                
+                    try {
+                        $fileid = $this->grid->storeUpload($fname, array("metadata" => array("filename" => $name, "ContentType" => $type, "FormUUID" => $form['uuid'])));
+                        $fileid = $fileid->{'$id'};
+                        $form['Files'][] = $fileid;     // add the file id to the $form data
+                    }
+                    catch (Exception $e) {
+                        print "Failed to upload files! :-(";
+                        error_log("COSHH Upload files failed : " . $e->getMessage() . " # $name # $type # $fname");
+                        exit();
+                    }
                 }
             }
         }
@@ -193,6 +213,26 @@ class coshhDB
         $this->tpl->display("index.tpl");
         return true;
 
+    }
+
+    public function submitJwnc()
+    {
+        $formtype = $_POST['formtype'];
+        $email = $_POST['email-address'];
+        $form = $this->findItem("JwncType",$formtype);
+        if (!$form) {
+            $form['ItemType'] = "jwncForm";
+            $form['JwncType'] = $formtype;
+            $form['Users'] = array();
+        }
+        $form['Users'][] = $email;
+        $form['LastUpdated'] = new MongoDate();
+        $this->updateItem($form);
+        $this->tpl->assign("page_title","Thank you");
+        $this->tpl->assign("message","Thank you - form submitted");
+        $this->tpl->assign("sub_page","thankyou.tpl");
+        $this->tpl->display("index.tpl");
+        return true;
     }
 
     function resendAlerts($uuid)
@@ -253,10 +293,19 @@ class coshhDB
                 $title = "Biological";
                 $form = "coshh_bio.tpl";
                 break;
+            case "jwnc":
+                $title = "JWNC";
+                $form = "jwnc_test.tpl";
+                break;
             default:
                 exit;
         }
-        
+
+        if (array_key_exists('multiuser', $_GET)) {
+            $this->tpl->assign("multiuser",true);
+        } else {
+            $this->tpl->assign("multiuser",false);
+        }
         $this->tpl->assign("page_title",$title);
         $this->tpl->assign("form",$form);
         $this->tpl->assign("sub_page","show_form.tpl");
@@ -535,5 +584,17 @@ class coshhDB
         return true;
     }
 
+    public function showJwnc($formtype = "jwnc_test1")
+    {
+
+        $form = $this->findItem("JwncType",$formtype);
+        if (!$form) {
+            $form['Users'] = array();
+        }
+        $this->tpl->assign("users",array_reverse($form['Users']));
+        $this->tpl->assign("formtype",$formtype);
+        $this->tpl->display($formtype . ".tpl");
+        return true;
+    }
 }
 ?>
