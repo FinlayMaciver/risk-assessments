@@ -494,6 +494,7 @@ class coshhDB
             }
         }
 
+        $this->tpl->assign("multiuser",true);
         $this->tpl->assign("forms",$forms);
         $this->tpl->assign("sub_page","form_list.tpl");
         $this->tpl->display("index.tpl");

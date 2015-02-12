@@ -12,7 +12,6 @@ if (array_key_exists('action',$_REQUEST)) {
 else {
     $action = "";
 }
-error_log("MULTI qqqqqq");
 switch ($action) {
     case 'view':
         $coshh->showFormApproval($_GET['id'],false,"guest");
@@ -22,7 +21,6 @@ switch ($action) {
         break;
     case 'listmulti':
         $coshh->showMultiFormList();
-        error_log("MULTI blah");
         break;
     default:
         $coshh->showFormList();

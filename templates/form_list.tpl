@@ -7,7 +7,11 @@
 </form>
 </p>
 <p>
-    <a href="{$smarty.server.PHP_SELF}?action=listmulti{if $admin}&amp;admin=true{/if}">Click here for multi-user forms</a>
+    {if $multiuser}
+        <a href="{$smarty.server.PHP_SELF}">Click here for single-user forms</a>
+    {else}
+        <a href="{$smarty.server.PHP_SELF}?action=listmulti{if $admin}&amp;admin=true{/if}">Click here for multi-user forms</a>
+    {/if}
 </p>
 <table width="100%">
 <tr>

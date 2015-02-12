@@ -240,7 +240,7 @@
     <input type="submit" name="submitcoshh" value="Submit" />
 {else}
     {if $formdata.MultiUser}
-        <p><a href="multiview.php">Back to the form list</a></p>
+        <p><a href="view.php?action=listmulti">Back to the form list</a></p>
     {else}
         <p><a href="view.php">Back to the form list</a></p>
     {/if}
