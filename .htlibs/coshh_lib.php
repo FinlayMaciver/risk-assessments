@@ -467,6 +467,38 @@ class coshhDB
         return true;
     }
 
+    function showMultiFormList($sortfield = "LastUpdated")
+    {
+        // function to list all of the multi-user forms - sorted by $sortfield
+        
+        if (array_key_exists("sf",$_GET)) {
+            $sortfield = $_GET['sf'];
+        }
+        $cursor = $this->collection->find(array("ItemType" => "coshhForm","MultiUser" => true));
+        $cursor->sort(array($sortfield=>-1));
+        $forms = array();
+    error_log("MULTIUSER");
+        if ($cursor) {
+            $i = 0;
+            foreach ($cursor as $line) {
+                $forms[$i++] = array (
+                            "SubType" => $line['SubType'],
+                            "UploadDate" => $line['UploadDate']->sec,
+                            "LastUpdated" => $line['LastUpdated']->sec,
+                            "Status" => $line['Status'],
+                            "Title" => $line['data']['title'],
+                            "Location" => $line['data']['location'],
+                            "uuid" => $line['uuid'],
+                            "SubmittedBy" => $line['data']['personemail']
+                        );
+            }
+        }
+
+        $this->tpl->assign("forms",$forms);
+        $this->tpl->assign("sub_page","form_list.tpl");
+        $this->tpl->display("index.tpl");
+        return true;
+    }
 
     function searchForms($term,$field = "")
     {
