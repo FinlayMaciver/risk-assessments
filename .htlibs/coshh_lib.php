@@ -146,12 +146,13 @@ class coshhDB
         }
 
         // check that any email addresses look half sane
-        if (array_key_exists('multiuser', $_POST)) {
+/*        if (array_key_exists('multiuser', $_POST)) {
             // we first check if this is a multi-user form.  if so, copy the labguardian email address to the
             // other two fields (makes sure it displays properly on the formlist())
             $form['data']["supervisor"] = $form['data']['labguardian'];
             $form['data']["personemail"] = $form['data']['labguardian'];
         }
+*/        
         foreach(array("personemail","supervisor","labguardian") as $addr) {
             if (array_key_exists($addr,$form['data'])) {
                 if (! preg_match("/[a-z0-9].+\@/i",$form['data'][$addr])) {     // ie, one or more alphanumeric followed by an @

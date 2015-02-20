@@ -181,7 +181,6 @@
 <p />
 
 <fieldset>
-    {if !$formdata.MultiUser and !$multiuser}
     <p>
         Risk assessment prepared by (your email address) :<br />
         {if $pdf}
@@ -198,7 +197,6 @@
             <input type="text" name="supervisor" value="{$data.supervisor}" size="60" />
         {/if}
     </p>
-    {/if}
     <p>
         Lab responsible/guardian email address :<br />
         {if $pdf}
