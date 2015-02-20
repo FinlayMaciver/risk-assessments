@@ -31,6 +31,9 @@ switch ($action) {
         $coshh->removeItem($_REQUEST['id']);
         $coshh->showFormList();
         break;
+    case 'listmulti':
+        $coshh->showMultiFormList();
+        break;
     default:
         $coshh->showFormList();
         break;

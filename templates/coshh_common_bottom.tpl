@@ -181,7 +181,7 @@
 <p />
 
 <fieldset>
-    {if !$formdata.MultiUser}
+    {if !$formdata.MultiUser and !$multiuser}
     <p>
         Risk assessment prepared by (your email address) :<br />
         {if $pdf}

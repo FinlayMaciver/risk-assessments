@@ -9,6 +9,9 @@
 <p>
     {if $multiuser}
         <a href="{$smarty.server.PHP_SELF}">Click here for single-user forms</a>
+        {if $admin}
+                 | Create new multi-user : <a href="index.php?action=do-general&amp;multiuser=1">General</a> &bull; <a href="index.php?action=do-bio&amp;multiuser=1">Bio</a> &bull; <a href="index.php?action=do-chem&amp;multiuser=1">Chemical</a>
+        {/if}
     {else}
         <a href="{$smarty.server.PHP_SELF}?action=listmulti{if $admin}&amp;admin=true{/if}">Click here for multi-user forms</a>
     {/if}
