@@ -38,7 +38,8 @@
     {/if}
 </p>
 <p>
-    Short description of procedures involved in the activity :<br />
+    Short description of procedures involved in the activity. <br />
+    (where appropriate, detailed protocols can be uploaded at the end of this form) :<br />
     {if $pdf}
         {$data.shortdesc}
     {else}
