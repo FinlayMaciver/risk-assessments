@@ -11,7 +11,8 @@
         <a href="{$smarty.server.PHP_SELF}">Click here for single-user forms</a>
         <br />
         <p>
-            To sign-up to one of the forms below, after reading, enter your e-mail address in the box provided at the end of the form.
+            To sign up to an existing multi-user form, select the appropriate form
+            below, read it through to the end and then enter your e-mail address.
         </p>
         {if $admin}
                  | Create new multi-user : <a href="index.php?action=do-general&amp;multiuser=1">General</a> &bull; <a href="index.php?action=do-bio&amp;multiuser=1">Bio</a> &bull; <a href="index.php?action=do-chem&amp;multiuser=1">Chemical</a>
