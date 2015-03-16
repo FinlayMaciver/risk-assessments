@@ -229,7 +229,11 @@
     {/if}
 {/if}
 {if $formdata.MultiUser and ($mode eq "guest")}
-    <p><b>To acknowledge that you will follow the protocols outlined above and understand the risks described, enter your e-mail address in the box below</b>:</p>
+    <p>
+        <b>
+            To acknowledge that you have read and will follow the protocols outlined above and understand the risks described, enter your e-mail address in the box below:
+        </b>
+    </p>
     <p><input type="email" name="multiemail" value="" size="60" /></p>
     <input type="submit" name="submicoshh" value="Submit" />
 {/if}
