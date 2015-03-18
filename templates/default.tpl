@@ -4,7 +4,8 @@
     Multi-user forms are provided for general procedures in labs &amp;
     facilities (eg, JWNC).
 	<ul>
-		<li><a href="view.php">Click here to view all existing forms</a></li>
+		<li><a href="view.php">Click here to view all existing single-user forms</a></li>
+        <li><a href="view.php?action=listmulti">Click here to view all existing multi-user forms</a></li>
 	</ul>
 </p>
 <p>Create a new <b>single user</b> form (Please choose the type of form which matches your task) :</p>
