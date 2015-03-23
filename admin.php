@@ -34,6 +34,9 @@ switch ($action) {
     case 'listmulti':
         $coshh->showMultiFormList();
         break;
+    case 'getformlist':
+        $coshh->exportAllAsPdf();
+        break;
     default:
         $coshh->showFormList();
         break;

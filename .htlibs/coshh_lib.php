@@ -466,7 +466,7 @@ class coshhDB
         if (array_key_exists("sf",$_GET)) {
             $sortfield = $_GET['sf'];
         }
-        $cursor = $this->collection->find(array("ItemType" => "coshhForm"));;
+        $cursor = $this->collection->find(array("ItemType" => "coshhForm"));
         $cursor->sort(array($sortfield=>-1));
         $forms = array();
 	error_log("COSHHHHHHH");
@@ -652,6 +652,25 @@ class coshhDB
         $this->tpl->assign("formtype",$formtype);
         $this->tpl->display($formtype . ".tpl");
         return true;
+    }
+
+    public function exportAllAsPdf()
+    {
+        $cursor = $this->collection->find(array("ItemType" => "coshhForm"));
+        $forms = array();
+        if ($cursor) {
+            $i = 0;
+            foreach ($cursor as $line) {
+                $forms[$i++] = array (
+                            "UploadDate" => $line['UploadDate']->sec,
+                            "Title" => $line['data']['title'],
+                            "uuid" => $line['uuid'],
+                        );
+            }
+        }
+        foreach($forms as $form) {
+            print $form['uuid'] . '######' . preg_replace("/[^a-zA-Z0-9]+/","_",$form['Title'] . '_' . $form['UploadDate']) . ".pdf\n";
+        }
     }
 }
 ?>
