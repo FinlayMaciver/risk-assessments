@@ -111,6 +111,7 @@ class coshhDB
     {
         // handle a new form submission
 
+        error_log("############################################");
         // create our assoc array to dump into the DB
         $form = array();
 
@@ -130,10 +131,28 @@ class coshhDB
             $form['UploadDate'] = new MongoDate();
             $form['uuid'] = md5($_POST['title'] . mt_rand());
             $form['Files'] = array();
+            if (array_key_exists('multiuser',$_POST)) {
+                $form['MultiUser'] = true;
+                $form['Users'] = array();
+            } else {
+                $form['MultiUser'] = false;
+            }
         }
-        $form['data'] = $_POST;
+        if (!$form["MultiUser"] or !array_key_exists("multiemail", $_POST)) {
+            // only update the form fields if the form is *not* a multi-user with a submitted new email
+            // address.  Otherwise users can over-write multi-user forms... (I hate the way this was
+            // done - it's caused so many problems... sigh)
+            $form['data'] = $_POST;
+        }
 
         // check that any email addresses look half sane
+/*        if (array_key_exists('multiuser', $_POST)) {
+            // we first check if this is a multi-user form.  if so, copy the labguardian email address to the
+            // other two fields (makes sure it displays properly on the formlist())
+            $form['data']["supervisor"] = $form['data']['labguardian'];
+            $form['data']["personemail"] = $form['data']['labguardian'];
+        }
+*/        
         foreach(array("personemail","supervisor","labguardian") as $addr) {
             if (array_key_exists($addr,$form['data'])) {
                 if (! preg_match("/[a-z0-9].+\@/i",$form['data'][$addr])) {     // ie, one or more alphanumeric followed by an @
@@ -144,6 +163,20 @@ class coshhDB
                 }
             }
         }
+        if (array_key_exists('multiuser', $_POST)) {
+            if (preg_match('/\@/',$_POST['multiemail'])) {
+                if (!array_key_exists('Users', $form)) {
+                    $form['Users'] = array();
+                    error_log("ZZZZZZZZZZZZZZZZZZZ created Users[]");
+                }
+                $form['Users'][] = $_POST['multiemail'] . '::' . time();
+                error_log("ZZZZZZZZZZZZZZZZZZZ added to Users[] : " . $_POST['multiemail']);
+            } else {
+                error_log("Invalid multiemail");
+            }
+        } else {
+            error_log("Not multiuser");
+        }
 
         // check that we have a title set
         if (! preg_match("/[a-z0-9]/i",$form['data']['title'])) {
@@ -152,10 +185,14 @@ class coshhDB
 
         // we always want to set these fields whether new or editing
         $form['LastUpdated'] = new MongoDate();
-        $form['Status'] = "Pending";
         $form['SearchDump'] = print_r($form,true);      // dump the whole object as a string to make searching easy(read: lazy git)
         $form['SearchDump'] = str_replace("\n","",$form['SearchDump']);
-
+        if (!$form['Status']) {
+            // set the status to Pending if we don't already have the status set - this (hopefully!) catches
+            // people submitting multi-user forms so that each person that adds their names doesn't reset the
+            // form to "Pending" again.
+            $form['Status'] = "Pending";
+        }
 
         // process any file uploads
         for($i = 1; $i < 10; $i++) {
@@ -166,17 +203,16 @@ class coshhDB
 
                 if (preg_match("/[a-z0-9]/i",$name)) {
                 // upload the file to Mongo's "gridFS"
-                try {
-                    $fileid = $this->grid->storeUpload($fname, array("metadata" => array("filename" => $name, "ContentType" => $type, "FormUUID" => $form['uuid'])));
-                    $fileid = $fileid->{'$id'};
-                    $form['Files'][] = $fileid;     // add the file id to the $form data
-                }
-                catch (Exception $e) {
-                    print "Failed to upload files! :-(";
-                    error_log("COSHH Upload files failed : " . $e->getMessage() . " # $name # $type # $fname");
-                    exit();
-                }
-                
+                    try {
+                        $fileid = $this->grid->storeUpload($fname, array("metadata" => array("filename" => $name, "ContentType" => $type, "FormUUID" => $form['uuid'])));
+                        $fileid = $fileid->{'$id'};
+                        $form['Files'][] = $fileid;     // add the file id to the $form data
+                    }
+                    catch (Exception $e) {
+                        print "Failed to upload files! :-(";
+                        error_log("COSHH Upload files failed : " . $e->getMessage() . " # $name # $type # $fname");
+                        exit();
+                    }
                 }
             }
         }
@@ -193,6 +229,26 @@ class coshhDB
         $this->tpl->display("index.tpl");
         return true;
 
+    }
+
+    public function submitJwnc()
+    {
+        $formtype = $_POST['formtype'];
+        $email = $_POST['email-address'];
+        $form = $this->findItem("JwncType",$formtype);
+        if (!$form) {
+            $form['ItemType'] = "jwncForm";
+            $form['JwncType'] = $formtype;
+            $form['Users'] = array();
+        }
+        $form['Users'][] = $email;
+        $form['LastUpdated'] = new MongoDate();
+        $this->updateItem($form);
+        $this->tpl->assign("page_title","Thank you");
+        $this->tpl->assign("message","Thank you - form submitted");
+        $this->tpl->assign("sub_page","thankyou.tpl");
+        $this->tpl->display("index.tpl");
+        return true;
     }
 
     function resendAlerts($uuid)
@@ -253,10 +309,19 @@ class coshhDB
                 $title = "Biological";
                 $form = "coshh_bio.tpl";
                 break;
+            case "jwnc":
+                $title = "JWNC";
+                $form = "jwnc_test.tpl";
+                break;
             default:
                 exit;
         }
-        
+
+        if (array_key_exists('multiuser', $_GET)) {
+            $this->tpl->assign("multiuser",true);
+        } else {
+            $this->tpl->assign("multiuser",false);
+        }
         $this->tpl->assign("page_title",$title);
         $this->tpl->assign("form",$form);
         $this->tpl->assign("sub_page","show_form.tpl");
@@ -282,6 +347,14 @@ class coshhDB
                 $files[] = array( "id" => $f->file['_id'], "filename" => $f->file['metadata']['filename'] );
             }
         }
+        if (array_key_exists('Users', $form)) {
+            $newlist = array();
+            foreach($form['Users'] as $u) {
+                list($email,$timestamp) = preg_split("/::/",$u);
+                $newlist[] = '<a href="mailto:' . $email . '">' . $email . '</a> @ ' . date("d/m/Y H:i",$timestamp);
+            }
+            $form['Users'] = $newlist;
+        }
 
         $this->tpl->assign("mode",$mode);
         $this->tpl->assign("data",$form['data']);
@@ -301,6 +374,7 @@ class coshhDB
             case "general": $f = "coshh_general.tpl"; break;
             default: $f = "coshh_general.tpl"; break;
         }
+
         $this->tpl->assign("form",$f);
         $this->tpl->assign("sub_page","show_form.tpl");
         if ($returnstring) {
@@ -392,7 +466,7 @@ class coshhDB
         if (array_key_exists("sf",$_GET)) {
             $sortfield = $_GET['sf'];
         }
-        $cursor = $this->collection->find(array("ItemType" => "coshhForm"));;
+        $cursor = $this->collection->find(array("ItemType" => "coshhForm"));
         $cursor->sort(array($sortfield=>-1));
         $forms = array();
 	error_log("COSHHHHHHH");
@@ -418,6 +492,38 @@ class coshhDB
         return true;
     }
 
+    function showMultiFormList($sortfield = "LastUpdated")
+    {
+        // function to list all of the multi-user forms - sorted by $sortfield
+        
+        if (array_key_exists("sf",$_GET)) {
+            $sortfield = $_GET['sf'];
+        }
+        $cursor = $this->collection->find(array("ItemType" => "coshhForm","MultiUser" => true));
+        $cursor->sort(array($sortfield=>-1));
+        $forms = array();
+    error_log("MULTIUSER");
+        if ($cursor) {
+            $i = 0;
+            foreach ($cursor as $line) {
+                $forms[$i++] = array (
+                            "SubType" => $line['SubType'],
+                            "UploadDate" => $line['UploadDate']->sec,
+                            "LastUpdated" => $line['LastUpdated']->sec,
+                            "Status" => $line['Status'],
+                            "Title" => $line['data']['title'],
+                            "Location" => $line['data']['location'],
+                            "uuid" => $line['uuid'],
+                            "SubmittedBy" => $line['data']['personemail']
+                        );
+            }
+        }
+        $this->tpl->assign("multiuser",true);
+        $this->tpl->assign("forms",$forms);
+        $this->tpl->assign("sub_page","form_list.tpl");
+        $this->tpl->display("index.tpl");
+        return true;
+    }
 
     function searchForms($term,$field = "")
     {
@@ -535,5 +641,36 @@ class coshhDB
         return true;
     }
 
+    public function showJwnc($formtype = "jwnc_test1")
+    {
+
+        $form = $this->findItem("JwncType",$formtype);
+        if (!$form) {
+            $form['Users'] = array();
+        }
+        $this->tpl->assign("users",array_reverse($form['Users']));
+        $this->tpl->assign("formtype",$formtype);
+        $this->tpl->display($formtype . ".tpl");
+        return true;
+    }
+
+    public function exportAllAsPdf()
+    {
+        $cursor = $this->collection->find(array("ItemType" => "coshhForm"));
+        $forms = array();
+        if ($cursor) {
+            $i = 0;
+            foreach ($cursor as $line) {
+                $forms[$i++] = array (
+                            "UploadDate" => $line['UploadDate']->sec,
+                            "Title" => $line['data']['title'],
+                            "uuid" => $line['uuid'],
+                        );
+            }
+        }
+        foreach($forms as $form) {
+            print $form['uuid'] . '######' . preg_replace("/[^a-zA-Z0-9]+/","_",$form['Title'] . '_' . $form['UploadDate']) . ".pdf\n";
+        }
+    }
 }
 ?>

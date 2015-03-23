@@ -6,6 +6,21 @@
 <input type="text" name="q" value="" size="30" /> <input type="submit" name="search" value="Search" />
 </form>
 </p>
+<p>
+    {if $multiuser}
+        <a href="{$smarty.server.PHP_SELF}">Click here for single-user forms</a>
+        <br />
+        <p>
+            To sign up to an existing multi-user form, select the appropriate form
+            below, read it through to the end and then enter your e-mail address.
+        </p>
+        {if $admin}
+                 | Create new multi-user : <a href="index.php?action=do-general&amp;multiuser=1">General</a> &bull; <a href="index.php?action=do-bio&amp;multiuser=1">Bio</a> &bull; <a href="index.php?action=do-chem&amp;multiuser=1">Chemical</a>
+        {/if}
+    {else}
+        <a href="{$smarty.server.PHP_SELF}?action=listmulti{if $admin}&amp;admin=true{/if}">Click here for multi-user forms</a>
+    {/if}
+</p>
 <table width="100%">
 <tr>
     <th class="adminth"><a href="{$smarty.server.PHP_SELF}?sf=data.title">Title</a></th>

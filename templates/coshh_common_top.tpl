@@ -1,15 +1,21 @@
 {* Smarty *}
 {if $forapproval}
-<form method="POST" action="approve.php" id="coshhform" enctype="multipart/form-data">
-<input type="hidden" name="uuid" value="{$formdata.uuid}" />
-{else}
-<form method="POST" action="index.php" id="coshhform" enctype="multipart/form-data">
-<input type="hidden" name="action" value="submit_coshh" />
-    {if $foredit}
+    <form method="POST" action="approve.php" id="coshhform" enctype="multipart/form-data">
     <input type="hidden" name="uuid" value="{$formdata.uuid}" />
-    {if $godmode}
-    <input type="hidden" name="godmode" value="yes" />
+{else}
+    <form method="POST" action="index.php" id="coshhform" enctype="multipart/form-data">
+    <input type="hidden" name="action" value="submit_coshh" />
+    {if $multiuser or $formdata.MultiUser}
+        <input type="hidden" name="multiuser" value="1" />
+        {if $formdata.uuid}
+            <input type="hidden" name="uuid" value="{$formdata.uuid}" />
+        {/if}
     {/if}
+    {if $foredit}
+        <input type="hidden" name="uuid" value="{$formdata.uuid}" />
+        {if $godmode}
+            <input type="hidden" name="godmode" value="yes" />
+        {/if}
     {/if}
 {/if}
 <p />
@@ -32,7 +38,8 @@
     {/if}
 </p>
 <p>
-    Short description of procedures involved in the activity :<br />
+    Short description of procedures involved in the activity. <br />
+    (where appropriate, detailed protocols can be uploaded at the end of this form) :<br />
     {if $pdf}
         {$data.shortdesc}
     {else}

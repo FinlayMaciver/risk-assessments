@@ -228,16 +228,37 @@
         {/if}
     {/if}
 {/if}
-
+{if $formdata.MultiUser and ($mode eq "guest")}
+    <p>
+        <b>
+            To acknowledge that you have read and will follow the protocols outlined above and understand the risks described, enter your e-mail address in the box below:
+        </b>
+    </p>
+    <p><input type="email" name="multiemail" value="" size="60" /></p>
+    <input type="submit" name="submicoshh" value="Submit" />
+{/if}
+    
 {if $mode ne "guest"}
     <input type="submit" name="submitcoshh" value="Submit" />
 {else}
-    <p><a href="view.php">Back to the form list</a></p>
+    {if $formdata.MultiUser}
+        <p><a href="view.php?action=listmulti">Back to the form list</a></p>
+    {else}
+        <p><a href="view.php">Back to the form list</a></p>
+    {/if}
 {/if}
 {if $mode eq "coshhadmin"}
     <p><a href="index.php?id={$formdata.uuid}&amp;godmode=1">Re-edit form</a></p>
     <p style="text-align:right"><a href="admin.php?action=remove&amp;id={$formdata.uuid}" style="color:white; background-color: red; font-weight:bold; border:1px solid red; padding:3px">Delete form</a></p>
 {/if}
 </fieldset>
+{if $formdata.MultiUser and count($formdata.Users) > 0}
+    <h3>Users who have seen this form</h3>
+    <ul>
+    {foreach from=$formdata.Users item=user}
+        <li><a href="mailto:$user">{$user}</a></li>
+    {/foreach}
+    </ul>
+{/if}
 </form>
 

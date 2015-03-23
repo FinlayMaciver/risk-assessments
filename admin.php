@@ -30,6 +30,13 @@ switch ($action) {
     case 'remove':
         $coshh->removeItem($_REQUEST['id']);
         $coshh->showFormList();
+        break;
+    case 'listmulti':
+        $coshh->showMultiFormList();
+        break;
+    case 'getformlist':
+        $coshh->exportAllAsPdf();
+        break;
     default:
         $coshh->showFormList();
         break;
