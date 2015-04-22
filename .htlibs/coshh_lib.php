@@ -419,9 +419,18 @@ class coshhDB
                     '"' . $_POST['ap_reason'] . '"' . "\n";
             $to = $form['data']['personemail'];
             $subject = "Risk Assessment Form - rejected";
-            if (! preg_match("/^INVALID/",$to)) {     // see validation code in sendForm()
-                mail($to,$subject,$body);
+            $bcc = "Bcc: " . $this->coshhadmin;
+            if (! preg_match("/^INVALID/",$form['data']['supervisor'])) {     // see validation code in sendForm()
+                $bcc = $bcc . ", " . $form['data']['supervisor'];
             }
+            if (! preg_match("/^INVALID/",$form['data']['labguardian'])) {     // see validation code in sendForm()
+                $bcc = $bcc . ", " . $form['data']['labguardian'];
+            }
+            $bcc = $bcc . "\r\n";
+            if (! preg_match("/^INVALID/",$to)) {     // see validation code in sendForm()
+                mail($to,$subject,$body,$bcc);
+            }
+            //mail($this->coshhadmin,"COSHH Form rejected",$body);
         }
         else {
             $body = "Your risk assessment form was approved by ";
