@@ -29,7 +29,7 @@ class coshhDB
         //    $GLOBALS['developmode'] = 'production';
             if ($GLOBALS['developmode'] == "production") {
                  //$this->db_host = 'mongodb://coshhuser:ceeCh5Sh@west.eng.gla.ac.uk:27017,puppet.eng.gla.ac.uk:27017';
-                 $this->db_host = 'mongodb://coshh2:hellokitty@polaroid.eng.gla.ac.uk,canon.eng.gla.ac.uk/coshh2';
+                 $this->db_host = 'mongodb://coshh2:hellokitty@polaroid.eng.gla.ac.uk,fuji.eng.gla.ac.uk/coshh2';
 		 $this->db_opts = array("replicaSet" => "SOEreplica");
                  //$this->db_opts = array("replicaSet" => "assetSet");
             }
