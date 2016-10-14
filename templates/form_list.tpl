@@ -32,7 +32,11 @@
 </tr>
 {foreach from=$forms item=form}
 <tr bgcolor="{cycle values="#FFFFFF,#EEEEFF"}">
-    <td> <a href="sendpdf.php?id={$form.uuid}"><img src="pdf_icon.png" alt="[PDF]" /></a> <a href="{$smarty.server.PHP_SELF}?action=view&amp;id={$form.uuid}">{$form.Title}</a></td>
+    {if $form.SubType == "Old"}
+        <td><a href="{$form.uuid}">{$form.Title}</a></td>
+    {else}
+        <td> <a href="sendpdf.php?id={$form.uuid}"><img src="pdf_icon.png" alt="[PDF]" /></a> <a href="{$smarty.server.PHP_SELF}?action=view&amp;id={$form.uuid}">{$form.Title}</a></td>
+    {/if}
     <td><a href="{$smarty.server.PHP_SELF}?action=search&amp;q={$form.SubmittedBy|escape:'url'}&amp;f=data.personemail">{$form.SubmittedBy}</a></td>
     <td>{$form.Location}</td>
     <td>{$form.UploadDate|date_format}</td>

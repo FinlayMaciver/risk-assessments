@@ -494,6 +494,10 @@ class coshhDB
                         );
             }
         }
+        $old_forms = $this->searchOldForms("");
+        foreach($old_forms as $form) {
+            $forms[$i++] = $form;
+        }
 
         $this->tpl->assign("forms",$forms);
         $this->tpl->assign("sub_page","form_list.tpl");
@@ -568,13 +572,52 @@ class coshhDB
                         );
             }
         }
-
+        $old_forms = $this->searchOldForms($term);
+        foreach($old_forms as $form) {
+            $forms[$i++] = $form;
+        }
         $this->tpl->assign("forms",$forms);
         $this->tpl->assign("sub_page","form_list.tpl");
         $this->tpl->display("index.tpl");
         return true;
     }
 
+
+    public function searchOldForms($term)
+    {
+        $matches = array();
+        $filenames = glob("old-forms/*.htm");
+        foreach ($filenames as $file) {
+            $match = $this->fileContains($file, $term);
+            if ($match) {
+                $matches[] = $match;
+            }
+        }
+        return $matches;
+    }
+
+    public function fileContains($filename, $term)
+    {
+        $contents = file_get_contents($filename);
+        if (preg_match("/$term/i", $contents)) {
+            preg_match('/name="title".+?value="([^"]+)" /', $contents, $matches);
+            $title = $matches[1];
+            preg_match('/name="location".+?value="([^"]+)" /', $contents, $matches);
+            $location = $matches[1];
+            $location = preg_replace("/([\-\/])/", "$1 ", $location);
+            return array (
+                "SubType" => "Old",
+                "UploadDate" => strtotime('22-09-2010'),
+                "LastUpdated" => strtotime('22-09-2010'),
+                "Status" => "Approved",
+                "Title" => $title,
+                "Location" => $location,
+                "uuid" => $filename,
+                "SubmittedBy" => "N/A"
+            );
+        }
+        return false;
+    }
 
     function sendFile($id)
     {
