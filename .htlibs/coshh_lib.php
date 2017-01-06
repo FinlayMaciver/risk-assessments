@@ -446,6 +446,10 @@ class coshhDB
             if (! preg_match("/^INVALID/",$to)) {     // see validation code in sendForm()
                 mail($to,$subject,$body);
             }
+            $body = "A risk form has been approved. To correct & re-submit visit\n\n" .
+                    "http://" . $_SERVER['SERVER_NAME'] . "/tools/risk/admin.php?id=" . $form['uuid'] . "\n" .
+                    "\n\n";
+            mail($this->coshhadmin, $subject, $body);
         }
 
         return true;
