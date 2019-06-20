@@ -491,7 +491,7 @@ class coshhDB
             $i = 0;
             foreach ($cursor as $line) {
                 // if we are only showing students and their email isn't an obvious undergrad one then skip
-                if ($onlyStudents && strpos($line['data']['personalemail'], 'student.gla.ac.uk') === false) {
+                if ($onlyStudents && strpos($line['data']['personemail'], 'student.gla.ac.uk') === false) {
                     continue;
                 }
                 $forms[$i++] = array (
