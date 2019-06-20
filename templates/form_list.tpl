@@ -19,6 +19,9 @@
         {/if}
     {else}
         <a href="{$smarty.server.PHP_SELF}?action=listmulti{if $admin}&amp;admin=true{/if}">Click here for multi-user forms</a>
+        {if $admin}
+            <a href="{$smarty.server.PHP_SELF}?onlystudents=1{if $admin}&amp;admin=true{/if}">Click here for only @student forms</a>
+        {/if}
     {/if}
 </p>
 <table width="100%">
@@ -45,4 +48,3 @@
 </tr>
 {/foreach}
 </table>
-

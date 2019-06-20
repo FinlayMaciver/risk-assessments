@@ -106,7 +106,7 @@ class coshhDB
         return true;
     }
 
-    
+
     function submitForm()
     {
         // handle a new form submission
@@ -152,7 +152,7 @@ class coshhDB
             $form['data']["supervisor"] = $form['data']['labguardian'];
             $form['data']["personemail"] = $form['data']['labguardian'];
         }
-*/        
+*/
         foreach(array("personemail","supervisor","labguardian") as $addr) {
             if (array_key_exists($addr,$form['data'])) {
                 if (! preg_match("/[a-z0-9].+\@/i",$form['data'][$addr])) {     // ie, one or more alphanumeric followed by an @
@@ -297,7 +297,7 @@ class coshhDB
 
         // check what type of form we want
         switch($type) {
-            case "general": 
+            case "general":
                 $title = "General";
                 $form = "coshh_general.tpl";
                 break;
@@ -472,13 +472,17 @@ class coshhDB
     }
 
 
-    function showFormList($sortfield = "LastUpdated")
+    function showFormList($sortfield = "LastUpdated", $onlyStudents = false)
     {
         // function to list all of the forms - sorted by $sortfield
-        
+
         if (array_key_exists("sf",$_GET)) {
             $sortfield = $_GET['sf'];
         }
+        if (array_key_exists("onlystudents", $_GET)) {
+            $onlyStudents = true;
+        }
+
         $cursor = $this->collection->find(array("ItemType" => "coshhForm"));
         $cursor->sort(array($sortfield=>-1));
         $forms = array();
@@ -486,6 +490,10 @@ class coshhDB
         if ($cursor) {
             $i = 0;
             foreach ($cursor as $line) {
+                // if we are only showing students and their email isn't an obvious undergrad one then skip
+                if ($onlyStudents && strpos($line['data']['personalemail'], 'student.gla.ac.uk') === false) {
+                    continue;
+                }
                 $forms[$i++] = array (
                             "SubType" => $line['SubType'],
                             "UploadDate" => $line['UploadDate']->sec,
@@ -512,7 +520,7 @@ class coshhDB
     function showMultiFormList($sortfield = "LastUpdated")
     {
         // function to list all of the multi-user forms - sorted by $sortfield
-        
+
         if (array_key_exists("sf",$_GET)) {
             $sortfield = $_GET['sf'];
         }
@@ -554,7 +562,7 @@ class coshhDB
         }
         else {
             $regex_term = new MongoRegex("/$term/i");       // ie, case-insensitive match "*thing*"
-            $cursor = $this->collection->find(array('$or' => array( 
+            $cursor = $this->collection->find(array('$or' => array(
                             array('Status' => $regex_term),
                             array('SearchDump' => $regex_term),
                         )));
@@ -637,7 +645,7 @@ class coshhDB
         header('Content-Type:' . $type);
         header('Content-Disposition: attachment; filename=' . $name);
         header('Content-Transfer-Encoding: binary');
-        header("Cache-Control: must-revalidate, post-check=0, pre-check=0"); 
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
         header("Pragma: public");
         echo $file->getBytes();
         return true;
@@ -646,7 +654,7 @@ class coshhDB
 
     function sendPdf($uuid)
     {
-        // function to stream a form as a pdf 
+        // function to stream a form as a pdf
         require_once("dompdf/dompdf_config.inc.php");
         $this->tpl->assign("pdf",true);
         $html = $this->showFormApproval($uuid,true);
@@ -660,7 +668,7 @@ class coshhDB
     {
         // function to edit a form (from a submitter point of view)
         // we end up here if the form was rejected
-        
+
         $form = $this->findItem("uuid",$uuid);
         if (! is_array($form)) {
             return false;
