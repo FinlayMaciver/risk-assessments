@@ -219,9 +219,9 @@ class coshhDB
 
         $this->updateItem($form);
         if (! array_key_exists("godmode",$_POST)) {     // only send emails if we are not in 'godmode' (ie, admin re-edits)
-            $this->sendAlert($form['data']['supervisor'],"COSHH Form approval required",$form['uuid'],"supervisor");
-            $this->sendAlert($form['data']['labguardian'],"COSHH Form approval required",$form['uuid'],"guardian");
-            $this->sendAlert($this->coshhadmin,"COSHH Form approval required",$form['uuid'],"coshhadmin");
+            $this->sendAlert($form['data']['supervisor'],"Risk Assessment Form approval required",$form['uuid'],"supervisor");
+            $this->sendAlert($form['data']['labguardian'],"Risk Assessment Form approval required",$form['uuid'],"guardian");
+            $this->sendAlert($this->coshhadmin,"Risk Assessment Form approval required",$form['uuid'],"coshhadmin");
         }
         $this->tpl->assign("page_title","Thank you");
         $this->tpl->assign("message","Thank you - form submitted");
@@ -257,9 +257,9 @@ class coshhDB
         if (!is_array($form)) {
             return false;
         }
-        $this->sendAlert($form['data']['supervisor'],"COSHH Form approval required",$form['uuid'],"supervisor");
-        $this->sendAlert($form['data']['labguardian'],"COSHH Form approval required",$form['uuid'],"guardian");
-        $this->sendAlert($this->coshhadmin,"COSHH Form approval required",$form['uuid'],"coshhadmin");
+        $this->sendAlert($form['data']['supervisor'],"Risk Assessment Form approval required",$form['uuid'],"supervisor");
+        $this->sendAlert($form['data']['labguardian'],"Risk Assessment Form approval required",$form['uuid'],"guardian");
+        $this->sendAlert($this->coshhadmin,"Risk Assessment Form approval required",$form['uuid'],"coshhadmin");
         return true;
     }
 
@@ -279,7 +279,7 @@ class coshhDB
                 default           : error_log("COSHH : sendAlert with no valid mode"); return false;
             }
             $headers = "From: School of Engineering Risk Assessment <donotreply@glasgow.ac.uk>";
-            $body = "This is an automated message to let you know a new COSHH form\n" .
+            $body = "This is an automated message to let you know a new Risk Assessment form\n" .
                     "has been submitted and your approval is required.  Please visit :\n" .
                     "\n" .
                     "http://" . $_SERVER['SERVER_NAME'] . "/tools/risk/approve.php?$p=$uuid\n" .
