@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('login', App\Http\Livewire\Login::class)->name('login');
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/', App\Http\Livewire\Home::class)->name('home');
+
+    Route::get('/form/create/{type}/{multiUser?}', App\Http\Livewire\Form\Create::class)->name('form.create');
 });
