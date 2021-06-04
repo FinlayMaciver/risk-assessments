@@ -6,7 +6,7 @@
     @include('form.partials.overview')
 
     @livewire('form.partials.risks', [
-        'risks' => $form->risks
+        'risks' => $form['risks']
     ])
     @include('form.partials.protection')
 

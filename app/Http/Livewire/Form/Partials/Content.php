@@ -3,6 +3,10 @@
 namespace App\Http\Livewire\Form\Partials;
 
 use App\Models\Form;
+use App\Models\FormRisk;
+use App\Models\GeneralFormDetails;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -10,7 +14,7 @@ class Content extends Component
 {
     use WithFileUploads;
 
-    public Form $form;
+    public $form = [];
     public $newFiles = [];
 
     protected $listeners = [
@@ -45,7 +49,7 @@ class Content extends Component
         'form.breathing_apparatus' => 'required|boolean',
         'form.external_services' => 'required|boolean',
         'form.poison_antidote' => 'required|boolean',
-        'form.poison_antidote' => 'string',
+        'form.other_emergency' => 'string',
 
         //Supervision
         'form.routine_approval' => 'required|boolean',
@@ -68,6 +72,21 @@ class Content extends Component
 
         //Files
         'form.files.*' => '',
+
+        //Risks
+        // 'form.risks' => '',
+        // 'form.risks.*.description' => 'string',
+        // 'form.risks.*.severity' => 'required_with:form.risks.*.description|string',
+        // 'form.risks.*.control_measures' => 'string',
+        // 'form.risks.*.likelihood_with' => 'string',
+        // 'form.risks.*.likelihood_without' => 'string',
+
+        //General form
+        'form.general.chemicals_involved' => '',
+    ];
+
+    protected $messages = [
+        'form.title.required' => 'Please provide a title'
     ];
 
     public function render()
@@ -75,16 +94,37 @@ class Content extends Component
         return view('livewire.form.partials.content');
     }
 
-    public function updateRisks(Collection $risks)
+    public function updateRisks($risks)
     {
-        $this->form->risks = $risks;
+        $this->form['risks'] = $risks;
     }
 
     public function save()
     {
-        //new Form()
-        //new FormRisk foreach
-        //new form type sections
+        $this->emit('validate');
+        // $this->validate();
+
+        // $form = Form::updateOrCreate(
+        //     [
+        //     'id' => $this->form['id'] ?? null],
+        //     Arr::except($this->form, ['risks', 'files', 'general'])
+        // );
+
+        // foreach ($this->form['risks'] as $risk) {
+        //     $risk = FormRisk::updateOrCreate([
+        //         'id' => $risk['id'] ?? null,
+        //         'form_id' => $form->id,
+        //     ], $risk);
+        // }
+        // if ($form->type == 'General') {
+        //     $generalSection = GeneralFormDetails::updateOrCreate(
+        //         ['form_id' => $form->id,],
+        //         $this->form['general']
+        //     );
+        // }
+        //Chemical form sections
+        //Biological form sections
+
         //foreach new file store
         //foreach removed file remove
     }

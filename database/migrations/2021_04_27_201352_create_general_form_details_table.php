@@ -16,7 +16,7 @@ class CreateGeneralFormDetailsTable extends Migration
         Schema::create('general_form_details', function (Blueprint $table) {
             $table->id();
             $table->foreignId('form_id')->constrained();
-            $table->string('chemicals_involved');
+            $table->string('chemicals_involved')->nullable();
             $table->timestamps();
         });
     }

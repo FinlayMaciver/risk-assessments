@@ -64,8 +64,8 @@
                 <tr>
                     <td class="d-block d-md-table-cell">{{ $form->title }}</td>
                     <td class="d-none d-md-table-cell">{{ $form->location }}</td>
-                    <td class="d-none d-md-table-cell">{{ $form->created_at }}</td>
-                    <td class="d-none d-md-table-cell">{{ $form->updated_at }}</td>
+                    <td class="d-none d-md-table-cell">{{ $form->formatted_created_at }}</td>
+                    <td class="d-none d-md-table-cell">{{ $form->formatted_updated_at }}</td>
                     <td class="d-block d-md-table-cell">
                         @if ($form->status == 'Approved')
                             <span class="text-success font-weight-bold fw-bold">

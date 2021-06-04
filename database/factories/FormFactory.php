@@ -26,7 +26,7 @@ class FormFactory extends Factory
     public function definition()
     {
         return [
-            'type' => $this->faker()->word(),
+            'type' => $this->faker->word(),
             'user_id' => function () {
                 return User::factory()->create()->id;
             },

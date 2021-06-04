@@ -9,12 +9,16 @@ class Risks extends Component
 {
     public $risks;
 
+    protected $listeners = [
+        'validate' => 'validateRisks'
+    ];
+
     protected $rules = [
         'risks.*.description' => 'string',
-        'risks.*.severity' => 'string',
-        'risks.*.control_measures' => 'string',
-        'risks.*.likelihood_with' => 'string',
-        'risks.*.likelihood_without' => 'string',
+        'risks.*.severity' => 'required_with:risks.*.description|string',
+        'risks.*.control_measures' => 'required_with:risks.*.description|string',
+        'risks.*.likelihood_with' => 'required_with:risks.*.description|string',
+        'risks.*.likelihood_without' => 'required_with:risks.*.description|string',
     ];
 
     public function render()
@@ -22,9 +26,16 @@ class Risks extends Component
         return view('livewire.form.partials.risks');
     }
 
+    public function validateRisks()
+    {
+        // dd('hiya');
+        $v = $this->validate();
+        dd($v);
+    }
+
     public function add()
     {
-        $this->risks->add(new FormRisk());
+        $this->risks[] = new FormRisk();
     }
 
     public function update()

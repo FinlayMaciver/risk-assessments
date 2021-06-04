@@ -18,7 +18,7 @@ class CreateFormsTable extends Migration
             $table->foreignId('user_id')->constrained();
             $table->string('type');
             $table->string('title');
-            $table->string('status');
+            $table->string('status')->default('Pending');
             $table->boolean('multi_user')->default(false);
             $table->string('location');
             $table->string('description');
@@ -62,8 +62,8 @@ class CreateFormsTable extends Migration
             $table->string('inform_other')->nullable();
 
             //Supervisor/Guardians
-            $table->foreignId('supervisor_id')->constrained('users');
-            $table->foreignId('lab_guardian_id')->constrained('users');
+            $table->foreignId('supervisor_id')->nullable()->constrained('users');
+            $table->foreignId('lab_guardian_id')->nullable()->constrained('users');
 
             $table->timestamps();
         });
