@@ -3,7 +3,12 @@
     <div class="card-body">
         @foreach($this->risks as $index => $risk)
             <div class="card">
-                <div class="card-header fw-bold">Risk {{ $index+1 }}</div>
+                <div class="card-header fw-bold">
+                    Risk {{ $index+1 }}
+                    <div wire:click="delete({{$index}})" class="float-end cursor-pointer">
+                        <span class="fas fa-times text-danger"></span>
+                    </div>
+                </div>
                 <div class="card-body">
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
@@ -81,7 +86,7 @@
             <hr>
         @endforeach
         <div class="d-grid">
-            <button wire:click.prevent="add" class="btn btn-outline-info">+ Add another risk</button>
+            <button wire:click.prevent="add" class="btn btn-primary">+ Add a risk</button>
         </div>
     </div>
 </div>

@@ -6,12 +6,12 @@
             </label>
             <textarea name="control_measures" class="form-control" wire:model="form.control_measures"></textarea>
         </div>
-        @if ($form['type'] == 'General')
+        @if ($form->type == 'General')
             <div class="mb-3">
                 <label for="chemicals_involved" class="form-label">
                     (Bio)Chemicals or micro-organisms involved (hazardous or otherwise)
                 </label>
-                <textarea name="chemicals_involved" class="form-control" wire:model="form.general.chemicals_involved"></textarea>
+                <textarea name="chemicals_involved" class="form-control" wire:model="section.chemicals_involved"></textarea>
             </div>
         @endif
         <div class="mb-3">

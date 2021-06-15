@@ -3,22 +3,19 @@
 namespace App\Http\Livewire\Form\Partials;
 
 use App\Models\FormRisk;
+use Illuminate\Database\Eloquent\Collection;
 use Livewire\Component;
 
 class Risks extends Component
 {
-    public $risks;
-
-    protected $listeners = [
-        'validate' => 'validateRisks'
-    ];
+    public Collection $risks;
 
     protected $rules = [
         'risks.*.description' => 'string',
-        'risks.*.severity' => 'required_with:risks.*.description|string',
-        'risks.*.control_measures' => 'required_with:risks.*.description|string',
-        'risks.*.likelihood_with' => 'required_with:risks.*.description|string',
-        'risks.*.likelihood_without' => 'required_with:risks.*.description|string',
+        'risks.*.severity' => 'string',
+        'risks.*.control_measures' => 'string',
+        'risks.*.likelihood_with' => 'string',
+        'risks.*.likelihood_without' => 'string',
     ];
 
     public function render()
@@ -26,20 +23,19 @@ class Risks extends Component
         return view('livewire.form.partials.risks');
     }
 
-    public function validateRisks()
-    {
-        // dd('hiya');
-        $v = $this->validate();
-        dd($v);
-    }
-
     public function add()
     {
         $this->risks[] = new FormRisk();
     }
 
+    public function delete($index)
+    {
+        $this->risks->forget($index);
+        $this->update();
+    }
+
     public function update()
     {
-        $this->emit('riskChanged', $this->risks);
+        $this->emit('risksUpdated', $this->risks);
     }
 }

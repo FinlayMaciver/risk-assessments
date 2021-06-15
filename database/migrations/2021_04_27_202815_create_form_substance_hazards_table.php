@@ -15,7 +15,7 @@ class CreateFormSubstanceHazardsTable extends Migration
     {
         Schema::create('form_substance_hazards', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('form_substance_id')->constrained();
+            $table->foreignId('form_substance_id')->constrained()->onDelete('cascade');
             $table->foreignId('hazard_id')->constrained();
             $table->timestamps();
         });

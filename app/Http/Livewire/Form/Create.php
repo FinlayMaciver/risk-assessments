@@ -10,7 +10,7 @@ use Livewire\Component;
 
 class Create extends Component
 {
-    public $form;
+    public Form $form;
 
     public function mount($type = null, $multiUser = false)
     {
@@ -18,13 +18,7 @@ class Create extends Component
             'type' => $type,
             'user_id' => Auth::user()->id,
             'multi_user' => $multiUser
-        ])->toArray();
-
-        $this->form['files'] = [];
-        $this->form['risks'][] = new FormRisk();
-        if ($type == 'General') {
-            $this->form['general'] = GeneralFormDetails::make()->toArray();
-        }
+        ]);
     }
 
     public function render()

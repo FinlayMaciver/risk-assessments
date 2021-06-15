@@ -8,17 +8,11 @@ use Livewire\Component;
 class Edit extends Component
 {
     public $formId;
-    public $form = [];
+    public Form $form;
 
     public function mount()
     {
-        $form = Form::findOrFail($this->formId);
-        $this->form = $form->toArray();
-        $this->form['risks'] = $form->risks->toArray();
-        $this->form['files'] = $form->files->toArray();
-        if ($form->type == 'General') {
-            $this->form['general'] = $form->general->toArray();
-        }
+        $this->form = Form::findOrFail($this->formId);
     }
 
     public function render()

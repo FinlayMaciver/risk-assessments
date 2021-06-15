@@ -1,43 +1,17 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Forms;
 
 use App\Models\Form;
 use App\Models\FormRisk;
 use App\Models\GeneralFormDetails;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Livewire\Livewire;
 use Tests\TestCase;
 
-class FormTest extends TestCase
+class GeneralFormTest extends TestCase
 {
-    public function testHomePageShowsOnlyLoggedInUsersForms()
-    {
-        $user = User::factory()->create();
-        $forms = Form::factory()->count(2)->create(['user_id' => $user->id]);
-        $otherUserForm = Form::factory()->create();
-
-        $response = $this->actingAs($user)->get('/');
-
-        $response->assertStatus(200);
-        $response->assertSee($forms[0]->title);
-        $response->assertSee($forms[1]->title);
-        $response->assertDontSee($otherUserForm->title);
-    }
-
-    public function testUserHasNoFormsSoSeesNoForms()
-    {
-        $user = User::factory()->create();
-        $forms = Form::factory()->count(2)->create();
-
-        $response = $this->actingAs($user)->get('/');
-
-        $response->assertStatus(200);
-        $response->assertSee('You have not submitted any forms.');
-        $response->assertDontSee($forms[0]->title);
-        $response->assertDontSee($forms[1]->title);
-    }
-
     public function testUserCanStartSubmittingANewGeneralForm()
     {
         $user = User::factory()->create();
@@ -52,14 +26,15 @@ class FormTest extends TestCase
     public function testUserCanSubmitANewGeneralForm()
     {
         $user = User::factory()->create();
+        $supervisor = User::factory()->create();
+        $labGuardian = User::factory()->create();
         $form = new Form([
             'type' => 'General',
             'user_id' => $user->id,
             'multi_user' => false
         ]);
-        $form->risks->add(new FormRisk());
 
-        $risks = [
+        $risks = new Collection([
             1 => new FormRisk([
                 'description' => 'Risk 1 description',
                 'severity' => 'Risk 1 severity',
@@ -74,7 +49,7 @@ class FormTest extends TestCase
                 'likelihood_with' => 'Risk 2 likelihood with',
                 'likelihood_without' => 'Risk 2 likelihood without',
             ])
-        ];
+        ]);
 
         $content = Livewire::actingAs($user)
         ->test(\App\Http\Livewire\Form\Partials\Content::class, ['form' => $form])
@@ -118,19 +93,18 @@ class FormTest extends TestCase
             ->set('form.inform_other', 'Form inform other')
 
             //General section
-            ->set('form.general.chemicals_involved', 'Form chemicals involved')
+            ->set('section.chemicals_involved', 'Form chemicals involved')
 
-            ->set('form.supervisor_id', null)
-            ->set('form.lab_guardian_id', null);
+            ->set('form.supervisor_id', $supervisor->id)
+            ->set('form.lab_guardian_id', $labGuardian->id);
 
         $riskForm = Livewire::actingAs($user)
         ->test(\App\Http\Livewire\Form\Partials\Risks::class, ['risks' => $form->risks])
         ->set('risks', $risks)
         ->call('update');
 
-        $content->call('updateRisks', collect($risks))
-        ->assertSet('form.risks', collect($risks))
-        ->call('save');
+        $content->call('risksUpdated', $risks);
+        $content->call('save');
 
         $savedForm = Form::where('title', 'Form title')->first();
 
@@ -174,8 +148,8 @@ class FormTest extends TestCase
             'inform_contractors' => true,
             'inform_other' => 'Form inform other',
 
-            'supervisor_id' => null,
-            'lab_guardian_id' => null,
+            'supervisor_id' => $supervisor->id,
+            'lab_guardian_id' => $labGuardian->id,
         ]);
 
         $this->assertDatabaseHas('general_form_details', [
@@ -205,6 +179,8 @@ class FormTest extends TestCase
     public function testUserCanEditAndSaveAGeneralForm()
     {
         $user = User::factory()->create();
+        $supervisor = User::factory()->create();
+        $labGuardian = User::factory()->create();
         $form = Form::create([
             'type' => 'General',
             'user_id' => $user->id,
@@ -245,8 +221,8 @@ class FormTest extends TestCase
             'inform_contractors' => true,
             'inform_other' => 'Form inform other',
 
-            'supervisor_id' => null,
-            'lab_guardian_id' => null,
+            'supervisor_id' => $supervisor->id,
+            'lab_guardian_id' => $labGuardian->id,
         ]);
 
         $risk1 = FormRisk::create([
@@ -270,8 +246,6 @@ class FormTest extends TestCase
             'form_id' => $form->id,
             'chemicals_involved' => 'Form chemicals involved'
         ]);
-
-        $form->load('general', 'risks');
 
         $content = Livewire::actingAs($user)
         ->test(\App\Http\Livewire\Form\Partials\Content::class, ['form' => $form])
@@ -315,18 +289,27 @@ class FormTest extends TestCase
             ->assertSet('form.inform_other', 'Form inform other')
 
             //General section
-            ->assertSet('form.general.chemicals_involved', 'Form chemicals involved')
+            ->assertSet('section.chemicals_involved', 'Form chemicals involved')
 
-            ->assertSet('form.supervisor_id', null)
-            ->assertSet('form.lab_guardian_id', null);
+            ->assertSet('form.supervisor_id', $supervisor->id)
+            ->assertSet('form.lab_guardian_id', $labGuardian->id);
 
-        $riskForm = Livewire::actingAs($user)
-        ->test(\App\Http\Livewire\Form\Partials\Risks::class, ['risks' => $form->risks])
-        ->set('risks', $form->risks);
 
-        $content->set('form.title', 'New title')
-            ->set('form.general.chemicals_involved', 'New chemicals involved')
+        //Risks - deleting one
+        $risks = $form->risks;
+        Livewire::actingAs($user)
+            ->test(\App\Http\Livewire\Form\Partials\Risks::class, ['risks' => $risks])
+            ->call('delete', 1)
+            ->assertEmitted('risksUpdated')
+            ->assertCount('risks', 1);
+
+        $content->set('risks', $risks->forget(1))
+            ->set('form.title', 'New title')
+            ->set('section.chemicals_involved', 'New chemicals involved')
+            ->set('form.supervisor_id', null)
             ->call('save');
+
+        $this->assertEquals($form->fresh()->risks->count(), 1);
 
         $this->assertDatabaseHas('forms', [
             'user_id' => $user->id,
@@ -369,7 +352,7 @@ class FormTest extends TestCase
             'inform_other' => 'Form inform other',
 
             'supervisor_id' => null,
-            'lab_guardian_id' => null,
+            'lab_guardian_id' => $labGuardian->id,
         ]);
 
         $this->assertDatabaseHas('general_form_details', [
@@ -386,7 +369,7 @@ class FormTest extends TestCase
             'likelihood_without' => 'Risk 1 likelihood without',
         ]);
 
-        $this->assertDatabaseHas('form_risks', [
+        $this->assertDatabaseMissing('form_risks', [
             'form_id' => $form->id,
             'description' => 'Risk 2 description',
             'severity' => 'Risk 2 severity',

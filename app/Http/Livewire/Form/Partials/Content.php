@@ -3,10 +3,10 @@
 namespace App\Http\Livewire\Form\Partials;
 
 use App\Models\Form;
-use App\Models\FormRisk;
 use App\Models\GeneralFormDetails;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -14,15 +14,33 @@ class Content extends Component
 {
     use WithFileUploads;
 
-    public $form = [];
+    public Form $form;
+    public $supervisor;
+    public $labGuardian;
+    public $risks;
+    public Collection $substances;
+    public $section;
+    public $files;
     public $newFiles = [];
 
+    public function mount(Form $form)
+    {
+        $this->form = $form;
+        $this->supervisor = $form->supervisor;
+        $this->labGuardian = $form->labGuardian;
+        $this->section = $form->{Str::lower($form->type).'Section'};
+        $this->substances = $form->substances;
+        $this->risks = $form->risks;
+        $this->files = $form->files;
+    }
+
     protected $listeners = [
-        'riskChanged' => 'updateRisks',
+        'risksUpdated',
+        'supervisorUpdated',
+        'labGuardianUpdated',
     ];
 
     protected $rules = [
-        'form.id' => '',
         'form.type' => 'required|string',
         'form.multi_user' => 'required|boolean',
         'form.user_id' => 'required',
@@ -66,23 +84,27 @@ class Content extends Component
         'form.inform_contractors' => 'required|boolean',
         'form.inform_other' => 'string',
 
-        //Supervisor/Guardians
+        //Risks
+        'risks.*.description' => 'string',
+        'risks.*.severity' => 'string',
+        'risks.*.control_measures' => 'string',
+        'risks.*.likelihood_with' => 'string',
+        'risks.*.likelihood_without' => 'string',
+
+        //General section
+        'section.chemicals_involved' => 'string',
+
+        //Substances
+        'substances.*.substance' => 'string',
+        'substances.*.quantity' => 'string',
+        'substances.*.route' => 'string',
+        'substances.*.single_acute_effect' => 'string',
+        'substances.*.repeated_low_effect' => 'string',
+        'substances.*.hazards.*.hazard_id' => '',
+
+        //Supervisor + lab guardian
         'form.supervisor_id' => '',
         'form.lab_guardian_id' => '',
-
-        //Files
-        'form.files.*' => '',
-
-        //Risks
-        // 'form.risks' => '',
-        // 'form.risks.*.description' => 'string',
-        // 'form.risks.*.severity' => 'required_with:form.risks.*.description|string',
-        // 'form.risks.*.control_measures' => 'string',
-        // 'form.risks.*.likelihood_with' => 'string',
-        // 'form.risks.*.likelihood_without' => 'string',
-
-        //General form
-        'form.general.chemicals_involved' => '',
     ];
 
     protected $messages = [
@@ -94,36 +116,67 @@ class Content extends Component
         return view('livewire.form.partials.content');
     }
 
-    public function updateRisks($risks)
+    public function risksUpdated($risks)
     {
-        $this->form['risks'] = $risks;
+        $this->risks = $risks;
+    }
+
+    public function substancesUpdated(Collection $substances)
+    {
+        $this->substances = $substances;
+    }
+
+    public function supervisorUpdated(User $user)
+    {
+        $this->form->supervisor_id = $user->id;
+    }
+
+    public function labGuardianUpdated(User $user)
+    {
+        $this->form->lab_guardian_id = $user->id;
     }
 
     public function save()
     {
-        $this->emit('validate');
-        // $this->validate();
+        $this->validate();
 
-        // $form = Form::updateOrCreate(
-        //     [
-        //     'id' => $this->form['id'] ?? null],
-        //     Arr::except($this->form, ['risks', 'files', 'general'])
-        // );
+        $form = Form::updateOrCreate(
+            ['id' => $this->form['id'] ?? null],
+            $this->form->attributesToArray()
+        );
 
-        // foreach ($this->form['risks'] as $risk) {
-        //     $risk = FormRisk::updateOrCreate([
-        //         'id' => $risk['id'] ?? null,
-        //         'form_id' => $form->id,
-        //     ], $risk);
-        // }
-        // if ($form->type == 'General') {
-        //     $generalSection = GeneralFormDetails::updateOrCreate(
-        //         ['form_id' => $form->id,],
-        //         $this->form['general']
-        //     );
-        // }
-        //Chemical form sections
-        //Biological form sections
+        //Risks
+        foreach ($this->risks as $risk) {
+            $id = $form->risks()->updateOrCreate(['id' => $risk->id], $risk->attributesToArray());
+        }
+
+        foreach ($this->form->risks->diff($this->risks) as $deletedRisk) {
+            $deletedRisk->delete();
+        }
+
+        //General
+        if ($form->type == 'General') {
+            $generalSection = GeneralFormDetails::updateOrCreate(
+                ['form_id' => $form->id],
+                ['chemicals_involved' => $this->section['chemicals_involved']]
+            );
+        }
+
+        //Chemical
+        if ($form->type == 'Chemical') {
+            foreach ($this->substances as $substance) {
+                dd($substance);
+                $savedSubstance = $form->substances()->updateOrCreate(['id' => $substance->id], $substance->makeHidden('hazards')->attributesToArray());
+                $savedSubstance->hazards()->sync($substance->hazards);
+            }
+            foreach ($this->form->substances->diff($this->substances) as $deletedSubstance) {
+                $deletedSubstance->delete();
+            }
+        }
+
+        //Biological
+
+        //Files
 
         //foreach new file store
         //foreach removed file remove

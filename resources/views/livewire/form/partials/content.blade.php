@@ -2,11 +2,13 @@
     <input type="hidden" name="id" wire:model="form.id">
     <input type="hidden" name="multi_user" wire:model="form.multi_user">
     <input type="hidden" name="user_id" wire:model="form.user_id">
+    <input type="hidden" name="supervisor_id" wire:model="form.supervisor_id">
+    <input type="hidden" name="lab_guardian_id" wire:model="form.lab_guardian_id">
 
     @include('form.partials.overview')
 
     @livewire('form.partials.risks', [
-        'risks' => $form['risks']
+        'risks' => $risks
     ])
     @include('form.partials.protection')
 

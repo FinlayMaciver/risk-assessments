@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class FormSubstanceHazard extends Model
 {
     use HasFactory;
+
+    protected $guarded = [];
+
+    public function hazard()
+    {
+        return $this->belongsTo(Hazard::class);
+    }
 }

@@ -3,6 +3,9 @@
     text-align: center;
     width: 15px !important;
 }
+.cursor-pointer {
+    cursor: pointer;
+}
 .banner-logo {
     height: 40px;
 }

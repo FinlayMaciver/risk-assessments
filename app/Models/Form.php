@@ -46,9 +46,24 @@ class Form extends Model
         return Carbon::createFromFormat('Y-m-d H:i:s', $this->updated_at)->format('d/m/y g:ma');
     }
 
-    public function general()
+    public function supervisor()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function labGuardian()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function generalSection()
     {
         return $this->hasOne(GeneralFormDetails::class);
+    }
+
+    public function substances()
+    {
+        return $this->hasMany(FormSubstance::class);
     }
 
     public function risks()
