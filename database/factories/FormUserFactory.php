@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Form;
+use App\Models\FormUser;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

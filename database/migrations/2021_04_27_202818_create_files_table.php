@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFormSubstanceHazardsTable extends Migration
+class CreateFilesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,13 @@ class CreateFormSubstanceHazardsTable extends Migration
      */
     public function up()
     {
-        Schema::create('form_substance_hazards', function (Blueprint $table) {
+        Schema::create('files', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('form_substance_id')->constrained()->onDelete('cascade');
-            $table->foreignId('hazard_id')->constrained();
+            $table->foreignId('form_id')->constrained();
+            $table->string('filename');
+            $table->string('original_filename');
+            $table->string('mimetype');
+            $table->bigInteger('size');
             $table->timestamps();
         });
     }
@@ -28,6 +31,6 @@ class CreateFormSubstanceHazardsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('form_substance_hazards');
+        Schema::dropIfExists('files');
     }
 }

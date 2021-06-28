@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Form\Partials;
 
-use App\Models\FormRisk;
+use App\Models\Risk;
 use Illuminate\Database\Eloquent\Collection;
 use Livewire\Component;
 
@@ -25,7 +25,7 @@ class Risks extends Component
 
     public function add()
     {
-        $this->risks[] = new FormRisk();
+        $this->risks[] = new Risk();
     }
 
     public function delete($index)

@@ -2,19 +2,19 @@
 
 namespace Database\Factories;
 
-use App\Models\FormSubstance;
-use App\Models\FormSubstanceHazard;
 use App\Models\Hazard;
+use App\Models\Substance;
+use App\Models\SubstanceHazard;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class FormSubstanceHazardFactory extends Factory
+class SubstanceHazardFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = FormSubstanceHazard::class;
+    protected $model = SubstanceHazard::class;
 
     /**
      * Define the model's default state.
@@ -24,8 +24,8 @@ class FormSubstanceHazardFactory extends Factory
     public function definition()
     {
         return [
-            'form_substance_id' => function () {
-                return FormSubstance::factory()->create()->id;
+            'substance_id' => function () {
+                return Substance::factory()->create()->id;
             },
             'hazard_id' => function () {
                 if (Hazard::count()) {

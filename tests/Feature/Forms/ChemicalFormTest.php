@@ -3,9 +3,9 @@
 namespace Tests\Feature\Forms;
 
 use App\Models\Form;
-use App\Models\FormRisk;
-use App\Models\FormSubstance;
-use App\Models\FormSubstanceHazard;
+use App\Models\Risk;
+use App\Models\Substance;
+use App\Models\SubstanceHazard;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Livewire\Livewire;
@@ -42,14 +42,14 @@ class ChemicalFormTest extends TestCase
         ]);
 
         $risks = new Collection([
-            1 => new FormRisk([
+            1 => new Risk([
                 'description' => 'Risk 1 description',
                 'severity' => 'Risk 1 severity',
                 'control_measures' => 'Risk 1 control measures',
                 'likelihood_with' => 'Risk 1 likelihood with',
                 'likelihood_without' => 'Risk 1 likelihood without',
              ]),
-            2 => new FormRisk([
+            2 => new Risk([
                 'description' => 'Risk 2 description',
                 'severity' => 'Risk 2 severity',
                 'control_measures' => 'Risk 2 control measures',
@@ -58,26 +58,23 @@ class ChemicalFormTest extends TestCase
             ])
         ]);
 
-        $substance1 = new FormSubstance([
-            'substance' => 'Substance 1',
-            'quantity' => 'Substance 1 quantity',
-            'route' => 'Substance 1 route',
-            'single_acute_effect' => 'Substance 1 single acute effect',
-            'repeated_low_effect' => 'Substance 1 repeated low effect',
-        ]);
-        $substance1->hazards->add(new FormSubstanceHazard(['hazard_id' => 1]));
-        $substance1->hazards->add(new FormSubstanceHazard(['hazard_id' => 2]));
-        $substance2 = new FormSubstance([
-            'substance' => 'Substance 2',
-            'quantity' => 'Substance 2 quantity',
-            'route' => 'Substance 2 route',
-            'single_acute_effect' => 'Substance 2 single acute effect',
-            'repeated_low_effect' => 'Substance 2 repeated low effect',
-        ]);
-        $substance2->hazards->add(new FormSubstanceHazard(['hazard_id' => 3]));
-        $substance2->hazards->add(new FormSubstanceHazard(['hazard_id' => 5]));
         $substances = new Collection([
-            $substance1,$substance2
+            1 => new Substance([
+                'substance' => 'Substance 1',
+                'quantity' => 'Substance 1 quantity',
+
+                'single_acute_effect' => 'Substance 1 single acute effect',
+                'repeated_low_effect' => 'Substance 1 repeated low effect',
+                'hazard_ids' => [1, 2],
+            ]),
+            2 => new Substance([
+                'substance' => 'Substance 2',
+                'quantity' => 'Substance 2 quantity',
+
+                'single_acute_effect' => 'Substance 2 single acute effect',
+                'repeated_low_effect' => 'Substance 2 repeated low effect',
+                'hazard_ids' => [3, 5]
+            ])
         ]);
 
         $content = Livewire::actingAs($user)
@@ -189,43 +186,41 @@ class ChemicalFormTest extends TestCase
             'lab_guardian_id' => $labGuardian->id,
         ]);
 
-        $this->assertDatabaseHas('form_substances', [
+        $this->assertDatabaseHas('substances', [
             'form_id' => $savedForm->id,
             'substance' => 'Substance 1',
             'quantity' => 'Substance 1 quantity',
-            'route' => 'Substance 1 route',
             'single_acute_effect' => 'Substance 1 single acute effect',
             'repeated_low_effect' => 'Substance 1 repeated low effect',
         ]);
 
-        $this->assertDatabaseHas('form_substance_hazards', [
-            'form_substance_id' => FormSubstance::where('substance', 'Substance 1')->first()->id,
+        $this->assertDatabaseHas('substance_hazards', [
+            'substance_id' => Substance::where('substance', 'Substance 1')->first()->id,
             'hazard_id' => 1,
         ]);
-        $this->assertDatabaseHas('form_substance_hazards', [
-            'form_substance_id' => FormSubstance::where('substance', 'Substance 1')->first()->id,
+        $this->assertDatabaseHas('substance_hazards', [
+            'substance_id' => Substance::where('substance', 'Substance 1')->first()->id,
             'hazard_id' => 2,
         ]);
 
-        $this->assertDatabaseHas('form_substances', [
+        $this->assertDatabaseHas('substances', [
             'form_id' => $savedForm->id,
             'substance' => 'Substance 2',
             'quantity' => 'Substance 2 quantity',
-            'route' => 'Substance 2 route',
             'single_acute_effect' => 'Substance 2 single acute effect',
             'repeated_low_effect' => 'Substance 2 repeated low effect',
         ]);
 
-        $this->assertDatabaseHas('form_substance_hazards', [
-            'form_substance_id' => FormSubstance::where('substance', 'Substance 2')->first()->id,
+        $this->assertDatabaseHas('substance_hazards', [
+            'substance_id' => Substance::where('substance', 'Substance 2')->first()->id,
             'hazard_id' => 3,
         ]);
-        $this->assertDatabaseHas('form_substance_hazards', [
-            'form_substance_id' => FormSubstance::where('substance', 'Substance 2')->first()->id,
+        $this->assertDatabaseHas('substance_hazards', [
+            'substance_id' => Substance::where('substance', 'Substance 2')->first()->id,
             'hazard_id' => 5,
         ]);
 
-        $this->assertDatabaseHas('form_risks', [
+        $this->assertDatabaseHas('risks', [
             'form_id' => $savedForm->id,
             'description' => 'Risk 1 description',
             'severity' => 'Risk 1 severity',
@@ -234,7 +229,7 @@ class ChemicalFormTest extends TestCase
             'likelihood_without' => 'Risk 1 likelihood without',
         ]);
 
-        $this->assertDatabaseHas('form_risks', [
+        $this->assertDatabaseHas('risks', [
             'form_id' => $savedForm->id,
             'description' => 'Risk 2 description',
             'severity' => 'Risk 2 severity',
@@ -293,7 +288,7 @@ class ChemicalFormTest extends TestCase
             'lab_guardian_id' => $labGuardian->id,
         ]);
 
-        $risk1 = FormRisk::create([
+        $risk1 = Risk::create([
             'form_id' => $form->id,
             'description' => 'Risk 1 description',
             'severity' => 'Risk 1 severity',
@@ -301,7 +296,7 @@ class ChemicalFormTest extends TestCase
             'likelihood_with' => 'Risk 1 likelihood with',
             'likelihood_without' => 'Risk 1 likelihood without',
         ]);
-        $risk2 = FormRisk::create([
+        $risk2 = Risk::create([
             'form_id' => $form->id,
             'description' => 'Risk 2 description',
             'severity' => 'Risk 2 severity',
@@ -310,21 +305,19 @@ class ChemicalFormTest extends TestCase
             'likelihood_without' => 'Risk 2 likelihood without',
         ]);
 
-        $substance1 = FormSubstance::create([
+        $substance1 = Substance::create([
             'form_id' => $form->id,
             'substance' => 'Substance 1',
             'quantity' => 'Substance 1 quantity',
-            'route' => 'Substance 1 route',
             'single_acute_effect' => 'Substance 1 single acute effect',
             'repeated_low_effect' => 'Substance 1 repeated low effect',
         ]);
         $substance1->hazards()->attach([1,2]);
 
-        $substance2 = FormSubstance::create([
+        $substance2 = Substance::create([
             'form_id' => $form->id,
             'substance' => 'Substance 2',
             'quantity' => 'Substance 2 quantity',
-            'route' => 'Substance 2 route',
             'single_acute_effect' => 'Substance 2 single acute effect',
             'repeated_low_effect' => 'Substance 2 repeated low effect',
         ]);
@@ -383,7 +376,10 @@ class ChemicalFormTest extends TestCase
             ->assertCount('risks', 1);
 
         //Substances - delete 1
-        $substances = $form->substances->load('hazards');
+        $substances = $form->substances;
+        $substances = $substances->each(function ($substance) {
+            $substance['hazard_ids'] = $substance->hazards->pluck('id');
+        });
         Livewire::actingAs($user)
             ->test(\App\Http\Livewire\Form\Partials\Substances::class, ['substances' => $substances])
             ->call('delete', 1)
@@ -392,7 +388,7 @@ class ChemicalFormTest extends TestCase
 
         $content
             ->set('risks', $risks->forget(1))
-            ->set('substances', $substances->forget(1)->load('hazards'))
+            ->set('substances', $substances->forget(1))
             ->set('form.title', 'New title')
             ->set('form.supervisor_id', null)
             ->call('save');
@@ -444,34 +440,32 @@ class ChemicalFormTest extends TestCase
             'lab_guardian_id' => $labGuardian->id,
         ]);
 
-        $this->assertDatabaseHas('form_substances', [
+        $this->assertDatabaseHas('substances', [
             'form_id' => $form->id,
             'substance' => 'Substance 1',
             'quantity' => 'Substance 1 quantity',
-            'route' => 'Substance 1 route',
             'single_acute_effect' => 'Substance 1 single acute effect',
             'repeated_low_effect' => 'Substance 1 repeated low effect',
         ]);
 
-        $this->assertDatabaseHas('form_substance_hazards', [
-            'form_substance_id' => FormSubstance::where('substance', 'Substance 1')->first()->id,
+        $this->assertDatabaseHas('substance_hazards', [
+            'substance_id' => Substance::where('substance', 'Substance 1')->first()->id,
             'hazard_id' => 1,
         ]);
-        $this->assertDatabaseHas('form_substance_hazards', [
-            'form_substance_id' => FormSubstance::where('substance', 'Substance 1')->first()->id,
+        $this->assertDatabaseHas('substance_hazards', [
+            'substance_id' => Substance::where('substance', 'Substance 1')->first()->id,
             'hazard_id' => 2,
         ]);
 
-        $this->assertDatabaseMissing('form_substances', [
+        $this->assertDatabaseMissing('substances', [
             'form_id' => $form->id,
             'substance' => 'Substance 2',
             'quantity' => 'Substance 2 quantity',
-            'route' => 'Substance 2 route',
             'single_acute_effect' => 'Substance 2 single acute effect',
             'repeated_low_effect' => 'Substance 2 repeated low effect',
         ]);
 
-        $this->assertDatabaseHas('form_risks', [
+        $this->assertDatabaseHas('risks', [
             'form_id' => $form->id,
             'description' => 'Risk 1 description',
             'severity' => 'Risk 1 severity',
@@ -480,7 +474,7 @@ class ChemicalFormTest extends TestCase
             'likelihood_without' => 'Risk 1 likelihood without',
         ]);
 
-        $this->assertDatabaseMissing('form_risks', [
+        $this->assertDatabaseMissing('risks', [
             'form_id' => $form->id,
             'description' => 'Risk 2 description',
             'severity' => 'Risk 2 severity',

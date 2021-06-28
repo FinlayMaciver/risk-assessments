@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Hazard;
+use App\Models\Route;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -31,8 +32,20 @@ class DatabaseSeeder extends Seeder
             'Teratogen'
         ];
 
+        $routes = [
+            'Inhalation',
+            'Ingestion',
+            'Skin absorption',
+            'Eye/skin contact',
+            'Injection'
+        ];
+
         foreach ($classifications as $classification) {
             Hazard::factory()->create(['title' => $classification]);
+        }
+
+        foreach ($routes as $route) {
+            Route::factory()->create(['title' => $route]);
         }
 
         User::factory()->admin()->create([

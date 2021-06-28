@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFormSubstancesTable extends Migration
+class CreateMicroOrganismsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateFormSubstancesTable extends Migration
      */
     public function up()
     {
-        Schema::create('form_substances', function (Blueprint $table) {
+        Schema::create('micro_organisms', function (Blueprint $table) {
             $table->id();
             $table->foreignId('form_id')->constrained();
-            $table->string('substance');
-            $table->string('quantity');
-            $table->string('route');
+            $table->string('micro_organism');
+            $table->string('classification');
+            $table->string('risk');
             $table->string('single_acute_effect');
             $table->string('repeated_low_effect');
             $table->timestamps();
@@ -32,6 +32,6 @@ class CreateFormSubstancesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('form_substances');
+        Schema::dropIfExists('micro_organisms');
     }
 }

@@ -2,18 +2,18 @@
 
 namespace Database\Factories;
 
+use App\Models\File;
 use App\Models\Form;
-use App\Models\FormFile;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class FormFileFactory extends Factory
+class FileFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = FormFile::class;
+    protected $model = File::class;
 
     /**
      * Define the model's default state.

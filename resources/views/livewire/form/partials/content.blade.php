@@ -10,6 +10,15 @@
     @livewire('form.partials.risks', [
         'risks' => $risks
     ])
+    <br>
+
+    @if ($form->type == 'Chemical')
+        @livewire('form.partials.substances', [
+            'substances' => $substances
+        ])
+        <br>
+    @endif
+
     @include('form.partials.protection')
 
     @include('form.partials.supervision')

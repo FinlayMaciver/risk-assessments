@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFormFilesTable extends Migration
+class CreateSubstanceRoutesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,10 @@ class CreateFormFilesTable extends Migration
      */
     public function up()
     {
-        Schema::create('form_files', function (Blueprint $table) {
+        Schema::create('substance_routes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('form_id')->constrained();
-            $table->string('filename');
-            $table->string('original_filename');
-            $table->string('mimetype');
-            $table->bigInteger('size');
+            $table->morphs('substance');
+            $table->foreignId('route_id')->constrained();
             $table->timestamps();
         });
     }
@@ -31,6 +28,6 @@ class CreateFormFilesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('form_files');
+        Schema::dropIfExists('substance_routes');
     }
 }

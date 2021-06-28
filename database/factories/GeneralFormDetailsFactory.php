@@ -2,9 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\Form;
-use App\Models\FormRisk;
 use App\Models\GeneralFormDetails;
+use App\Models\Risk;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class GeneralFormDetailsFactory extends Factory
@@ -36,7 +35,7 @@ class GeneralFormDetailsFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function (GeneralFormDetails $details) {
-            FormRisk::factory()->count(rand(0, 4))->create([
+            Risk::factory()->count(rand(0, 4))->create([
                 'form_id' => $details->form_id,
             ]);
         });

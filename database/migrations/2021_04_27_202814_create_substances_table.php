@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFormRisksTable extends Migration
+class CreateSubstancesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,13 @@ class CreateFormRisksTable extends Migration
      */
     public function up()
     {
-        Schema::create('form_risks', function (Blueprint $table) {
+        Schema::create('substances', function (Blueprint $table) {
             $table->id();
             $table->foreignId('form_id')->constrained();
-            $table->string('description');
-            $table->string('severity');
-            $table->string('control_measures');
-            $table->string('likelihood_with');
-            $table->string('likelihood_without');
+            $table->string('substance');
+            $table->string('quantity');
+            $table->string('single_acute_effect');
+            $table->string('repeated_low_effect');
             $table->timestamps();
         });
     }
@@ -32,6 +31,6 @@ class CreateFormRisksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('form_risks');
+        Schema::dropIfExists('substances');
     }
 }

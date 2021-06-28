@@ -3,17 +3,18 @@
 namespace Database\Factories;
 
 use App\Models\Form;
-use App\Models\FormMicroOrganism;
+use App\Models\MicroOrganism;
+use App\Models\SubstanceRoute;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class FormMicroOrganismFactory extends Factory
+class MicroOrganismFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = FormMicroOrganism::class;
+    protected $model = MicroOrganism::class;
 
     /**
      * Define the model's default state.
@@ -38,13 +39,6 @@ class FormMicroOrganismFactory extends Factory
                 'Medium',
                 'High',
             ]),
-            'route' => $this->faker->randomElement([
-                'Inhalation',
-                'Ingestion',
-                'Skin absorption',
-                'Eye/skin contact',
-                'Injection'
-            ]),
             'single_acute_effect' => $this->faker->randomElement([
                 'Serious',
                 'Not serious',
@@ -56,5 +50,15 @@ class FormMicroOrganismFactory extends Factory
                 'Not known',
             ]),
         ];
+    }
+
+    public function configure()
+    {
+        return $this->afterCreating(function (MicroOrganism $substance) {
+            SubstanceRoute::factory()->count(rand(0, 4))->create([
+                'substance_id' => $substance->id,
+                'substance_type' => 'micro_organism'
+            ]);
+        });
     }
 }

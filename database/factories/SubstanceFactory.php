@@ -3,18 +3,19 @@
 namespace Database\Factories;
 
 use App\Models\Form;
-use App\Models\FormSubstance;
-use App\Models\FormSubstanceHazard;
+use App\Models\Substance;
+use App\Models\SubstanceHazard;
+use App\Models\SubstanceRoute;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class FormSubstanceFactory extends Factory
+class SubstanceFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = FormSubstance::class;
+    protected $model = Substance::class;
 
     /**
      * Define the model's default state.
@@ -34,13 +35,6 @@ class FormSubstanceFactory extends Factory
                 'Large 10g - 100g',
                 'Very large > 100g',
             ]),
-            'route' => $this->faker->randomElement([
-                'Inhalation',
-                'Ingestion',
-                'Skin absorption',
-                'Eye/skin contact',
-                'Injection'
-            ]),
             'single_acute_effect' => $this->faker->randomElement([
                 'Serious',
                 'Not serious',
@@ -56,9 +50,13 @@ class FormSubstanceFactory extends Factory
 
     public function configure()
     {
-        return $this->afterCreating(function (FormSubstance $substance) {
-            FormSubstanceHazard::factory()->count(rand(0, 4))->create([
-                'form_substance_id' => $substance->id,
+        return $this->afterCreating(function (Substance $substance) {
+            SubstanceHazard::factory()->count(rand(0, 4))->create([
+                'substance_id' => $substance->id,
+            ]);
+            SubstanceRoute::factory()->count(rand(0, 4))->create([
+                'substance_id' => $substance->id,
+                'substance_type' => 'substance'
             ]);
         });
     }

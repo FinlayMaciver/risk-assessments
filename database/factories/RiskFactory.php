@@ -3,17 +3,17 @@
 namespace Database\Factories;
 
 use App\Models\Form;
-use App\Models\FormRisk;
+use App\Models\Risk;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class FormRiskFactory extends Factory
+class RiskFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = FormRisk::class;
+    protected $model = Risk::class;
 
     /**
      * Define the model's default state.

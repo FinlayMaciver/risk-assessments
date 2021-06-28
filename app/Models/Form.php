@@ -63,16 +63,16 @@ class Form extends Model
 
     public function substances()
     {
-        return $this->hasMany(FormSubstance::class);
+        return $this->hasMany(Substance::class);
     }
 
     public function risks()
     {
-        return $this->hasMany(FormRisk::class);
+        return $this->hasMany(Risk::class);
     }
 
     public function files()
     {
-        return $this->hasMany(FormFile::class);
+        return $this->hasMany(File::class);
     }
 }

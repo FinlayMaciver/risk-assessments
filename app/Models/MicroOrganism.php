@@ -5,14 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class FormRisk extends Model
+class MicroOrganism extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
-
-    public function form()
+    public function routes()
     {
-        return $this->belongsTo(Form::class);
+        return $this->morphToMany(Route::class, 'substance', 'substance_routes');
     }
 }

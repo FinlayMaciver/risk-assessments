@@ -3,7 +3,7 @@
 namespace App\Http\Livewire\Form;
 
 use App\Models\Form;
-use App\Models\FormRisk;
+use App\Models\Risk;
 use App\Models\GeneralFormDetails;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;

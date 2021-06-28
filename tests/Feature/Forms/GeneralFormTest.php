@@ -3,7 +3,7 @@
 namespace Tests\Feature\Forms;
 
 use App\Models\Form;
-use App\Models\FormRisk;
+use App\Models\Risk;
 use App\Models\GeneralFormDetails;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
@@ -35,14 +35,14 @@ class GeneralFormTest extends TestCase
         ]);
 
         $risks = new Collection([
-            1 => new FormRisk([
+            1 => new Risk([
                 'description' => 'Risk 1 description',
                 'severity' => 'Risk 1 severity',
                 'control_measures' => 'Risk 1 control measures',
                 'likelihood_with' => 'Risk 1 likelihood with',
                 'likelihood_without' => 'Risk 1 likelihood without',
             ]),
-            2 => new FormRisk([
+            2 => new Risk([
                 'description' => 'Risk 2 description',
                 'severity' => 'Risk 2 severity',
                 'control_measures' => 'Risk 2 control measures',
@@ -157,7 +157,7 @@ class GeneralFormTest extends TestCase
             'chemicals_involved' => 'Form chemicals involved'
         ]);
 
-        $this->assertDatabaseHas('form_risks', [
+        $this->assertDatabaseHas('risks', [
             'form_id' => $savedForm->id,
             'description' => 'Risk 1 description',
             'severity' => 'Risk 1 severity',
@@ -166,7 +166,7 @@ class GeneralFormTest extends TestCase
             'likelihood_without' => 'Risk 1 likelihood without',
         ]);
 
-        $this->assertDatabaseHas('form_risks', [
+        $this->assertDatabaseHas('risks', [
             'form_id' => $savedForm->id,
             'description' => 'Risk 2 description',
             'severity' => 'Risk 2 severity',
@@ -225,7 +225,7 @@ class GeneralFormTest extends TestCase
             'lab_guardian_id' => $labGuardian->id,
         ]);
 
-        $risk1 = FormRisk::create([
+        $risk1 = Risk::create([
             'form_id' => $form->id,
             'description' => 'Risk 1 description',
             'severity' => 'Risk 1 severity',
@@ -233,7 +233,7 @@ class GeneralFormTest extends TestCase
             'likelihood_with' => 'Risk 1 likelihood with',
             'likelihood_without' => 'Risk 1 likelihood without',
         ]);
-        $risk2 = FormRisk::create([
+        $risk2 = Risk::create([
             'form_id' => $form->id,
             'description' => 'Risk 2 description',
             'severity' => 'Risk 2 severity',
@@ -360,7 +360,7 @@ class GeneralFormTest extends TestCase
             'chemicals_involved' => 'New chemicals involved'
         ]);
 
-        $this->assertDatabaseHas('form_risks', [
+        $this->assertDatabaseHas('risks', [
             'form_id' => $form->id,
             'description' => 'Risk 1 description',
             'severity' => 'Risk 1 severity',
@@ -369,7 +369,7 @@ class GeneralFormTest extends TestCase
             'likelihood_without' => 'Risk 1 likelihood without',
         ]);
 
-        $this->assertDatabaseMissing('form_risks', [
+        $this->assertDatabaseMissing('risks', [
             'form_id' => $form->id,
             'description' => 'Risk 2 description',
             'severity' => 'Risk 2 severity',

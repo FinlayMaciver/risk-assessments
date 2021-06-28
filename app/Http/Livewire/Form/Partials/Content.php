@@ -18,7 +18,7 @@ class Content extends Component
     public $supervisor;
     public $labGuardian;
     public $risks;
-    public Collection $substances;
+    public $substances;
     public $section;
     public $files;
     public $newFiles = [];
@@ -38,6 +38,7 @@ class Content extends Component
         'risksUpdated',
         'supervisorUpdated',
         'labGuardianUpdated',
+        'substancesUpdated'
     ];
 
     protected $rules = [
@@ -94,13 +95,13 @@ class Content extends Component
         //General section
         'section.chemicals_involved' => 'string',
 
-        //Substances
+        // Substances
         'substances.*.substance' => 'string',
         'substances.*.quantity' => 'string',
-        'substances.*.route' => 'string',
         'substances.*.single_acute_effect' => 'string',
         'substances.*.repeated_low_effect' => 'string',
-        'substances.*.hazards.*.hazard_id' => '',
+        'substances.*.hazard_ids' => '',
+        'substances.*.route_ids' => '',
 
         //Supervisor + lab guardian
         'form.supervisor_id' => '',
@@ -121,7 +122,7 @@ class Content extends Component
         $this->risks = $risks;
     }
 
-    public function substancesUpdated(Collection $substances)
+    public function substancesUpdated($substances)
     {
         $this->substances = $substances;
     }
@@ -165,9 +166,8 @@ class Content extends Component
         //Chemical
         if ($form->type == 'Chemical') {
             foreach ($this->substances as $substance) {
-                dd($substance);
-                $savedSubstance = $form->substances()->updateOrCreate(['id' => $substance->id], $substance->makeHidden('hazards')->attributesToArray());
-                $savedSubstance->hazards()->sync($substance->hazards);
+                $savedSubstance = $form->substances()->updateOrCreate(['id' => $substance->id], $substance->makeHidden(['hazard_ids', 'route_ids'])->attributesToArray());
+                $savedSubstance->hazards()->sync($substance->hazard_ids);
             }
             foreach ($this->form->substances->diff($this->substances) as $deletedSubstance) {
                 $deletedSubstance->delete();

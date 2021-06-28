@@ -2,11 +2,11 @@
 
 namespace Database\Factories;
 
-use App\Models\BiologicalFormDetails;
 use App\Models\Form;
-use App\Models\FormRisk;
-use App\Models\FormSubstance;
 use App\Models\GeneralFormDetails;
+use App\Models\MicroOrganism;
+use App\Models\Risk;
+use App\Models\Substance;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -118,10 +118,10 @@ class FormFactory extends Factory
                 'type' => 'Chemical'
             ];
         })->afterCreating(function (Form $form) {
-            FormRisk::factory()->count(rand(0, 4))->create([
+            Risk::factory()->count(rand(0, 4))->create([
                 'form_id' => $form->id,
             ]);
-            FormSubstance::factory()->count(rand(0, 4))->create([
+            Substance::factory()->count(rand(0, 4))->create([
                 'form_id' => $form->id,
             ]);
         });
@@ -134,7 +134,10 @@ class FormFactory extends Factory
                 'type' => 'Biological'
             ];
         })->afterCreating(function (Form $form) {
-            BiologicalFormDetails::factory()->create([
+            Risk::factory()->count(rand(0, 4))->create([
+                'form_id' => $form->id,
+            ]);
+            MicroOrganism::factory()->count(rand(0, 4))->create([
                 'form_id' => $form->id,
             ]);
         });

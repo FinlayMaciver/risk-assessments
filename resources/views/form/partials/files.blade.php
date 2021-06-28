@@ -7,7 +7,7 @@
                     <div class="p-3 border border-2 rounded-2 shadow border-success text-center text-success">
                         <i class="fas fa-4x fa-file-upload mb-2"></i>
                         <h6>{{  $file->original_filename }}<br>
-                        ({{ App\Models\FormFile::bytesConversion($file->size) }})
+                        ({{ App\Models\File::bytesConversion($file->size) }})
                     </h6>
                     </div>
                 </div>
@@ -21,7 +21,7 @@
                     <div class="p-3 border border-2 rounded-2 shadow border-success text-center text-success">
                         <i class="fas fa-4x fa-file-upload mb-2"></i>
                         <h6>{{  $file->getClientOriginalName() }}<br>
-                        ({{ App\Models\FormFile::bytesConversion($file->getSize()) }})
+                        ({{ App\Models\File::bytesConversion($file->getSize()) }})
                     </h6>
                     </div>
                 </div>
