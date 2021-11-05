@@ -14,10 +14,8 @@ class CreateSubstanceRoutesTable extends Migration
     public function up()
     {
         Schema::create('substance_routes', function (Blueprint $table) {
-            $table->id();
             $table->morphs('substance');
             $table->foreignId('route_id')->constrained();
-            $table->timestamps();
         });
     }
 

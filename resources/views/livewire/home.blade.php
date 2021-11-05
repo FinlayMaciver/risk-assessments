@@ -5,8 +5,6 @@
                 + Create
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-
-                <li><h6 class="dropdown-header">Single User</h6></li>
                 <li>
                     <a class="dropdown-item" href="{{ route('form.create', [
                         'type' => 'General'
@@ -19,27 +17,7 @@
                 </li>
                 <li>
                     <a class="dropdown-item" href="{{ route('form.create', [
-                        'type' => 'General'
-                    ]) }}">Biological</a>
-                </li>
-                <hr>
-                <li><h6 class="dropdown-header">Multi User</h6></li>
-                <li>
-                    <a class="dropdown-item" href="{{ route('form.create', [
-                        'type' => 'General',
-                        'multiUser' => true
-                    ]) }}">General</a>
-                </li>
-                <li>
-                    <a class="dropdown-item" href="{{ route('form.create', [
-                        'type' => 'Chemical',
-                        'multiUser' => true
-                    ]) }}">Chemical</a>
-                </li>
-                <li>
-                    <a class="dropdown-item" href="{{ route('form.create', [
-                        'type' => 'Biological',
-                        'multiUser' => true
+                        'type' => 'Biological'
                     ]) }}">Biological</a>
                 </li>
             </ul>
@@ -49,7 +27,7 @@
             <thead class="table-light">
                 <tr>
                     @if (! $forms->count())
-                        <td class="text-center font-weight-bold" colspan="3">You have not submitted any forms.</td>
+                        <td class="text-center fw-bold" colspan="3">You have not submitted any forms.</td>
                     @else
                     <th class="d-none d-md-table-cell">Title</th>
                     <th class="d-none d-md-table-cell">Location</th>
@@ -62,27 +40,27 @@
             <tbody class="border">
                 @foreach ($forms as $form)
                 <tr>
-                    <td class="d-block d-md-table-cell">{{ $form->title }}</td>
+                    <td class="d-block d-md-table-cell"><a href="{{ route('form.show', $form->id) }}">{{ $form->title }}</a></td>
                     <td class="d-none d-md-table-cell">{{ $form->location }}</td>
                     <td class="d-none d-md-table-cell">{{ $form->formatted_created_at }}</td>
                     <td class="d-none d-md-table-cell">{{ $form->formatted_updated_at }}</td>
                     <td class="d-block d-md-table-cell">
                         @if ($form->status == 'Approved')
-                            <span class="text-success font-weight-bold fw-bold">
+                            <span class="badge bg-success fw-bold">
                                 <span class="icon-spacing">
                                     <i class="fas fa-check"></i>
                                 </span>
                                 {{ $form->status }}
                             </span>
                         @elseif ($form->status == 'Denied')
-                            <span class="text-danger font-weight-bold fw-bold">
+                            <span class="badge bg-danger fw-bold">
                                 <span class="icon-spacing">
                                     <i class="fas fa-times"></i>
                                 </span>
                                 {{ $form->status }}
                             </span>
                         @elseif ($form->status == 'Pending')
-                             <span class="text-warning font-weight-bold fw-bold">
+                            <span class="badge bg-warning fw-bold">
                                 <span class="icon-spacing">
                                     <i class="far fa-clock"></i>
                                 </span>

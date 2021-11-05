@@ -15,7 +15,7 @@ class CreateSubstancesTable extends Migration
     {
         Schema::create('substances', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('form_id')->constrained();
+            $table->foreignId('form_id')->constrained()->onDelete('cascade');
             $table->string('substance');
             $table->string('quantity');
             $table->string('single_acute_effect');

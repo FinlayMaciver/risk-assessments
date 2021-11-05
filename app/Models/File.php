@@ -9,6 +9,8 @@ class File extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public static function bytesConversion($bytes)
     {
         $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];

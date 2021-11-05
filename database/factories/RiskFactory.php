@@ -26,13 +26,13 @@ class RiskFactory extends Factory
             'form_id' => function () {
                 return Form::factory()->create()->id;
             },
-            'description' => $this->faker->sentence(rand(1, 5)),
+            'risk' => $this->faker->sentence(rand(1, 5)),
             'control_measures' => $this->faker->sentence(rand(1, 5)),
             'severity' => $this->faker->randomElement([
                 'Slight',
                 'Moderate',
                 'Very',
-                'Extremely',
+                'Extreme',
             ]),
             'likelihood_without' => $this->faker->randomElement([
                 'Improbable',

@@ -3,9 +3,9 @@
 namespace Database\Factories;
 
 use App\Models\Form;
+use App\Models\Route;
 use App\Models\Substance;
 use App\Models\SubstanceHazard;
-use App\Models\SubstanceRoute;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class SubstanceFactory extends Factory
@@ -51,13 +51,12 @@ class SubstanceFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function (Substance $substance) {
-            SubstanceHazard::factory()->count(rand(0, 4))->create([
+            SubstanceHazard::factory()->count(rand(1, 4))->create([
                 'substance_id' => $substance->id,
             ]);
-            SubstanceRoute::factory()->count(rand(0, 4))->create([
-                'substance_id' => $substance->id,
-                'substance_type' => 'substance'
-            ]);
+            $routes = Route::inRandomOrder()->get();
+            $substance->routes()->attach($routes->first());
+            $substance->routes()->attach($routes->last());
         });
     }
 }

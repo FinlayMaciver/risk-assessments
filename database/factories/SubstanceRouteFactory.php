@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\Route;
 use App\Models\Substance;
-use App\Models\SubstanceRoute;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class SubstanceRouteFactory extends Factory

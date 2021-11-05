@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Form;
 use App\Models\MicroOrganism;
-use App\Models\SubstanceRoute;
+use App\Models\Route;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class MicroOrganismFactory extends Factory
@@ -55,10 +55,9 @@ class MicroOrganismFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function (MicroOrganism $substance) {
-            SubstanceRoute::factory()->count(rand(0, 4))->create([
-                'substance_id' => $substance->id,
-                'substance_type' => 'micro_organism'
-            ]);
+            $routes = Route::inRandomOrder()->get();
+            $substance->routes()->attach($routes->first());
+            $substance->routes()->attach($routes->last());
         });
     }
 }

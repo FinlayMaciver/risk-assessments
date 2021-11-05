@@ -10,9 +10,16 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    protected $guarded = [];
+
     protected $hidden = [
         'remember_token',
     ];
+
+    public function getFullNameAttribute()
+    {
+        return $this->forenames . ' ' . $this->surname;
+    }
 
     public static function createFromLdap($guid)
     {

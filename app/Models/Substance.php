@@ -11,6 +11,23 @@ class Substance extends Model
 
     protected $guarded = [];
 
+    // protected $appends = ['hazard_ids', 'route_ids'];
+
+    // public function getHazardIdsAttribute()
+    // {
+    //     return $this->hazards->pluck('id');
+    // }
+
+    // public function getRouteIdsAttribute()
+    // {
+    //     return $this->routes->pluck('id');
+    // }
+
+    public function form()
+    {
+        return $this->belongsTo(Form::class);
+    }
+
     public function hazards()
     {
         return $this->belongsToMany(Hazard::class, 'substance_hazards', 'substance_id', 'hazard_id');

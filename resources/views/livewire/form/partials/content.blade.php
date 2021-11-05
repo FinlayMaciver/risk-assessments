@@ -4,19 +4,19 @@
     <input type="hidden" name="user_id" wire:model="form.user_id">
     <input type="hidden" name="supervisor_id" wire:model="form.supervisor_id">
     <input type="hidden" name="lab_guardian_id" wire:model="form.lab_guardian_id">
-
+    {{ $this->getErrorBag() }}
     @include('form.partials.overview')
 
-    @livewire('form.partials.risks', [
-        'risks' => $risks
-    ])
-    <br>
+    @include('form.partials.users')
 
-    @if ($form->type == 'Chemical')
-        @livewire('form.partials.substances', [
-            'substances' => $substances
-        ])
-        <br>
+    @include('form.partials.risks')
+
+    @if ($form->type == 'Biological')
+        @include('form.partials.micro-organisms')
+    @endif
+
+    @if ($form->type == 'Biological' || $form->type == 'Chemical')
+        @include('form.partials.substances')
     @endif
 
     @include('form.partials.protection')
@@ -29,9 +29,18 @@
 
     @include('form.partials.emergency')
 
+    @include('form.partials.informing')
+
     @include('form.partials.control')
 
     @include('form.partials.files')
 
-    <button wire:click.prevent="save" class="btn btn-success">Save</button>
+    <hr>
+    <div class="d-grid mb-5">
+        @if(!$valid || count($errors))
+            <button disabled class="btn btn-danger"> You have some errors in your form, please correct them</button>
+        @else
+            <button wire:click.prevent="save" class="btn btn-success">Save</button>
+        @endif
+    </div>
 </div>

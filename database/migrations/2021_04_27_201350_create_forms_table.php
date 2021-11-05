@@ -22,10 +22,10 @@ class CreateFormsTable extends Migration
             $table->boolean('multi_user')->default(false);
             $table->string('location');
             $table->string('description');
-            $table->string('control_measures');
-            $table->string('work_site');
+            $table->string('control_measures')->nullable();
+            $table->string('work_site')->nullable();
             $table->string('further_risks')->nullable();
-            $table->string('disposal_methods');
+            $table->string('disposal_methods')->nullable();
 
             //Equipment
             $table->boolean('eye_protection')->default(false);

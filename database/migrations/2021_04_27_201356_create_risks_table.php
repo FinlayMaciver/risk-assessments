@@ -15,12 +15,12 @@ class CreateRisksTable extends Migration
     {
         Schema::create('risks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('form_id')->constrained();
-            $table->string('description');
-            $table->string('severity');
-            $table->string('control_measures');
-            $table->string('likelihood_with');
-            $table->string('likelihood_without');
+            $table->foreignId('form_id')->constrained()->onDelete('cascade');
+            $table->string('risk');
+            $table->string('severity')->nullable();
+            $table->string('control_measures')->nullable();
+            $table->string('likelihood_with')->nullable();
+            $table->string('likelihood_without')->nullable();
             $table->timestamps();
         });
     }

@@ -33,7 +33,7 @@ class MultiSelect extends Component
         $this->options = $this->optionsModel['namespace']::get();
         $this->selected = $this->optionsModel['namespace']::find($selected);
         $this->descriptors = $descriptors;
-        $this->eventName = 'update' . Str::ucfirst($this->optionsModel['plural']);
+        $this->eventName = 'update' . Str::ucfirst($this->mainModel['title']) . Str::ucfirst($this->optionsModel['plural']);
         $this->index = $index;
     }
 

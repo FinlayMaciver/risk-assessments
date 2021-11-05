@@ -3,7 +3,9 @@
 namespace App\Http\Livewire\Form\Partials;
 
 use App\Models\Form;
-use App\Models\GeneralFormDetails;
+use App\Models\MicroOrganism;
+use App\Models\Risk;
+use App\Models\Substance;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
@@ -17,11 +19,15 @@ class Content extends Component
     public Form $form;
     public $supervisor;
     public $labGuardian;
-    public $risks;
-    public $substances;
-    public $section;
+    public $section = [];
+    public $users = [];
+    public $userIds = [];
+    public Collection $risks;
+    public Collection $substances;
+    public Collection $microOrganisms;
     public $files;
     public $newFiles = [];
+    public $valid = true;
 
     public function mount(Form $form)
     {
@@ -29,79 +35,103 @@ class Content extends Component
         $this->supervisor = $form->supervisor;
         $this->labGuardian = $form->labGuardian;
         $this->section = $form->{Str::lower($form->type).'Section'};
-        $this->substances = $form->substances;
+        $this->users = $form->users->toArray();
         $this->risks = $form->risks;
+        $this->substances = $form->substances;
+        $this->microOrganisms = $form->microOrganisms;
         $this->files = $form->files;
+        $this->substances->each(fn ($substance) => $substance->hazard_ids = $substance->hazards->pluck('id'));
+        $this->substances->each(fn ($substance) => $substance->route_ids = $substance->routes->pluck('id'));
+        $this->microOrganisms->each(fn ($substance) => $substance->route_ids = $substance->routes->pluck('id'));
     }
 
     protected $listeners = [
-        'risksUpdated',
+        'userUpdated',
+        'userDeleted',
         'supervisorUpdated',
         'labGuardianUpdated',
-        'substancesUpdated'
+        'updateSubstanceHazards',
+        'updateSubstanceRoutes',
+        'updateMicroOrganismRoutes'
     ];
 
     protected $rules = [
         'form.type' => 'required|string',
-        'form.multi_user' => 'required|boolean',
+        'form.multi_user' => 'boolean',
         'form.user_id' => 'required',
         'form.title' => 'required|string',
         'form.location' => 'required|string',
         'form.description' => 'required|string',
-        'form.control_measures' => 'required|string',
-        'form.work_site' => 'required|string',
+        'form.control_measures' => 'string',
+        'form.work_site' => 'string',
         'form.further_risks' => 'string',
-        'form.disposal_methods' => 'required|string',
-        'form.eye_protection' => 'required|boolean',
-        'form.face_protection' => 'required|boolean',
-        'form.hand_protection' => 'required|boolean',
-        'form.foot_protection' => 'required|boolean',
-        'form.respiratory_protection' => 'required|boolean',
+        'form.disposal_methods' => 'string',
+        'form.eye_protection' => 'boolean',
+        'form.face_protection' => 'boolean',
+        'form.hand_protection' => 'boolean',
+        'form.foot_protection' => 'boolean',
+        'form.respiratory_protection' => 'boolean',
         'form.other_protection' => 'string',
 
         //Emergencies
-        'form.instructions' => 'required|boolean',
-        'form.spill_neutralisation' => 'required|boolean',
-        'form.eye_irrigation' => 'required|boolean',
-        'form.body_shower' => 'required|boolean',
-        'form.first_aid' => 'required|boolean',
-        'form.breathing_apparatus' => 'required|boolean',
-        'form.external_services' => 'required|boolean',
-        'form.poison_antidote' => 'required|boolean',
+        'form.instructions' => 'boolean',
+        'form.spill_neutralisation' => 'boolean',
+        'form.eye_irrigation' => 'boolean',
+        'form.body_shower' => 'boolean',
+        'form.first_aid' => 'boolean',
+        'form.breathing_apparatus' => 'boolean',
+        'form.external_services' => 'boolean',
+        'form.poison_antidote' => 'boolean',
         'form.other_emergency' => 'string',
 
         //Supervision
-        'form.routine_approval' => 'required|boolean',
-        'form.specific_approval' => 'required|boolean',
-        'form.personal_supervision' => 'required|boolean',
+        'form.routine_approval' => 'boolean',
+        'form.specific_approval' => 'boolean',
+        'form.personal_supervision' => 'boolean',
 
         //Monitoring
-        'form.airborne_monitoring' => 'required|boolean',
-        'form.biological_monitoring' => 'required|boolean',
+        'form.airborne_monitoring' => 'boolean',
+        'form.biological_monitoring' => 'boolean',
 
         //Informing
-        'form.inform_lab_occupants' => 'required|boolean',
-        'form.inform_cleaners' => 'required|boolean',
-        'form.inform_contractors' => 'required|boolean',
+        'form.inform_lab_occupants' => 'boolean',
+        'form.inform_cleaners' => 'boolean',
+        'form.inform_contractors' => 'boolean',
         'form.inform_other' => 'string',
 
         //Risks
-        'risks.*.description' => 'string',
-        'risks.*.severity' => 'string',
-        'risks.*.control_measures' => 'string',
-        'risks.*.likelihood_with' => 'string',
-        'risks.*.likelihood_without' => 'string',
+        'risks.*.risk' => 'required',
+        'risks.*.severity' => 'required_with:risks.*.risk',
+        'risks.*.control_measures' => 'required_with:risks.*.risk',
+        'risks.*.likelihood_without' => 'required_with:risks.*.risk',
+        'risks.*.likelihood_with' => 'required_with:risks.*.risk',
+
+        //Files
+        'files.*.id' => '',
+        'files.*.form_id' => '',
+        'files.*.filename' => '',
+        'files.*.original_filename' => '',
+        'files.*.mimetype' => '',
+        'files.*.size' => '',
 
         //General section
-        'section.chemicals_involved' => 'string',
+        'section.chemicals_involved' => '',
 
-        // Substances
-        'substances.*.substance' => 'string',
-        'substances.*.quantity' => 'string',
-        'substances.*.single_acute_effect' => 'string',
-        'substances.*.repeated_low_effect' => 'string',
+        //Substances
+        'substances.*.substance' => 'required',
+        'substances.*.quantity' => 'required_with:substances.*.substance',
+        'substances.*.single_acute_effect' => 'required_with:substances.*.substance',
+        'substances.*.repeated_low_effect' => 'required_with:substances.*.substance',
         'substances.*.hazard_ids' => '',
         'substances.*.route_ids' => '',
+
+        //MicroOrganisms
+        'microOrganisms.*.micro_organism' => 'required',
+        'microOrganisms.*.classification' => 'required_with:microOrganisms.*.micro_organism',
+        'microOrganisms.*.risk' => 'required_with:microOrganisms.*.micro_organism',
+        'microOrganisms.*.single_acute_effect' => 'required_with:microOrganisms.*.micro_organism',
+        'microOrganisms.*.repeated_low_effect' => 'required_with:microOrganisms.*.micro_organism',
+        'microOrganisms.*.route_ids' => '',
 
         //Supervisor + lab guardian
         'form.supervisor_id' => '',
@@ -109,7 +139,26 @@ class Content extends Component
     ];
 
     protected $messages = [
-        'form.title.required' => 'Please provide a title'
+        'form.title.required' => 'Please provide a title',
+        'form.location.required' => 'Please provide a location',
+        'form.description.required' => 'Please provide a description',
+
+        'risks.*.risk.required' => 'Please provide a description',
+        'risks.*.severity.required_with' => 'Please select a severity',
+        'risks.*.control_measures.required_with' => 'Please describe control measures',
+        'risks.*.likelihood_without.required_with' => 'Please select likelihood without',
+        'risks.*.likelihood_with.required_with' => 'Please select likelihood with',
+
+        'substances.*.substance.required' => 'Please provide a substance name',
+        'substances.*.quantity.required_with' => 'Please select a quantity',
+        'substances.*.single_acute_effect.required_with' => 'Please select the effect',
+        'substances.*.repeated_low_effect.required_with' => 'Please select the effect',
+
+        'microOrganisms.*.micro_organism.required' => 'Please provide a micro-organism name',
+        'microOrganisms.*.classification.required_with' => 'Please select the hazard classification',
+        'microOrganisms.*.risk.required_with' => 'Please select the risk level',
+        'microOrganisms.*.single_acute_effect.required_with' => 'Please select the effect',
+        'microOrganisms.*.repeated_low_effect.required_with' => 'Please select the effect',
     ];
 
     public function render()
@@ -117,68 +166,146 @@ class Content extends Component
         return view('livewire.form.partials.content');
     }
 
-    public function risksUpdated($risks)
+    public function addUser()
     {
-        $this->risks = $risks;
+        $this->users[] = new User();
     }
 
-    public function substancesUpdated($substances)
+    public function addRisk()
     {
-        $this->substances = $substances;
+        $this->risks->push(new Risk());
     }
 
-    public function supervisorUpdated(User $user)
+    public function deleteRisk($index)
     {
-        $this->form->supervisor_id = $user->id;
+        $this->risks->forget($index);
     }
 
-    public function labGuardianUpdated(User $user)
+    public function addSubstance()
     {
-        $this->form->lab_guardian_id = $user->id;
+        $this->substances->push(new Substance());
+    }
+
+    public function deleteSubstance($index)
+    {
+        $this->substances->forget($index);
+    }
+
+    public function updateSubstanceHazards($hazards, $index)
+    {
+        $this->substances[$index]->hazard_ids = $hazards;
+    }
+
+    public function updateSubstanceRoutes($routes, $index)
+    {
+        $this->substances[$index]->route_ids = $routes;
+    }
+
+    public function addMicroOrganism()
+    {
+        $this->microOrganisms->push(new MicroOrganism());
+    }
+
+    public function deleteMicroOrganism($index)
+    {
+        $this->microOrganisms->forget($index);
+    }
+
+    public function updateMicroOrganismRoutes($routes, $index)
+    {
+        $this->microOrganisms[$index]->route_ids = $routes;
+    }
+
+    public function userUpdated(User $user, $index)
+    {
+        $this->users[$index] = $user;
+        $this->userIds[] = $user->id;
+    }
+
+    public function userDeleted(User $user, $index)
+    {
+        unset($this->users[$index]);
+        $this->userIds = array_diff($this->userIds, [$user->id]);
+    }
+
+    public function supervisorUpdated($user)
+    {
+        if ($user === null) {
+            $this->form->supervisor_id = null;
+            $this->valid = false;
+        } else {
+            $this->form->supervisor_id = $user['id'];
+            $this->valid = true;
+        }
+    }
+
+    public function labGuardianUpdated($user)
+    {
+        if ($user == null) {
+            $this->form->supervisor_id = null;
+            $this->valid = false;
+        } else {
+            $this->form->lab_guardian_id = $user['id'];
+            $this->valid = true;
+        }
     }
 
     public function save()
     {
-        $this->validate();
+        if ($this->validate()) {
+            $this->valid = false;
+        }
 
+        $this->valid = true;
         $form = Form::updateOrCreate(
             ['id' => $this->form['id'] ?? null],
             $this->form->attributesToArray()
         );
 
-        //Risks
-        foreach ($this->risks as $risk) {
-            $id = $form->risks()->updateOrCreate(['id' => $risk->id], $risk->attributesToArray());
+        //Users
+        if ($form->multi_user) {
+            $form->users()->sync($this->userIds);
+        } else {
+            $form->users()->sync([]);
         }
 
-        foreach ($this->form->risks->diff($this->risks) as $deletedRisk) {
-            $deletedRisk->delete();
-        }
+        //Risks
+        $this->risks->each(fn ($risk) => $form->updateRisk($risk));
+        $deletedRisks = $this->form->risks->diff($this->risks);
+        $deletedRisks->each(fn ($risk) => $risk->delete());
 
         //General
         if ($form->type == 'General') {
-            $generalSection = GeneralFormDetails::updateOrCreate(
-                ['form_id' => $form->id],
-                ['chemicals_involved' => $this->section['chemicals_involved']]
-            );
+            $form->addGeneralSection($this->section);
         }
 
-        //Chemical
-        if ($form->type == 'Chemical') {
-            foreach ($this->substances as $substance) {
-                $savedSubstance = $form->substances()->updateOrCreate(['id' => $substance->id], $substance->makeHidden(['hazard_ids', 'route_ids'])->attributesToArray());
-                $savedSubstance->hazards()->sync($substance->hazard_ids);
-            }
-            foreach ($this->form->substances->diff($this->substances) as $deletedSubstance) {
-                $deletedSubstance->delete();
-            }
+        //Substances - Chemical or Biological
+        if ($form->type == 'Chemical' || $form->type == 'Biological') {
+            $this->substances->each(fn ($substance) => $form->addSubstance($substance));
+            $deletedSubstances = $this->form->substances->diff($this->substances);
+            $deletedSubstances->each(fn ($substance) => $form->deleteSubstance($substance));
         }
 
-        //Biological
+        //Micro-organisms - Biological only
+        if ($form->type == 'Biological') {
+            $this->microOrganisms->each(fn ($microOrganism) => $form->addMicroOrganism($microOrganism));
+            $deletedMicroOrganisms = $this->form->microOrganisms->diff($this->microOrganisms);
+            $deletedMicroOrganisms->each(fn ($microOrganism) => $form->deleteMicroOrganism($microOrganism));
+        }
 
         //Files
+        foreach ($this->newFiles as $newFile) {
+            $form->addFile($newFile);
+        }
+        $deletedFiles = $this->form->files->diff($this->files);
+        $deletedFiles->each(fn ($file) => $form->deleteFile($file));
 
-        //foreach new file store
-        //foreach removed file remove
+        session()->flash('success_message', 'Saved form');
+        return redirect()->route('home');
+    }
+
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
     }
 }

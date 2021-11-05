@@ -3,10 +3,12 @@
 namespace Tests\Feature\Forms;
 
 use App\Models\Form;
-use App\Models\Risk;
 use App\Models\GeneralFormDetails;
+use App\Models\Risk;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -25,6 +27,7 @@ class GeneralFormTest extends TestCase
 
     public function testUserCanSubmitANewGeneralForm()
     {
+        Storage::fake('coshh');
         $user = User::factory()->create();
         $supervisor = User::factory()->create();
         $labGuardian = User::factory()->create();
@@ -34,22 +37,24 @@ class GeneralFormTest extends TestCase
             'multi_user' => false
         ]);
 
-        $risks = new Collection([
+        $form->risks = new Collection([
             1 => new Risk([
-                'description' => 'Risk 1 description',
+                'risk' => 'Risk 1 risk',
                 'severity' => 'Risk 1 severity',
                 'control_measures' => 'Risk 1 control measures',
                 'likelihood_with' => 'Risk 1 likelihood with',
                 'likelihood_without' => 'Risk 1 likelihood without',
             ]),
             2 => new Risk([
-                'description' => 'Risk 2 description',
+                'risk' => 'Risk 2 risk',
                 'severity' => 'Risk 2 severity',
                 'control_measures' => 'Risk 2 control measures',
                 'likelihood_with' => 'Risk 2 likelihood with',
                 'likelihood_without' => 'Risk 2 likelihood without',
             ])
         ]);
+
+        $file = UploadedFile::fake()->image('test.jpg');
 
         $content = Livewire::actingAs($user)
         ->test(\App\Http\Livewire\Form\Partials\Content::class, ['form' => $form])
@@ -98,12 +103,7 @@ class GeneralFormTest extends TestCase
             ->set('form.supervisor_id', $supervisor->id)
             ->set('form.lab_guardian_id', $labGuardian->id);
 
-        $riskForm = Livewire::actingAs($user)
-        ->test(\App\Http\Livewire\Form\Partials\Risks::class, ['risks' => $form->risks])
-        ->set('risks', $risks)
-        ->call('update');
-
-        $content->call('risksUpdated', $risks);
+        $content->set('newFiles.0', $file);
         $content->call('save');
 
         $savedForm = Form::where('title', 'Form title')->first();
@@ -159,7 +159,7 @@ class GeneralFormTest extends TestCase
 
         $this->assertDatabaseHas('risks', [
             'form_id' => $savedForm->id,
-            'description' => 'Risk 1 description',
+            'risk' => 'Risk 1 risk',
             'severity' => 'Risk 1 severity',
             'control_measures' => 'Risk 1 control measures',
             'likelihood_with' => 'Risk 1 likelihood with',
@@ -168,16 +168,24 @@ class GeneralFormTest extends TestCase
 
         $this->assertDatabaseHas('risks', [
             'form_id' => $savedForm->id,
-            'description' => 'Risk 2 description',
+            'risk' => 'Risk 2 risk',
             'severity' => 'Risk 2 severity',
             'control_measures' => 'Risk 2 control measures',
             'likelihood_with' => 'Risk 2 likelihood with',
             'likelihood_without' => 'Risk 2 likelihood without',
         ]);
+
+        $this->assertDatabaseHas('files', [
+            'form_id' => $savedForm->id,
+            'original_filename' => 'test.jpg'
+        ]);
+
+        Storage::disk('coshh')->assertExists('form_1/file_1.dat');
     }
 
     public function testUserCanEditAndSaveAGeneralForm()
     {
+        Storage::fake('coshh');
         $user = User::factory()->create();
         $supervisor = User::factory()->create();
         $labGuardian = User::factory()->create();
@@ -227,7 +235,7 @@ class GeneralFormTest extends TestCase
 
         $risk1 = Risk::create([
             'form_id' => $form->id,
-            'description' => 'Risk 1 description',
+            'risk' => 'Risk 1 risk',
             'severity' => 'Risk 1 severity',
             'control_measures' => 'Risk 1 control measures',
             'likelihood_with' => 'Risk 1 likelihood with',
@@ -235,12 +243,18 @@ class GeneralFormTest extends TestCase
         ]);
         $risk2 = Risk::create([
             'form_id' => $form->id,
-            'description' => 'Risk 2 description',
+            'risk' => 'Risk 2 risk',
             'severity' => 'Risk 2 severity',
             'control_measures' => 'Risk 2 control measures',
             'likelihood_with' => 'Risk 2 likelihood with',
             'likelihood_without' => 'Risk 2 likelihood without',
         ]);
+
+        $file1 = UploadedFile::fake()->image('test1.jpg');
+        $file2 = UploadedFile::fake()->image('test2.jpg');
+
+        $form->addFile($file1);
+        $form->addFile($file2);
 
         $generalSection = GeneralFormDetails::create([
             'form_id' => $form->id,
@@ -296,20 +310,19 @@ class GeneralFormTest extends TestCase
 
 
         //Risks - deleting one
-        $risks = $form->risks;
-        Livewire::actingAs($user)
-            ->test(\App\Http\Livewire\Form\Partials\Risks::class, ['risks' => $risks])
-            ->call('delete', 1)
-            ->assertEmitted('risksUpdated')
-            ->assertCount('risks', 1);
+        $content->call('deleteRisk', 1);
 
-        $content->set('risks', $risks->forget(1))
-            ->set('form.title', 'New title')
+        //Files - deleting one
+        $files = $form->fresh()->files;
+        $content->set('files', $files->forget(1));
+
+        $content->set('form.title', 'New title')
             ->set('section.chemicals_involved', 'New chemicals involved')
             ->set('form.supervisor_id', null)
             ->call('save');
 
         $this->assertEquals($form->fresh()->risks->count(), 1);
+        $this->assertEquals($form->fresh()->files->count(), 1);
 
         $this->assertDatabaseHas('forms', [
             'user_id' => $user->id,
@@ -362,7 +375,7 @@ class GeneralFormTest extends TestCase
 
         $this->assertDatabaseHas('risks', [
             'form_id' => $form->id,
-            'description' => 'Risk 1 description',
+            'risk' => 'Risk 1 risk',
             'severity' => 'Risk 1 severity',
             'control_measures' => 'Risk 1 control measures',
             'likelihood_with' => 'Risk 1 likelihood with',
@@ -371,11 +384,129 @@ class GeneralFormTest extends TestCase
 
         $this->assertDatabaseMissing('risks', [
             'form_id' => $form->id,
-            'description' => 'Risk 2 description',
+            'risk' => 'Risk 2 risk',
             'severity' => 'Risk 2 severity',
             'control_measures' => 'Risk 2 control measures',
             'likelihood_with' => 'Risk 2 likelihood with',
             'likelihood_without' => 'Risk 2 likelihood without',
         ]);
+
+        $this->assertDatabaseHas('files', [
+            'form_id' => $form->id,
+            'original_filename' => 'test1.jpg'
+        ]);
+
+        $this->assertDatabaseMissing('files', [
+            'form_id' => $form->id,
+            'original_filename' => 'test2.jpg'
+        ]);
+
+        Storage::disk('coshh')->assertExists('form_1/file_1.dat');
+        Storage::disk('coshh')->assertMissing('form_1/file_2.dat');
+    }
+
+    /** @test */
+    public function testUserCanViewAGeneralForm()
+    {
+        $user = User::factory()->create();
+        $supervisor = User::factory()->create();
+        $labGuardian = User::factory()->create();
+        $form = Form::create([
+            'type' => 'General',
+            'user_id' => $user->id,
+            'multi_user' => false,
+            'title' => 'Form title',
+            'location' => 'Form location',
+            'description' => 'Form description',
+            'control_measures' => 'Form control measures',
+            'work_site' => 'Form work site',
+            'further_risks' => 'Form further risks',
+            'disposal_methods' => 'Form disposal methods',
+            'eye_protection' => true,
+            'face_protection' => true,
+            'hand_protection' => true,
+            'foot_protection' => true,
+            'respiratory_protection' => true,
+            'other_protection' => 'Form other protection',
+            'instructions' => true,
+            'spill_neutralisation' => true,
+            'eye_irrigation' => true,
+            'body_shower' => true,
+            'first_aid' => true,
+            'breathing_apparatus' => true,
+            'external_services' => true,
+            'poison_antidote' => true,
+            'other_emergency' => 'Form other emergency',
+            'routine_approval' => true,
+            'specific_approval' => true,
+            'personal_supervision' => true,
+
+            //Monitoring
+            'airborne_monitoring' => true,
+            'biological_monitoring' => true,
+
+            //Informing
+            'inform_lab_occupants' => true,
+            'inform_cleaners' => true,
+            'inform_contractors' => true,
+            'inform_other' => 'Form inform other',
+
+            'supervisor_id' => $supervisor->id,
+            'lab_guardian_id' => $labGuardian->id,
+        ]);
+
+        $risk1 = Risk::create([
+            'form_id' => $form->id,
+            'risk' => 'Risk 1 risk',
+            'severity' => 'Risk 1 severity',
+            'control_measures' => 'Risk 1 control measures',
+            'likelihood_with' => 'Risk 1 likelihood with',
+            'likelihood_without' => 'Risk 1 likelihood without',
+        ]);
+        $risk2 = Risk::create([
+            'form_id' => $form->id,
+            'risk' => 'Risk 2 risk',
+            'severity' => 'Risk 2 severity',
+            'control_measures' => 'Risk 2 control measures',
+            'likelihood_with' => 'Risk 2 likelihood with',
+            'likelihood_without' => 'Risk 2 likelihood without',
+        ]);
+
+        $generalSection = GeneralFormDetails::create([
+            'form_id' => $form->id,
+            'chemicals_involved' => 'Form chemicals involved'
+        ]);
+
+        $response = $this->actingAs($user)->get(route('form.show', $form->id));
+
+        $response->assertStatus(200);
+        $response->assertSee($user->full_name);
+        $response->assertSee($supervisor->full_name);
+        $response->assertSee($labGuardian->full_name);
+        $response->assertSee('General');
+        $response->assertSee('Form title');
+        $response->assertSee('Form location');
+        $response->assertSee('Form description');
+        $response->assertSee('Form control measures');
+        $response->assertSee('Form work site');
+        $response->assertSee('Form further risks');
+        $response->assertSee('Form disposal methods');
+        $response->assertSee('Form other protection');
+        $response->assertSee('Form other emergency');
+        $response->assertSee('Form inform other');
+        $response->assertSee('Risk 1 risk');
+        $response->assertSee('Risk 1 severity');
+        $response->assertSee('Risk 1 control measures');
+        $response->assertSee('Risk 1 likelihood with');
+        $response->assertSee('Risk 1 likelihood without');
+        $response->assertSee('Risk 2 risk');
+        $response->assertSee('Risk 2 severity');
+        $response->assertSee('Risk 2 control measures');
+        $response->assertSee('Risk 2 likelihood with');
+        $response->assertSee('Risk 2 likelihood without');
+        $response->assertSee('Form chemicals involved');
+
+        $response->assertDontSee('Hazardous substances involved');
+        $response->assertDontSee('Hazards of micro-organisms involved');
     }
 }

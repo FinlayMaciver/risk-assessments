@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class SubstanceRoute extends Model
 {
     use HasFactory;
+
+    public $timestamps = false;
 }

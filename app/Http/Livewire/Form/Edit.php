@@ -7,12 +7,12 @@ use Livewire\Component;
 
 class Edit extends Component
 {
-    public $formId;
+    public $id;
     public Form $form;
 
     public function mount()
     {
-        $this->form = Form::findOrFail($this->formId);
+        $this->form = Form::with('substances.hazards')->findOrFail($this->id);
     }
 
     public function render()

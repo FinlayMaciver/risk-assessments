@@ -16,13 +16,7 @@
         <div class="mb-3">
             <label for="description" class="form-label">Short description of procedures involved in the activity<br>(where appropriate, detailed protocols can be uploaded at the end of this form)</label>
             <textarea name="description" class="form-control @error('form.description') is-invalid @enderror" placeholder="Description" wire:model="form.description"></textarea>
-            @error('form.location') <span class="text-danger">{{ $message }}</span> @enderror
-        </div>
-
-        <!-- TODO: ldap search by email for supervisor and lab guardian -->
-        <div class="row">
-            @livewire('form.partials.user-search', ['type' => 'supervisor', 'user' => $form['supervisor']])
-            @livewire('form.partials.user-search', ['type' => 'lab guardian', 'user' => $form['labGuardian']])
+            @error('form.description') <span class="text-danger">{{ $message }}</span> @enderror
         </div>
     </div>
 </div>

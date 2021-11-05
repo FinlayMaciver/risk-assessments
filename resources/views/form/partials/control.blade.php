@@ -18,7 +18,7 @@
             <label for="work_site" class="form-label">
                 Should the work be carried out on the open bench, using other local exhaust ventilation, in a fume cupboard or in a glove box?
             </label>
-            <textarea name="control_measures" class="form-control" wire:model="form.work_site"></textarea>
+            <textarea name="work_site" class="form-control" wire:model="form.work_site"></textarea>
         </div>
         <div class="mb-3">
             <label for="disposal_methods" class="form-label">

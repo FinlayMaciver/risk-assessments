@@ -25,7 +25,7 @@
         <nav class="navbar navbar-dark bg-primary">
             <div class="container-fluid">
                 <a class="navbar-brand" href="/">
-                    <img src="{{asset('images/uogbanner.jpeg')}}" alt="University of Glasgow" class="d-inline-block align-text-center banner-logo">
+                    <img src="{{asset('images/uogbanner.jpeg')}}" alt="University of Glasgow" class="d-none d-lg-inline-block align-text-center banner-logo">
                     <span class="ms-2">School of Engineering - Risk Assessment</span>
                 </a>
                 <!-- Right Side Of Navbar -->

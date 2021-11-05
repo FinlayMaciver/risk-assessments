@@ -52,7 +52,7 @@ class TestDataSeeder extends Seeder
         $admin = User::factory()->admin()->create([
             'forenames' => 'Finlay',
             'surname' => 'Mac',
-            'email' => 'finlay.mac@example.com',
+            'email' => 'finlay.maciver@glasgow.ac.uk',
             'guid' => 'fmi9x',
         ]);
 

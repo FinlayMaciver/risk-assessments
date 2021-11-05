@@ -9,6 +9,8 @@ class MicroOrganism extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function routes()
     {
         return $this->morphToMany(Route::class, 'substance', 'substance_routes');

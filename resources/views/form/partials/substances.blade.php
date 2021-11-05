@@ -1,11 +1,13 @@
 <div class="card">
-    <div class="card-header fw-bold">Hazardous substances and micro-organisms involved</div>
+    <div class="card-header fw-bold">
+        Hazardous substances involved
+    </div>
     <div class="card-body">
-        @foreach($this->substances as $index => $substance)
+        @foreach($substances as $index => $substance)
             <div class="card">
                 <div class="card-header fw-bold">
                     Substance {{ $index+1 }}
-                    <div wire:click="delete({{$index}})" class="float-end cursor-pointer">
+                    <div wire:click="deleteSubstance({{$index}})" class="float-end cursor-pointer">
                         <span class="fas fa-times text-danger"></span>
                     </div>
                 </div>
@@ -13,14 +15,15 @@
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <input type="text" class="form-control" placeholder="Substance" wire:change="update" name="substance" wire:model="substances.{{$index}}.substance">
+                                <input type="text" class="form-control @error('substances.*.substance') is-invalid @enderror" placeholder="Substance" name="substance" wire:model="substances.{{$index}}.substance">
                                 <label for="substance">Substance</label>
+                                @error('substances.*.substance') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <select wire:change="update" name="quantity" wire:model="substances.{{$index}}.quantity" class="form-select">
+                                <select name="quantity" wire:model="substances.{{$index}}.quantity" class="form-select @error('substances.*.quantity') is-invalid @enderror">
                                     <option selected>---</option>
                                     @foreach([
                                         'Small < 10mg',
@@ -32,13 +35,14 @@
                                     @endforeach
                                 </select>
                                 <label for="quantity" class="form-label">Quantity</label>
+                                @error('substances.*.quantity') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                         </div>
                     </div>
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <select wire:change="update" name="single_acute_effect" wire:model="substances.{{$index}}.single_acute_effect" class="form-select">
+                                <select name="single_acute_effect" wire:model="substances.{{$index}}.single_acute_effect" class="form-select @error('substances.*.single_acute_effect') is-invalid @enderror">
                                     <option value="" selected>---</option>
                                     @foreach([
                                         'Serious',
@@ -49,11 +53,12 @@
                                     @endforeach
                                 </select>
                                 <label for="single_acute_effect" class="form-label">Effect of single acute exposure</label>
+                                @error('substances.*.single_acute_effect') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <select wire:change="update" name="repeated_low_effect" wire:model="substances.{{$index}}.repeated_low_effect" class="form-select">
+                                <select name="repeated_low_effect" wire:model="substances.{{$index}}.repeated_low_effect" class="form-select @error('substances.*.repeated_low_effect') is-invalid @enderror">
                                     <option value="" selected>---</option>
                                     @foreach([
                                         'Serious',
@@ -64,6 +69,7 @@
                                     @endforeach
                                 </select>
                                 <label for="repeated_low_effect" class="form-label">Effect of repeated low exposure</label>
+                                @error('substances.*.repeated_low_effect') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                         </div>
                     </div>
@@ -78,7 +84,7 @@
                                     'title',
                                 ],
                                 'index' => $index,
-                            ])
+                            ], key('substance-hazard-'.$index))
                         </div>
                         <div class="col-md-6">
                             <label for="route">Route by which substance is hazardous to health</label>
@@ -90,7 +96,7 @@
                                     'title',
                                 ],
                                 'index' => $index,
-                            ])
+                            ], key('substance-route-'.$index))
                         </div>
                     </div>
                 </div>
@@ -98,7 +104,8 @@
             <hr>
         @endforeach
         <div class="d-grid">
-            <button wire:click.prevent="add" class="btn btn-primary">+ Add a substance</button>
+            <button wire:click.prevent="addSubstance" class="btn btn-primary">+ Add a substance</button>
         </div>
     </div>
 </div>
+<hr>

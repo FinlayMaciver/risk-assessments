@@ -15,7 +15,7 @@ class CreateMicroOrganismsTable extends Migration
     {
         Schema::create('micro_organisms', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('form_id')->constrained();
+            $table->foreignId('form_id')->constrained()->onDelete('cascade');
             $table->string('micro_organism');
             $table->string('classification');
             $table->string('risk');
