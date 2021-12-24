@@ -4,7 +4,7 @@
     <input type="hidden" name="user_id" wire:model="form.user_id">
     <input type="hidden" name="supervisor_id" wire:model="form.supervisor_id">
     <input type="hidden" name="lab_guardian_id" wire:model="form.lab_guardian_id">
-    {{ $this->getErrorBag() }}
+
     @include('form.partials.overview')
 
     @include('form.partials.users')

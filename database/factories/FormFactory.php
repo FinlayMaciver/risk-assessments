@@ -157,6 +157,9 @@ class FormFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'status' => 'Approved',
+                'supervisor_approval' => true,
+                'lab_guardian_approval' => true,
+                'coshh_admin_approval' => true,
             ];
         });
     }
@@ -166,6 +169,12 @@ class FormFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'status' => 'Denied',
+                'supervisor_approval' => false,
+                'lab_guardian_approval' => false,
+                'coshh_admin_approval' => false,
+                'supervisor_comments' => $this->faker->words(3, true),
+                'lab_guardian_comments' => $this->faker->words(3, true),
+                'coshh_admin_comments' => $this->faker->words(3, true),
             ];
         });
     }

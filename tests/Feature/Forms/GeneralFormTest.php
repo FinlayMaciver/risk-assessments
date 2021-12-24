@@ -6,8 +6,10 @@ use App\Models\Form;
 use App\Models\GeneralFormDetails;
 use App\Models\Risk;
 use App\Models\User;
+use App\Notifications\FormSubmitted;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 use Tests\TestCase;
@@ -27,10 +29,15 @@ class GeneralFormTest extends TestCase
 
     public function testUserCanSubmitANewGeneralForm()
     {
+        $this->withoutExceptionHandling();
+        Notification::fake();
         Storage::fake('coshh');
         $user = User::factory()->create();
         $supervisor = User::factory()->create();
         $labGuardian = User::factory()->create();
+        $coshhAdmin = User::factory()->create([
+            'is_coshh_admin' => true
+        ]);
         $form = new Form([
             'type' => 'General',
             'user_id' => $user->id,
@@ -100,7 +107,9 @@ class GeneralFormTest extends TestCase
             //General section
             ->set('section.chemicals_involved', 'Form chemicals involved')
 
+            ->set('supervisor', $supervisor)
             ->set('form.supervisor_id', $supervisor->id)
+            ->set('labGuardian', $labGuardian)
             ->set('form.lab_guardian_id', $labGuardian->id);
 
         $content->set('newFiles.0', $file);
@@ -181,6 +190,9 @@ class GeneralFormTest extends TestCase
         ]);
 
         Storage::disk('coshh')->assertExists('form_1/file_1.dat');
+        Notification::assertSentTo($supervisor, FormSubmitted::class);
+        Notification::assertSentTo($labGuardian, FormSubmitted::class);
+        Notification::assertSentTo($coshhAdmin, FormSubmitted::class);
     }
 
     public function testUserCanEditAndSaveAGeneralForm()

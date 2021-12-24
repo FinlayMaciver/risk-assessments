@@ -45,6 +45,7 @@
                     <td class="d-none d-md-table-cell">{{ $form->formatted_created_at }}</td>
                     <td class="d-none d-md-table-cell">{{ $form->formatted_updated_at }}</td>
                     <td class="d-block d-md-table-cell">
+                        <h5>
                         @if ($form->status == 'Approved')
                             <span class="badge bg-success fw-bold">
                                 <span class="icon-spacing">
@@ -60,7 +61,7 @@
                                 {{ $form->status }}
                             </span>
                         @elseif ($form->status == 'Pending')
-                            <span class="badge bg-warning fw-bold">
+                            <span class="badge bg-info fw-bold">
                                 <span class="icon-spacing">
                                     <i class="far fa-clock"></i>
                                 </span>
@@ -69,6 +70,7 @@
                         @else
                             {{ $form->status }}
                         @endif
+                        </h5>
                     </td>
                 </tr>
                 @endforeach

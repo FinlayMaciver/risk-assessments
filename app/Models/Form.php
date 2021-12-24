@@ -2,12 +2,17 @@
 
 namespace App\Models;
 
+use App\Mail\DeniedForm;
 use App\Models\GeneralFormDetails;
 use App\Models\MicroOrganism;
+use App\Models\User;
+use App\Notifications\ApprovedForm;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 
 class Form extends Model
@@ -17,6 +22,7 @@ class Form extends Model
     protected $guarded = [];
 
     protected $casts = [
+        'multi_user' => 'boolean',
         'eye_protection' => 'boolean',
         'face_protection' => 'boolean',
         'hand_protection' => 'boolean',
@@ -38,9 +44,12 @@ class Form extends Model
         'inform_lab_occupants' => 'boolean',
         'inform_cleaners' => 'boolean',
         'inform_contractors' => 'boolean',
+        'supervisor_approval' => 'boolean',
+        'lab_guardian_approval' => 'boolean',
     ];
 
     protected $attributes = [
+        'multi_user' => false,
         'eye_protection' => false,
         'face_protection' => false,
         'hand_protection' => false,
@@ -62,7 +71,13 @@ class Form extends Model
         'inform_lab_occupants' => false,
         'inform_cleaners' => false,
         'inform_contractors' => false,
+        'supervisor_approval' => null,
+        'lab_guardian_approval' => null,
     ];
+
+    /**
+     * Additional attributes
+     */
 
     public function getFormattedCreatedAtAttribute()
     {
@@ -73,6 +88,45 @@ class Form extends Model
     {
         return Carbon::createFromFormat('Y-m-d H:i:s', $this->updated_at)->format('d/m/y g:ma');
     }
+
+    public function getNoRequirementsAttribute()
+    {
+        return (
+            !$this->eye_protection &&
+            !$this->face_protection &&
+            !$this->hand_protection &&
+            !$this->foot_protection &&
+            !$this->respiratory_protection &&
+            !$this->instructions &&
+            !$this->spill_neutralisation &&
+            !$this->eye_irrigation &&
+            !$this->body_shower &&
+            !$this->first_aid &&
+            !$this->breathing_apparatus &&
+            !$this->external_services &&
+            !$this->poison_antidote &&
+            !$this->routine_approval &&
+            !$this->specific_approval &&
+            !$this->personal_supervision &&
+            !$this->airborne_monitoring &&
+            !$this->biological_monitoring &&
+            !$this->inform_lab_occupants &&
+            !$this->inform_cleaners &&
+            !$this->inform_contractors &&
+            !$this->inform_other &&
+            !$this->other_emergency &&
+            !$this->other_protection
+        );
+    }
+
+    public function getHasCommentsAttribute()
+    {
+        return $this->supervisor_comments || $this->lab_guardian_comments || $this->coshh_admin_comments;
+    }
+
+    /**
+     * Relationships
+     */
 
     public function user()
     {
@@ -118,6 +172,10 @@ class Form extends Model
     {
         return $this->hasMany(File::class);
     }
+
+    /**
+     * Methods
+     */
 
     public function updateRisk($risk)
     {
@@ -181,5 +239,63 @@ class Form extends Model
     {
         $this->files()->findOrFail($file->id)->delete();
         Storage::disk('coshh')->delete($file->filename);
+    }
+
+    public function supervisorApproval(bool $verdict, $comments = null)
+    {
+        $this->update([
+            'status' => $verdict ? 'Pending' : 'Denied',
+            'supervisor_approval' => $verdict,
+            'supervisor_comments' => $comments
+        ]);
+        if ($verdict) {
+            $this->user->notify(new ApprovedForm($this, 'supervisor'));
+        } else {
+            Mail::to($this->user)
+                ->bcc([
+                    $this->labGuardian,
+                    User::coshhAdmin()->first()
+                ])
+                ->send(new DeniedForm($this, 'supervisor'));
+        }
+    }
+
+    public function labGuardianApproval(bool $verdict, $comments = null)
+    {
+        $this->update([
+            'status' => $verdict ? 'Pending' : 'Denied',
+            'lab_guardian_approval' => $verdict,
+            'lab_guardian_comments' => $comments
+        ]);
+        if ($verdict) {
+            $this->user->notify(new ApprovedForm($this, 'lab guardian'));
+        } else {
+            Mail::to($this->user)
+                ->bcc([
+                    $this->supervisor,
+                    User::coshhAdmin()->first()
+                ])
+                ->send(new DeniedForm($this, 'lab guardian'));
+        }
+    }
+
+    public function coshhAdminApproval(bool $verdict, $comments = null)
+    {
+        $this->update([
+            'status' => $verdict ? 'Approved' : 'Denied',
+            'coshh_admin_approval' => $verdict,
+            'coshh_admin_comments' => $comments
+        ]);
+        if ($verdict) {
+            $this->user->notify(new ApprovedForm($this, 'school safety officer'));
+        } else {
+            Mail::to($this->user)
+                ->bcc([
+                    $this->supervisor,
+                    $this->labGuardian,
+                    User::coshhAdmin()->first()
+                ])
+                ->send(new DeniedForm($this, 'school safety officer'));
+        }
     }
 }

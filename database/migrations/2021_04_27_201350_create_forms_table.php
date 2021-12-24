@@ -65,6 +65,14 @@ class CreateFormsTable extends Migration
             $table->foreignId('supervisor_id')->nullable()->constrained('users');
             $table->foreignId('lab_guardian_id')->nullable()->constrained('users');
 
+            //Approval
+            $table->boolean('supervisor_approval')->nullable()->default(null);
+            $table->string('supervisor_comments')->nullable();
+            $table->boolean('lab_guardian_approval')->nullable()->default(null);
+            $table->string('lab_guardian_comments')->nullable();
+            $table->boolean('coshh_admin_approval')->nullable()->default(null);
+            $table->string('coshh_admin_comments')->nullable();
+
             $table->timestamps();
         });
     }

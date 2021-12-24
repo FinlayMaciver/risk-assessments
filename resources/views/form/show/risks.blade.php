@@ -5,7 +5,7 @@
             @foreach($form->risks as $index => $risk)
             <div class="card mb-3">
                 <div class="card-header text-center">
-                    Risk {{ $index + 1 }} - {{ $risk->severity }} severity
+                    Risk {{ $index + 1 }} - <b>Severity: {{ $risk->severity }} </b>
                 </div>
                 <div class="card-body">
                     <div class="row mb-3">

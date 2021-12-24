@@ -16,6 +16,11 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function scopeCoshhAdmin($query)
+    {
+        return $query->where('is_coshh_admin', 1);
+    }
+
     public function getFullNameAttribute()
     {
         return $this->forenames . ' ' . $this->surname;

@@ -20,5 +20,5 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/form/create/{type}', App\Http\Livewire\Form\Create::class)->name('form.create');
     Route::get('/form/{id}', App\Http\Livewire\Form\Show::class)->name('form.show');
-    Route::get('/form/{id}/edit', App\Http\Livewire\Form\Edit::class)->name('form.edit');
+    Route::get('/form/{formId}/edit', App\Http\Livewire\Form\Edit::class)->name('form.edit');
 });

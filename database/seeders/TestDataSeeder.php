@@ -54,6 +54,7 @@ class TestDataSeeder extends Seeder
             'surname' => 'Mac',
             'email' => 'finlay.maciver@glasgow.ac.uk',
             'guid' => 'fmi9x',
+            'is_coshh_admin' => true,
         ]);
 
         Form::factory()->general()->count(5)->create([

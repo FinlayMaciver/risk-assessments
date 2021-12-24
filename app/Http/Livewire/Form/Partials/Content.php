@@ -7,7 +7,9 @@ use App\Models\MicroOrganism;
 use App\Models\Risk;
 use App\Models\Substance;
 use App\Models\User;
+use App\Notifications\FormSubmitted;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -299,6 +301,18 @@ class Content extends Component
         }
         $deletedFiles = $this->form->files->diff($this->files);
         $deletedFiles->each(fn ($file) => $form->deleteFile($file));
+
+        if ($form->supervisor) {
+            $form->supervisor->notify(new FormSubmitted($form));
+        }
+
+        if ($form->labGuardian) {
+            $form->labGuardian->notify(new FormSubmitted($form));
+        }
+
+        if (User::coshhAdmin()->first()) {
+            Notification::send(User::coshhAdmin()->first(), new FormSubmitted($form));
+        }
 
         session()->flash('success_message', 'Saved form');
         return redirect()->route('home');
