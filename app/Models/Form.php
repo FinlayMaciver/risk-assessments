@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Mail\DeniedForm;
+use App\Mail\RejectedForm;
 use App\Models\GeneralFormDetails;
 use App\Models\MicroOrganism;
 use App\Models\User;
@@ -244,7 +244,7 @@ class Form extends Model
     public function supervisorApproval(bool $verdict, $comments = null)
     {
         $this->update([
-            'status' => $verdict ? 'Pending' : 'Denied',
+            'status' => $verdict ? 'Pending' : 'Rejected',
             'supervisor_approval' => $verdict,
             'supervisor_comments' => $comments
         ]);
@@ -256,14 +256,14 @@ class Form extends Model
                     $this->labGuardian,
                     User::coshhAdmin()->first()
                 ])
-                ->send(new DeniedForm($this, 'supervisor'));
+                ->send(new RejectedForm($this, 'supervisor'));
         }
     }
 
     public function labGuardianApproval(bool $verdict, $comments = null)
     {
         $this->update([
-            'status' => $verdict ? 'Pending' : 'Denied',
+            'status' => $verdict ? 'Pending' : 'Rejected',
             'lab_guardian_approval' => $verdict,
             'lab_guardian_comments' => $comments
         ]);
@@ -275,14 +275,14 @@ class Form extends Model
                     $this->supervisor,
                     User::coshhAdmin()->first()
                 ])
-                ->send(new DeniedForm($this, 'lab guardian'));
+                ->send(new RejectedForm($this, 'lab guardian'));
         }
     }
 
     public function coshhAdminApproval(bool $verdict, $comments = null)
     {
         $this->update([
-            'status' => $verdict ? 'Approved' : 'Denied',
+            'status' => $verdict ? 'Approved' : 'Rejected',
             'coshh_admin_approval' => $verdict,
             'coshh_admin_comments' => $comments
         ]);
@@ -295,7 +295,7 @@ class Form extends Model
                     $this->labGuardian,
                     User::coshhAdmin()->first()
                 ])
-                ->send(new DeniedForm($this, 'school safety officer'));
+                ->send(new RejectedForm($this, 'school safety officer'));
         }
     }
 }

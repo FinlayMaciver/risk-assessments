@@ -61,26 +61,26 @@ class TestDataSeeder extends Seeder
             'user_id' => $admin->id
         ]);
         Form::factory()->general()->approved()->count(5)->create();
-        Form::factory()->general()->denied()->count(5)->create();
+        Form::factory()->general()->rejected()->count(5)->create();
 
         Form::factory()->general()->multiuser()->count(5)->create();
         Form::factory()->general()->multiuser()->approved()->count(5)->create();
-        Form::factory()->general()->multiuser()->denied()->count(5)->create();
+        Form::factory()->general()->multiuser()->rejected()->count(5)->create();
 
         Form::factory()->chemical()->count(5)->create();
         Form::factory()->chemical()->approved()->count(5)->create();
-        Form::factory()->chemical()->denied()->count(5)->create();
+        Form::factory()->chemical()->rejected()->count(5)->create();
 
         Form::factory()->chemical()->multiuser()->count(5)->create();
         Form::factory()->chemical()->multiuser()->approved()->count(5)->create();
-        Form::factory()->chemical()->multiuser()->denied()->count(5)->create();
+        Form::factory()->chemical()->multiuser()->rejected()->count(5)->create();
 
         Form::factory()->biological()->count(5)->create();
         Form::factory()->biological()->approved()->count(5)->create();
-        Form::factory()->biological()->denied()->count(5)->create();
+        Form::factory()->biological()->rejected()->count(5)->create();
 
         Form::factory()->biological()->multiuser()->count(5)->create();
         Form::factory()->biological()->multiuser()->approved()->count(5)->create();
-        Form::factory()->biological()->multiuser()->denied()->count(5)->create();
+        Form::factory()->biological()->multiuser()->rejected()->count(5)->create();
     }
 }

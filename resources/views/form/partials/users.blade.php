@@ -13,6 +13,7 @@
             </div>
         </div>
         @if ($form->multi_user)
+            You may add some users yourself here, or they can sign up to this form later.
             @foreach ($users as $index => $user)
                 @livewire('form.partials.user-search', ['user' => $user, 'index' => $index], key($index+1))
                 <br>

@@ -1,7 +1,7 @@
 @component('mail::message')
 Dear {{ $form->user->forenames }},
 
-This is an automated message to let you know your Risk Assessment form has been rejected by the {{ $deniedBy }}.
+This is an automated message to let you know your Risk Assessment form has been rejected by the {{ $rejectedBy }}.
 
 @if ($form->supervisor_comments)
     {{ $form->supervisor_comments }}

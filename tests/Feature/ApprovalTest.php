@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Mail\DeniedForm;
+use App\Mail\RejectedForm;
 use App\Models\Form;
 use App\Models\User;
 use App\Notifications\ApprovedForm;
@@ -99,7 +99,7 @@ class ApprovalTest extends TestCase
         $this->assertEquals($form->supervisor_comments, $comment);
         $this->assertNull($form->lab_guardian_approval);
         $this->assertNull($form->coshh_admin_approval);
-        Mail::assertSent(DeniedForm::class, function ($mail) use ($user, $form, $coshhAdmin) {
+        Mail::assertSent(RejectedForm::class, function ($mail) use ($user, $form, $coshhAdmin) {
             return $mail->hasTo($user->email) &&
                    $mail->hasBcc($form->labGuardian) &&
                    $mail->hasBcc($coshhAdmin);
@@ -126,7 +126,7 @@ class ApprovalTest extends TestCase
         $this->assertEquals($form->lab_guardian_comments, $comment);
         $this->assertNull($form->supervisor_approval);
         $this->assertNull($form->coshh_admin_approval);
-        Mail::assertSent(DeniedForm::class, function ($mail) use ($user, $form, $coshhAdmin) {
+        Mail::assertSent(RejectedForm::class, function ($mail) use ($user, $form, $coshhAdmin) {
             return $mail->hasTo($user->email) &&
                    $mail->hasBcc($form->supervisor) &&
                    $mail->hasBcc($coshhAdmin);
@@ -153,7 +153,7 @@ class ApprovalTest extends TestCase
         $this->assertNull($form->lab_guardian_approval);
         $this->assertEquals($form->coshh_admin_comments, $comment);
         $this->assertFalse($form->coshh_admin_approval);
-        Mail::assertSent(DeniedForm::class, function ($mail) use ($user, $form, $coshhAdmin) {
+        Mail::assertSent(RejectedForm::class, function ($mail) use ($user, $form, $coshhAdmin) {
             return $mail->hasTo($user->email) &&
                 $mail->hasBcc($form->supervisor) &&
                 $mail->hasBcc($form->labGuardian) &&

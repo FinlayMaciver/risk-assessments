@@ -8,25 +8,25 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Str;
 
-class DeniedForm extends Mailable
+class RejectedForm extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $form;
-    public $deniedBy;
+    public $rejectedBy;
 
-    public function __construct(Form $form, $deniedBy)
+    public function __construct(Form $form, $rejectedBy)
     {
         $this->form = $form;
-        $this->deniedBy = $deniedBy;
+        $this->rejectedBy = $rejectedBy;
     }
 
     public function build()
     {
         return $this
-            ->subject('COSHH Risk Assessment - Form Rejected By ' . Str::title($this->deniedBy))
-            ->markdown('emails.form.denied', [
-                'deniedBy' => $this->deniedBy,
+            ->subject('COSHH Risk Assessment - Form Rejected By ' . Str::title($this->rejectedBy))
+            ->markdown('emails.form.rejected', [
+                'rejectedBy' => $this->rejectedBy,
                 'form' => $this->form,
             ]);
     }

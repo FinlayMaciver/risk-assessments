@@ -16,7 +16,7 @@
                     @if ($form->supervisor_approval)
                         <span class="float-end text-success">Approved</span>
                     @elseif ($form->supervisor_approval === false)
-                        <span class="float-end text-danger">Denied</span>
+                        <span class="float-end text-danger">Rejected</span>
                     @endif
                 </div>
             @endif
@@ -29,7 +29,7 @@
                     @if ($form->lab_guardian_approval)
                         <span class="float-end text-success">Approved</span>
                     @elseif ($form->lab_guardian_approval === false)
-                        <span class="float-end text-danger">Denied</span>
+                        <span class="float-end text-danger">Rejected</span>
                     @endif
                 </div>
             @endif
@@ -42,7 +42,7 @@
                     @if ($form->coshh_admin_approval)
                         <span class="float-end text-success">Approved</span>
                     @else
-                        <span class="float-end text-danger">Denied</span>
+                        <span class="float-end text-danger">Rejected</span>
                     @endif
                 </div>
             @endif

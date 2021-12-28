@@ -26,7 +26,7 @@
                         <span>{{ $form->type }}</span>
                     </div>
                     <div class="g-0 mb-1">
-                        <span class="@if ($form->status == 'Denied') text-danger @elseif ($form->status == 'Approved') text-success @else text-info @endif">{{ $form->status }}</span>
+                        <span class="@if ($form->status == 'Rejected') text-danger @elseif ($form->status == 'Approved') text-success @else text-info @endif">{{ $form->status }}</span>
                     </div>
                     <div class="g-0 mb-1">
                         <span>{{ $form->location }}</span>

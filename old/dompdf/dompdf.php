@@ -230,7 +230,7 @@ switch ( $sapi ) {
       $types[ trim($type) ] = 1;
     $_DOMPDF_DEBUG_TYPES = $types;
   }
-  
+
   $save_file = true;
 
   break;
@@ -241,38 +241,38 @@ switch ( $sapi ) {
     $file = rawurldecode($_GET["input_file"]);
   else
     throw new DOMPDF_Exception("An input file is required (i.e. input_file _GET variable).");
-  
+
   if ( isset($_GET["paper"]) )
     $paper = rawurldecode($_GET["paper"]);
   else
     $paper = DOMPDF_DEFAULT_PAPER_SIZE;
-  
+
   if ( isset($_GET["orientation"]) )
     $orientation = rawurldecode($_GET["orientation"]);
   else
     $orientation = "portrait";
-  
+
   if ( isset($_GET["base_path"]) ) {
     $base_path = rawurldecode($_GET["base_path"]);
     $file = $base_path . $file; # Set the input file
-  }  
-  
+  }
+
   if ( isset($_GET["options"]) ) {
     $options = $_GET["options"];
   }
-  
+
   $file_parts = explode_url($file);
   /* Check to see if the input file is local and, if so, that the base path falls within that specified by DOMDPF_CHROOT */
   if(($file_parts['protocol'] == '' || $file_parts['protocol'] === 'file://')) {
     $file = realpath($file);
     if (strpos($file, DOMPDF_CHROOT) !== 0) {
-      throw new DOMPDF_Exception("Permission denied on $file.");
+      throw new DOMPDF_Exception("Permission rejected on $file.");
     }
   }
-  
+
   $outfile = "dompdf_out.pdf"; # Don't allow them to set the output file
   $save_file = false; # Don't save the file
-  
+
   break;
 }
 
@@ -317,7 +317,7 @@ if ( $save_file ) {
   $outfile = realpath(dirname($outfile)) . DIRECTORY_SEPARATOR . basename($outfile);
 
   if ( strpos($outfile, DOMPDF_CHROOT) !== 0 )
-    throw new DOMPDF_Exception("Permission denied.");
+    throw new DOMPDF_Exception("Permission rejected.");
 
   file_put_contents($outfile, $dompdf->output( array("compress" => 0) ));
   exit(0);

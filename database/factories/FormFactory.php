@@ -164,11 +164,11 @@ class FormFactory extends Factory
         });
     }
 
-    public function denied()
+    public function rejected()
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => 'Denied',
+                'status' => 'Rejected',
                 'supervisor_approval' => false,
                 'lab_guardian_approval' => false,
                 'coshh_admin_approval' => false,
