@@ -23,7 +23,7 @@
         <a title="{{$form->title}}" data-toggle="tooltip" data-placement="top" href="{{ route('form.show', $form->id) }}">{{ Str::limit($form->title, 70, "(...)") }}</a>
     </td>
     <td title="{{$form->title}}" data-toggle="tooltip" data-placement="top" class="d-none d-md-table-cell">{{ Str::limit($form->location, 50, "(...)") }}</td>
-    <td class="d-none d-md-table-cell">{{ $form->created_at }}</td>
+    <td class="d-none d-md-table-cell">{{ $form->formatted_created_at }}</td>
     <td class="d-none d-md-table-cell">{{ $form->formatted_updated_at }}</td>
     <td class="d-none d-md-table-cell">{{ $form->user->forenames }} {{ $form->user->surname }}</td>
 </tr>

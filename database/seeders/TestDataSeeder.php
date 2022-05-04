@@ -49,16 +49,21 @@ class TestDataSeeder extends Seeder
             Route::factory()->create(['title' => $route]);
         }
 
-        $admin = User::factory()->admin()->create([
+        $me = User::factory()->admin()->create([
             'forenames' => 'Finlay',
             'surname' => 'Mac',
             'email' => 'finlay.maciver@glasgow.ac.uk',
             'guid' => 'fmi9x',
-            'is_coshh_admin' => true,
+        ]);
+
+        $coshhAdmin = User::factory()->coshhAdmin()->create([
+            'forenames' => 'Coshh',
+            'surname' => 'Admin',
+            'guid' => 'coshhadmin'
         ]);
 
         Form::factory()->general()->count(5)->create([
-            'user_id' => $admin->id
+            'user_id' => $me->id
         ]);
         Form::factory()->general()->approved()->count(5)->create();
         Form::factory()->general()->rejected()->count(5)->create();

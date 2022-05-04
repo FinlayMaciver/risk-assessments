@@ -13,7 +13,7 @@
             </div>
         </div>
         @if ($form->multi_user)
-            You may add some users yourself here, or they can sign up to this form later.
+            You may add some users yourself here to notify them of the form being submitted. Users not listed here can still sign off the form.
             @foreach ($users as $index => $user)
                 @livewire('form.partials.user-search', ['user' => $user, 'index' => $index], key($index+1))
                 <br>

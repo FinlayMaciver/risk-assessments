@@ -26,7 +26,7 @@
 
         <div class="card">
             <div class="card-header">
-                <ul class="nav nav-tabs card-header-tabs nav-fill" id="bologna-list" role="tablist">
+                <ul class="nav nav-tabs card-header-tabs nav-fill" role="tablist">
                     <li class="nav-item" role="presentation" wire:ignore>
                         <button class="nav-link active" id="my-forms-tab" data-bs-toggle="tab" data-bs-target="#my-forms" type="button" role="tab" aria-controls="my-forms" aria-selected="true">My Forms</button>
                     </li>
@@ -39,31 +39,42 @@
 
                 <div class="input-group mb-2">
                     <div class="input-group-text">
-                        Status
+                        <i class="fas fa-filter"></i>
+                        <span class="ml-1 d-none d-lg-block">Type</span>
+                    </div>
+                    <button wire:click.prevent="$set('multiFilter', '')"
+                        class="input-group-text @if($multiFilter === '') bg-primary text-light @else bg-white @endif">
+                        Both
+                    </button>
+                    <button wire:click.prevent="$set('multiFilter', false)"
+                        class="input-group-text @if($multiFilter === false) bg-primary text-light @else bg-white @endif">
+                        Single user
+                    </button>
+                    <button wire:click.prevent="$set('multiFilter', true)"
+                        class="input-group-text @if($multiFilter === true) bg-primary text-light @else bg-white @endif">
+                        Multiple users
+                    </button>
+                </div>
+
+                <div class="input-group mb-2">
+                    <div class="input-group-text">
+                        <i class="fas fa-filter"></i>
+                        <span class="ml-1 d-none d-lg-block">Status</span>
                     </div>
                     <button wire:click.prevent="$set('statusFilter', '')"
-                        class="input-group-text @if($statusFilter == '') bg-primary text-light @else bg-light @endif">
+                        class="input-group-text @if($statusFilter == '') bg-primary text-light @else bg-white @endif">
                         All
                     </button>
                     <button wire:click.prevent="$set('statusFilter', 'Approved')"
-                        class="input-group-text @if($statusFilter == 'Approved') bg-primary text-light @else bg-light @endif">
-                        <span class="icon-spacing">
-                            <i class="fas fa-check"></i>
-                        </span>
+                        class="input-group-text @if($statusFilter == 'Approved') bg-primary text-light @else bg-white @endif">
                         Approved
                     </button>
                     <button wire:click.prevent="$set('statusFilter', 'Pending')"
-                        class="input-group-text @if($statusFilter == 'Pending') bg-primary text-light @else bg-light @endif">
-                        <span class="icon-spacing">
-                            <i class="fas fa-hourglass-half"></i>
-                        </span>
+                        class="input-group-text @if($statusFilter == 'Pending') bg-primary text-light @else bg-white @endif">
                         Pending
                     </button>
                     <button wire:click.prevent="$set('statusFilter', 'Rejected')"
-                        class="input-group-text @if($statusFilter == 'Rejected') bg-primary text-light @else bg-light @endif">
-                        <span class="icon-spacing">
-                            <i class="fas fa-times"></i>
-                        </span>
+                        class="input-group-text @if($statusFilter == 'Rejected') bg-primary text-light @else bg-white @endif">
                         Rejected
                     </button>
                 </div>

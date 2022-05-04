@@ -12,8 +12,11 @@ class Home extends Component
 {
     use WithPagination;
 
+    public $myForms;
+    public $allForms;
     public $search = '';
     public $statusFilter = '';
+    public $multiFilter = '';
     public $orderBy = [
         'column' => 'forms.created_at',
         'order' => 'asc'
@@ -21,27 +24,34 @@ class Home extends Component
 
     public function render()
     {
-        $forms = Form::with('user')->join('users', 'forms.user_id', '=', 'users.id')
+        $forms = Form::with('user')
             ->when(
                 $this->statusFilter !== '',
                 fn ($query) => $query->where('status', $this->statusFilter)
             )
             ->when(
+                $this->multiFilter !== '',
+                fn ($query) => $query->where('multi_user', $this->multiFilter)
+            )
+            ->when(
                 $this->search !== '',
                 fn ($query) => $query->where(
                     fn ($query) => $query->where('title', 'like', "%$this->search%")
-                ->orWhere('location', 'like', "%$this->search%")
-                ->orWhere('status', 'like', "%$this->search%")
-                ->orWhere(DB::raw("CONCAT(`forenames`, ' ', `surname`)"), 'like', "%$this->search%")
+                    ->orWhere('location', 'like', "%$this->search%")
+                    ->orWhere('status', 'like', "%$this->search%")
+                    ->orWhereHas('user', function ($query) {
+                        return $query->whereRaw("CONCAT(`forenames`, ' ', `surname`) LIKE ?", ["%$this->search%"]);
+                    })
                 )
             )->orderBy(
                 $this->orderBy['column'],
                 $this->orderBy['order']
             );
-        return view('livewire.home', [
-            'allForms' => $forms->get(),
-            'myForms' => $forms->where('user_id', Auth::user()->id)->get(),
-        ]);
+
+        $this->allForms = $forms->get();
+        $this->myForms = $forms->where('user_id', Auth::user()->id)->get();
+
+        return view('livewire.home');
     }
 
     public function toggleSort($column)

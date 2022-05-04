@@ -150,7 +150,7 @@ class Form extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'form_users');
+        return $this->belongsToMany(User::class, 'form_users')->using(FormUser::class)->withPivot('signed', 'signed_at');
     }
 
     public function risks()
@@ -297,5 +297,10 @@ class Form extends Model
                 ])
                 ->send(new RejectedForm($this, 'school safety officer'));
         }
+    }
+
+    public function signForm(User $user)
+    {
+        $this->users()->syncWithPivotValues($user, ['signed' => true, 'signed_at' => now()], false);
     }
 }

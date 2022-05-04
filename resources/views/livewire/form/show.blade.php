@@ -47,5 +47,8 @@
                 'form' => $form
             ])
         @endif
+        @if ($form->multi_user && !$form->users->contains(auth()->user()))
+                balegdeh
+        @endif
     </div>
 </div>

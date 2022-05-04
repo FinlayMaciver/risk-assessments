@@ -47,7 +47,7 @@
     @endif
 </th>
 <th class="d-none d-md-table-cell cursor-pointer" wire:click.prevent="toggleSort('users.forenames')">
-    Status
+    User
     @if ($orderBy['column'] == 'users.forenames')
         @if ($orderBy['order'] == 'asc')
             <i class="fas fa-sort-alpha-down"></i>
