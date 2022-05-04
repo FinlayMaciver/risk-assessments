@@ -15,7 +15,7 @@ use Tests\TestCase;
 
 class ChemicalFormTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->artisan('db:seed', ['--class' => 'DatabaseSeeder']);

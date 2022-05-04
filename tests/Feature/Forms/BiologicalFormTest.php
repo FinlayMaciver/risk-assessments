@@ -13,7 +13,7 @@ use Tests\TestCase;
 
 class BiologicalFormTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->artisan('db:seed', ['--class' => 'DatabaseSeeder']);
