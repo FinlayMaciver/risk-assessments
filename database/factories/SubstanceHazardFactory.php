@@ -10,13 +10,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class SubstanceHazardFactory extends Factory
 {
     /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
-    protected $model = SubstanceHazard::class;
-
-    /**
      * Define the model's default state.
      *
      * @return array
@@ -31,6 +24,7 @@ class SubstanceHazardFactory extends Factory
                 if (Hazard::count()) {
                     return Hazard::find(rand(1, Hazard::count()))->id;
                 }
+
                 return Hazard::factory()->create([
                     'title' => $this->faker->unique()->randomElement([
                         'Very toxic',
@@ -45,10 +39,10 @@ class SubstanceHazardFactory extends Factory
                         'Micro-organism',
                         'Flammable',
                         'Reproductive',
-                        'Teratogen'
-                    ])
+                        'Teratogen',
+                    ]),
                 ])->id;
-            }
+            },
         ];
     }
 }

@@ -10,11 +10,17 @@ use Livewire\Component;
 class MultiSelect extends Component
 {
     public $mainModel;
+
     public $optionsModel;
+
     public $options;
+
     public $selected;
+
     public $descriptors;
+
     public $eventName;
+
     public $index;
 
     public function mount($mainModel, $optionsModel, $selected, $descriptors, $index)
@@ -28,12 +34,12 @@ class MultiSelect extends Component
             'title' => $optionsModel,
             'plural' => Str::lower(Str::plural($optionsModel)),
             'namespace' => "\\App\\Models\\$optionsModel",
-            'columns' => Arr::except(Schema::getColumnListing(app("\\App\\Models\\$optionsModel")->getTable()), [ 'created_at', 'updated_at', 'deleted_at'])
+            'columns' => Arr::except(Schema::getColumnListing(app("\\App\\Models\\$optionsModel")->getTable()), ['created_at', 'updated_at', 'deleted_at']),
         ];
         $this->options = $this->optionsModel['namespace']::get();
         $this->selected = $this->optionsModel['namespace']::find($selected);
         $this->descriptors = $descriptors;
-        $this->eventName = 'update' . Str::ucfirst($this->mainModel['title']) . Str::ucfirst($this->optionsModel['plural']);
+        $this->eventName = 'update'.Str::ucfirst($this->mainModel['title']).Str::ucfirst($this->optionsModel['plural']);
         $this->index = $index;
     }
 

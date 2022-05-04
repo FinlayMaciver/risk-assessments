@@ -9,8 +9,11 @@ use Livewire\Component;
 class UserSearch extends Component
 {
     public $user;
+
     public $email;
+
     public $valid;
+
     public $index;
 
     public function mount($user, $index = null)
@@ -29,7 +32,7 @@ class UserSearch extends Component
 
     public function delete()
     {
-        $this->emit("userDeleted", $this->user, $this->index);
+        $this->emit('userDeleted', $this->user, $this->index);
     }
 
     public function search()
@@ -37,7 +40,8 @@ class UserSearch extends Component
         $user = User::where('email', $this->email)->first();
         if ($user) {
             $this->user = $user;
-            $this->emit("userUpdated", $this->user, $this->index);
+            $this->emit('userUpdated', $this->user, $this->index);
+
             return $this->valid = true;
         }
 
@@ -49,9 +53,11 @@ class UserSearch extends Component
                 'guid' => $search['username'],
                 'email' => $search['email'],
             ]);
-            $this->emit("userUpdated", $this->user, $this->index);
+            $this->emit('userUpdated', $this->user, $this->index);
+
             return $this->valid = true;
         }
+
         return $this->valid = false;
     }
 }

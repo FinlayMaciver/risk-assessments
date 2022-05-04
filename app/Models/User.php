@@ -23,7 +23,7 @@ class User extends Authenticatable
 
     public function getFullNameAttribute()
     {
-        return $this->forenames . ' ' . $this->surname;
+        return $this->forenames.' '.$this->surname;
     }
 
     public static function createFromLdap($guid)
@@ -34,15 +34,15 @@ class User extends Authenticatable
             abort(404, 'Invalid GUID/matric.');
         }
 
-        if (User::where('guid', $guid)->first()) {
+        if (self::where('guid', $guid)->first()) {
             abort(422, 'Duplicate GUID/matric.');
         }
 
-        if (User::where('email', $ldapSearch['email'])->first()) {
+        if (self::where('email', $ldapSearch['email'])->first()) {
             abort(422, "Duplicate email address ({{$ldapSearch['email']}}).");
         }
 
-        $user = new User();
+        $user = new self();
         $user->forenames = $ldapSearch['forenames'];
         $user->surname = $ldapSearch['surname'];
         $user->guid = $guid;

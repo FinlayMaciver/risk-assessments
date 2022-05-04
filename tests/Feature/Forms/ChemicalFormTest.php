@@ -15,7 +15,7 @@ use Tests\TestCase;
 
 class ChemicalFormTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->artisan('db:seed', ['--class' => 'DatabaseSeeder']);
@@ -40,7 +40,7 @@ class ChemicalFormTest extends TestCase
         $form = new Form([
             'type' => 'Chemical',
             'user_id' => $user->id,
-            'multi_user' => false
+            'multi_user' => false,
         ]);
 
         $form->risks = new Collection([
@@ -50,14 +50,14 @@ class ChemicalFormTest extends TestCase
                 'control_measures' => 'Risk 1 control measures',
                 'likelihood_with' => 'Risk 1 likelihood with',
                 'likelihood_without' => 'Risk 1 likelihood without',
-             ]),
+            ]),
             2 => new Risk([
                 'risk' => 'Risk 2 risk',
                 'severity' => 'Risk 2 severity',
                 'control_measures' => 'Risk 2 control measures',
                 'likelihood_with' => 'Risk 2 likelihood with',
                 'likelihood_without' => 'Risk 2 likelihood without',
-            ])
+            ]),
         ]);
 
         $form->substances = new Collection([
@@ -72,7 +72,7 @@ class ChemicalFormTest extends TestCase
                 'quantity' => 'Substance 2 quantity',
                 'single_acute_effect' => 'Substance 2 single acute effect',
                 'repeated_low_effect' => 'Substance 2 repeated low effect',
-            ])
+            ]),
         ]);
 
         $content = Livewire::actingAs($user)
@@ -315,8 +315,8 @@ class ChemicalFormTest extends TestCase
             'single_acute_effect' => 'Substance 1 single acute effect',
             'repeated_low_effect' => 'Substance 1 repeated low effect',
         ]);
-        $substance1->hazards()->attach([1,2]);
-        $substance1->routes()->attach([1,2]);
+        $substance1->hazards()->attach([1, 2]);
+        $substance1->routes()->attach([1, 2]);
 
         $substance2 = Substance::create([
             'form_id' => $form->id,
@@ -325,12 +325,12 @@ class ChemicalFormTest extends TestCase
             'single_acute_effect' => 'Substance 2 single acute effect',
             'repeated_low_effect' => 'Substance 2 repeated low effect',
         ]);
-        $substance2->hazards()->attach([3,5]);
-        $substance2->routes()->attach([3,5]);
+        $substance2->hazards()->attach([3, 5]);
+        $substance2->routes()->attach([3, 5]);
 
         $content = Livewire::actingAs($user)
             ->test(\App\Http\Livewire\Form\Partials\Content::class, [
-                'form' => $form
+                'form' => $form,
             ])
             ->assertSet('form.user_id', $user->id)
             ->assertSet('form.type', 'Chemical')
@@ -558,8 +558,8 @@ class ChemicalFormTest extends TestCase
             'single_acute_effect' => 'Substance 1 single acute effect',
             'repeated_low_effect' => 'Substance 1 repeated low effect',
         ]);
-        $substance1->hazards()->attach([1,2]);
-        $substance1->routes()->attach([1,2]);
+        $substance1->hazards()->attach([1, 2]);
+        $substance1->routes()->attach([1, 2]);
 
         $substance2 = Substance::create([
             'form_id' => $form->id,
@@ -568,8 +568,8 @@ class ChemicalFormTest extends TestCase
             'single_acute_effect' => 'Substance 2 single acute effect',
             'repeated_low_effect' => 'Substance 2 repeated low effect',
         ]);
-        $substance2->hazards()->attach([3,5]);
-        $substance2->routes()->attach([3,5]);
+        $substance2->hazards()->attach([3, 5]);
+        $substance2->routes()->attach([3, 5]);
 
         $response = $this->actingAs($user)->get(route('form.show', $form->id));
 

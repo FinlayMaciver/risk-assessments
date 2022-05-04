@@ -36,12 +36,12 @@ class GeneralFormTest extends TestCase
         $supervisor = User::factory()->create();
         $labGuardian = User::factory()->create();
         $coshhAdmin = User::factory()->create([
-            'is_coshh_admin' => true
+            'is_coshh_admin' => true,
         ]);
         $form = new Form([
             'type' => 'General',
             'user_id' => $user->id,
-            'multi_user' => false
+            'multi_user' => false,
         ]);
 
         $form->risks = new Collection([
@@ -58,7 +58,7 @@ class GeneralFormTest extends TestCase
                 'control_measures' => 'Risk 2 control measures',
                 'likelihood_with' => 'Risk 2 likelihood with',
                 'likelihood_without' => 'Risk 2 likelihood without',
-            ])
+            ]),
         ]);
 
         $file = UploadedFile::fake()->image('test.jpg');
@@ -163,7 +163,7 @@ class GeneralFormTest extends TestCase
 
         $this->assertDatabaseHas('general_form_details', [
             'form_id' => $savedForm->id,
-            'chemicals_involved' => 'Form chemicals involved'
+            'chemicals_involved' => 'Form chemicals involved',
         ]);
 
         $this->assertDatabaseHas('risks', [
@@ -186,7 +186,7 @@ class GeneralFormTest extends TestCase
 
         $this->assertDatabaseHas('files', [
             'form_id' => $savedForm->id,
-            'original_filename' => 'test.jpg'
+            'original_filename' => 'test.jpg',
         ]);
 
         Storage::disk('coshh')->assertExists('form_1/file_1.dat');
@@ -270,7 +270,7 @@ class GeneralFormTest extends TestCase
 
         $generalSection = GeneralFormDetails::create([
             'form_id' => $form->id,
-            'chemicals_involved' => 'Form chemicals involved'
+            'chemicals_involved' => 'Form chemicals involved',
         ]);
 
         $content = Livewire::actingAs($user)
@@ -319,7 +319,6 @@ class GeneralFormTest extends TestCase
 
             ->assertSet('form.supervisor_id', $supervisor->id)
             ->assertSet('form.lab_guardian_id', $labGuardian->id);
-
 
         //Risks - deleting one
         $content->call('deleteRisk', 1);
@@ -382,7 +381,7 @@ class GeneralFormTest extends TestCase
 
         $this->assertDatabaseHas('general_form_details', [
             'form_id' => $form->id,
-            'chemicals_involved' => 'New chemicals involved'
+            'chemicals_involved' => 'New chemicals involved',
         ]);
 
         $this->assertDatabaseHas('risks', [
@@ -405,12 +404,12 @@ class GeneralFormTest extends TestCase
 
         $this->assertDatabaseHas('files', [
             'form_id' => $form->id,
-            'original_filename' => 'test1.jpg'
+            'original_filename' => 'test1.jpg',
         ]);
 
         $this->assertDatabaseMissing('files', [
             'form_id' => $form->id,
-            'original_filename' => 'test2.jpg'
+            'original_filename' => 'test2.jpg',
         ]);
 
         Storage::disk('coshh')->assertExists('form_1/file_1.dat');
@@ -486,7 +485,7 @@ class GeneralFormTest extends TestCase
 
         $generalSection = GeneralFormDetails::create([
             'form_id' => $form->id,
-            'chemicals_involved' => 'Form chemicals involved'
+            'chemicals_involved' => 'Form chemicals involved',
         ]);
 
         $response = $this->actingAs($user)->get(route('form.show', $form->id));

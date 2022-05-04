@@ -13,13 +13,18 @@ class Home extends Component
     use WithPagination;
 
     public $myForms;
+
     public $allForms;
+
     public $search = '';
+
     public $statusFilter = '';
+
     public $multiFilter = '';
+
     public $orderBy = [
         'column' => 'forms.created_at',
-        'order' => 'asc'
+        'order' => 'asc',
     ];
 
     public function render()

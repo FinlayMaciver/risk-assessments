@@ -13,13 +13,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class FormFactory extends Factory
 {
     /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
-    protected $model = Form::class;
-
-    /**
      * Define the model's default state.
      *
      * @return array
@@ -42,16 +35,16 @@ class FormFactory extends Factory
                 'Open bench',
                 'Fume Cupboard',
                 'Glove box',
-                'Other'
+                'Other',
             ]),
             'further_risks' => $this->faker->randomElement([
                 null,
                 'None',
-                $this->faker->sentence(rand(7, 14))
+                $this->faker->sentence(rand(7, 14)),
             ]),
             'disposal_methods' => $this->faker->randomElement([
                 'None',
-                $this->faker->sentence(rand(7, 14))
+                $this->faker->sentence(rand(7, 14)),
             ]),
 
             //Equipment
@@ -115,7 +108,7 @@ class FormFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'type' => 'Chemical'
+                'type' => 'Chemical',
             ];
         })->afterCreating(function (Form $form) {
             Risk::factory()->count(rand(0, 4))->create([
@@ -131,7 +124,7 @@ class FormFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'type' => 'Biological'
+                'type' => 'Biological',
             ];
         })->afterCreating(function (Form $form) {
             Risk::factory()->count(rand(0, 4))->create([
