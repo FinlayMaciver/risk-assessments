@@ -8,6 +8,7 @@ use Livewire\Component;
 class Edit extends Component
 {
     public $formId;
+
     public Form $form;
 
     public function mount()

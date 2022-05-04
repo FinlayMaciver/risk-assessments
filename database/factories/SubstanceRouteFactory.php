@@ -30,16 +30,17 @@ class SubstanceRouteFactory extends Factory
                 if (Route::count()) {
                     return Route::find(rand(1, Route::count()))->id;
                 }
+
                 return Route::factory()->create([
                     'title' => $this->faker->unique()->randomElement([
                         'Inhalation',
                         'Ingestion',
                         'Skin absorption',
                         'Eye/skin contact',
-                        'Injection'
-                    ])
+                        'Injection',
+                    ]),
                 ])->id;
-            }
+            },
         ];
     }
 }

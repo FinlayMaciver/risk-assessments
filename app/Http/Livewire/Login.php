@@ -10,7 +10,9 @@ use Livewire\Component;
 class Login extends Component
 {
     public $guid = '';
+
     public $password = '';
+
     public $remember = '';
 
     public function render()
@@ -22,7 +24,7 @@ class Login extends Component
     {
         $this->validate([
             'guid' => 'required',
-            'password' => 'required'
+            'password' => 'required',
         ]);
 
         if (config('ldap.authentication')) {

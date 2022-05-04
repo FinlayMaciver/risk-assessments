@@ -92,7 +92,7 @@ class ApprovalTest extends TestCase
             'lab_guardian_id' => $labGuardian->id,
         ]);
 
-        $comment = "Form not filled correctly";
+        $comment = 'Form not filled correctly';
         $form->supervisorApproval(false, $comment);
 
         $this->assertFalse($form->supervisor_approval);
@@ -119,7 +119,7 @@ class ApprovalTest extends TestCase
             'lab_guardian_id' => $labGuardian->id,
         ]);
 
-        $comment = "Form not filled correctly";
+        $comment = 'Form not filled correctly';
         $form->labGuardianApproval(false, $comment);
 
         $this->assertFalse($form->lab_guardian_approval);
@@ -146,7 +146,7 @@ class ApprovalTest extends TestCase
             'lab_guardian_id' => $labGuardian->id,
         ]);
 
-        $comment = "Form not filled correctly";
+        $comment = 'Form not filled correctly';
         $form->coshhAdminApproval(false, $comment);
 
         $this->assertNull($form->supervisor_approval);

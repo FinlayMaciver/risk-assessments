@@ -78,7 +78,6 @@ class Form extends Model
     /**
      * Additional attributes
      */
-
     public function getFormattedCreatedAtAttribute()
     {
         return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/y g:ma');
@@ -91,32 +90,31 @@ class Form extends Model
 
     public function getNoRequirementsAttribute()
     {
-        return (
-            !$this->eye_protection &&
-            !$this->face_protection &&
-            !$this->hand_protection &&
-            !$this->foot_protection &&
-            !$this->respiratory_protection &&
-            !$this->instructions &&
-            !$this->spill_neutralisation &&
-            !$this->eye_irrigation &&
-            !$this->body_shower &&
-            !$this->first_aid &&
-            !$this->breathing_apparatus &&
-            !$this->external_services &&
-            !$this->poison_antidote &&
-            !$this->routine_approval &&
-            !$this->specific_approval &&
-            !$this->personal_supervision &&
-            !$this->airborne_monitoring &&
-            !$this->biological_monitoring &&
-            !$this->inform_lab_occupants &&
-            !$this->inform_cleaners &&
-            !$this->inform_contractors &&
-            !$this->inform_other &&
-            !$this->other_emergency &&
-            !$this->other_protection
-        );
+        return
+            ! $this->eye_protection &&
+            ! $this->face_protection &&
+            ! $this->hand_protection &&
+            ! $this->foot_protection &&
+            ! $this->respiratory_protection &&
+            ! $this->instructions &&
+            ! $this->spill_neutralisation &&
+            ! $this->eye_irrigation &&
+            ! $this->body_shower &&
+            ! $this->first_aid &&
+            ! $this->breathing_apparatus &&
+            ! $this->external_services &&
+            ! $this->poison_antidote &&
+            ! $this->routine_approval &&
+            ! $this->specific_approval &&
+            ! $this->personal_supervision &&
+            ! $this->airborne_monitoring &&
+            ! $this->biological_monitoring &&
+            ! $this->inform_lab_occupants &&
+            ! $this->inform_cleaners &&
+            ! $this->inform_contractors &&
+            ! $this->inform_other &&
+            ! $this->other_emergency &&
+            ! $this->other_protection;
     }
 
     public function getHasCommentsAttribute()
@@ -127,7 +125,6 @@ class Form extends Model
     /**
      * Relationships
      */
-
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -176,7 +173,6 @@ class Form extends Model
     /**
      * Methods
      */
-
     public function updateRisk($risk)
     {
         $this->risks()->updateOrCreate(
@@ -246,7 +242,7 @@ class Form extends Model
         $this->update([
             'status' => $verdict ? 'Pending' : 'Rejected',
             'supervisor_approval' => $verdict,
-            'supervisor_comments' => $comments
+            'supervisor_comments' => $comments,
         ]);
         if ($verdict) {
             $this->user->notify(new ApprovedForm($this, 'supervisor'));
@@ -254,7 +250,7 @@ class Form extends Model
             Mail::to($this->user)
                 ->bcc([
                     $this->labGuardian,
-                    User::coshhAdmin()->first()
+                    User::coshhAdmin()->first(),
                 ])
                 ->send(new RejectedForm($this, 'supervisor'));
         }
@@ -265,7 +261,7 @@ class Form extends Model
         $this->update([
             'status' => $verdict ? 'Pending' : 'Rejected',
             'lab_guardian_approval' => $verdict,
-            'lab_guardian_comments' => $comments
+            'lab_guardian_comments' => $comments,
         ]);
         if ($verdict) {
             $this->user->notify(new ApprovedForm($this, 'lab guardian'));
@@ -273,7 +269,7 @@ class Form extends Model
             Mail::to($this->user)
                 ->bcc([
                     $this->supervisor,
-                    User::coshhAdmin()->first()
+                    User::coshhAdmin()->first(),
                 ])
                 ->send(new RejectedForm($this, 'lab guardian'));
         }
@@ -284,7 +280,7 @@ class Form extends Model
         $this->update([
             'status' => $verdict ? 'Approved' : 'Rejected',
             'coshh_admin_approval' => $verdict,
-            'coshh_admin_comments' => $comments
+            'coshh_admin_comments' => $comments,
         ]);
         if ($verdict) {
             $this->user->notify(new ApprovedForm($this, 'school safety officer'));
@@ -293,7 +289,7 @@ class Form extends Model
                 ->bcc([
                     $this->supervisor,
                     $this->labGuardian,
-                    User::coshhAdmin()->first()
+                    User::coshhAdmin()->first(),
                 ])
                 ->send(new RejectedForm($this, 'school safety officer'));
         }

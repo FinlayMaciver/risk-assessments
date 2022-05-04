@@ -13,6 +13,7 @@ class RejectedForm extends Mailable
     use Queueable, SerializesModels;
 
     public $form;
+
     public $rejectedBy;
 
     public function __construct(Form $form, $rejectedBy)
@@ -24,7 +25,7 @@ class RejectedForm extends Mailable
     public function build()
     {
         return $this
-            ->subject('COSHH Risk Assessment - Form Rejected By ' . Str::title($this->rejectedBy))
+            ->subject('COSHH Risk Assessment - Form Rejected By '.Str::title($this->rejectedBy))
             ->markdown('emails.form.rejected', [
                 'rejectedBy' => $this->rejectedBy,
                 'form' => $this->form,

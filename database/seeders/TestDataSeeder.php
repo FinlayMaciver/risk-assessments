@@ -30,7 +30,7 @@ class TestDataSeeder extends Seeder
             'Micro-organism',
             'Flammable',
             'Reproductive',
-            'Teratogen'
+            'Teratogen',
         ];
 
         $routes = [
@@ -38,7 +38,7 @@ class TestDataSeeder extends Seeder
             'Ingestion',
             'Skin absorption',
             'Eye/skin contact',
-            'Injection'
+            'Injection',
         ];
 
         foreach ($classifications as $classification) {
@@ -59,11 +59,11 @@ class TestDataSeeder extends Seeder
         $coshhAdmin = User::factory()->coshhAdmin()->create([
             'forenames' => 'Coshh',
             'surname' => 'Admin',
-            'guid' => 'coshhadmin'
+            'guid' => 'coshhadmin',
         ]);
 
         Form::factory()->general()->count(5)->create([
-            'user_id' => $me->id
+            'user_id' => $me->id,
         ]);
         Form::factory()->general()->approved()->count(5)->create();
         Form::factory()->general()->rejected()->count(5)->create();

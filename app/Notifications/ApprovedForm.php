@@ -13,6 +13,7 @@ class ApprovedForm extends Notification
     use Queueable;
 
     public Form $form;
+
     public $approvedBy;
 
     public function __construct(Form $form, $approvedBy)
@@ -29,7 +30,7 @@ class ApprovedForm extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject('COSHH Risk Assessment - Form Approved By ' . Str::title($this->approvedBy))
+            ->subject('COSHH Risk Assessment - Form Approved By '.Str::title($this->approvedBy))
             ->markdown('emails.form.approved', [
                 'approvedBy' => $this->approvedBy,
                 'form' => $this->form,

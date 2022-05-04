@@ -8,6 +8,7 @@ use Livewire\Component;
 class Approval extends Component
 {
     public Form $form;
+
     public $comments;
 
     public function render()
@@ -26,6 +27,7 @@ class Approval extends Component
         }
 
         session()->flash('success_message', 'Submitted verdict.');
+
         return redirect()->route('form.show', $this->form->id);
     }
 }

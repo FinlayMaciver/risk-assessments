@@ -12,7 +12,7 @@ class FormUser extends Pivot
 
     protected $casts = [
         'signed' => 'boolean',
-        'signed_at' => 'timestamp'
+        'signed_at' => 'timestamp',
     ];
 
     public function getFormattedSignedAtAttribute()

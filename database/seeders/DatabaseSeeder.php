@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
             'Micro-organism',
             'Flammable',
             'Reproductive',
-            'Teratogen'
+            'Teratogen',
         ];
 
         $routes = [
@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
             'Ingestion',
             'Skin absorption',
             'Eye/skin contact',
-            'Injection'
+            'Injection',
         ];
 
         foreach ($classifications as $classification) {

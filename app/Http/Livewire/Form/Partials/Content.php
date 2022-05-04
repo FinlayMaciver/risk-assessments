@@ -19,16 +19,27 @@ class Content extends Component
     use WithFileUploads;
 
     public Form $form;
+
     public $supervisor;
+
     public $labGuardian;
+
     public $section = [];
+
     public $users = [];
+
     public $userIds = [];
+
     public Collection $risks;
+
     public Collection $substances;
+
     public Collection $microOrganisms;
+
     public $files;
+
     public $newFiles = [];
+
     public $valid = true;
 
     public function mount(Form $form)
@@ -54,7 +65,7 @@ class Content extends Component
         'labGuardianUpdated',
         'updateSubstanceHazards',
         'updateSubstanceRoutes',
-        'updateMicroOrganismRoutes'
+        'updateMicroOrganismRoutes',
     ];
 
     protected $rules = [
@@ -315,6 +326,7 @@ class Content extends Component
         }
 
         session()->flash('success_message', 'Saved form');
+
         return redirect()->route('home');
     }
 

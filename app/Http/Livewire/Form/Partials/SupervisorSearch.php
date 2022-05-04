@@ -9,8 +9,11 @@ use Livewire\Component;
 class SupervisorSearch extends Component
 {
     public $type;
+
     public $user;
+
     public $email;
+
     public $valid;
 
     public function mount($user)
@@ -32,6 +35,7 @@ class SupervisorSearch extends Component
         if ($user) {
             $this->user = $user;
             $this->emit(Str::camel("$this->type Updated"), $this->user);
+
             return $this->valid = true;
         }
 
@@ -44,9 +48,11 @@ class SupervisorSearch extends Component
                 'email' => $search['email'],
             ]);
             $this->emit(Str::camel("$this->type Updated"), $this->user);
+
             return $this->valid = true;
         }
         $this->emit(Str::camel("$this->type Updated"), null);
+
         return $this->valid = false;
     }
 }

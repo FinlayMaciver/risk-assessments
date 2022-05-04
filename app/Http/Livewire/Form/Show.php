@@ -19,7 +19,7 @@ class Show extends Component
             'substances.routes',
             'substances.hazards',
             'microOrganisms.routes',
-            'files'
+            'files',
         ])->findOrFail($id);
     }
 
