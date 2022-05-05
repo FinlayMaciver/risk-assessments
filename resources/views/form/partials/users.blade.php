@@ -3,7 +3,6 @@
     <div class="card-body">
         <div class="row">
             @livewire('form.partials.supervisor-search', ['type' => 'supervisor', 'user' => $form['supervisor']])
-            @livewire('form.partials.supervisor-search', ['type' => 'lab guardian', 'user' => $form['labGuardian']])
         </div>
         <hr>
         <div class="mb-3">

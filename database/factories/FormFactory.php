@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\CoshhFormDetails;
 use App\Models\Form;
-use App\Models\GeneralFormDetails;
 use App\Models\MicroOrganism;
 use App\Models\Risk;
 use App\Models\Substance;
@@ -12,6 +12,14 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class FormFactory extends Factory
 {
+    public function configure()
+    {
+        return $this->afterCreating(function (Form $form) {
+            Risk::factory()->count(rand(1, 4))->create([
+                'form_id' => $form->id,
+            ]);
+        });
+    }
     /**
      * Define the model's default state.
      *
@@ -20,89 +28,25 @@ class FormFactory extends Factory
     public function definition()
     {
         return [
-            'type' => $this->faker->word(),
+            'type' => 'General',
             'user_id' => function () {
                 return User::factory()->create()->id;
             },
             'multi_user' => false,
             'status' => 'Pending',
-
             'title' => $this->faker->sentence(rand(1, 4)),
+            'management_unit' => 'School of Engineering',
             'location' => $this->faker->city(),
+            'review_date' => $this->faker->date(),
             'description' => $this->faker->sentence(rand(10, 20)),
-            'control_measures' => $this->faker->sentence(rand(5, 10)),
-            'work_site' => $this->faker->randomElement([
-                'Open bench',
-                'Fume Cupboard',
-                'Glove box',
-                'Other',
-            ]),
-            'further_risks' => $this->faker->randomElement([
-                null,
-                'None',
-                $this->faker->sentence(rand(7, 14)),
-            ]),
-            'disposal_methods' => $this->faker->randomElement([
-                'None',
-                $this->faker->sentence(rand(7, 14)),
-            ]),
-
-            //Equipment
-            'eye_protection' => $this->faker->boolean(),
-            'face_protection' => $this->faker->boolean(),
-            'hand_protection' => $this->faker->boolean(),
-            'foot_protection' => $this->faker->boolean(),
-            'respiratory_protection' => $this->faker->boolean(),
-            'other_protection' => $this->faker->words(3, true),
-
-            //Emergencies
-            'instructions' => $this->faker->boolean(),
-            'spill_neutralisation' => $this->faker->boolean(),
-            'eye_irrigation' => $this->faker->boolean(),
-            'body_shower' => $this->faker->boolean(),
-            'first_aid' => $this->faker->boolean(),
-            'breathing_apparatus' => $this->faker->boolean(),
-            'external_services' => $this->faker->boolean(),
-            'poison_antidote' => $this->faker->boolean(),
-            'other_emergency' => $this->faker->words(3, true),
-
-            //Supervision
-            'routine_approval' => $this->faker->boolean(),
-            'specific_approval' => $this->faker->boolean(),
-            'personal_supervision' => $this->faker->boolean(),
-
-            //Monitoring
-            'airborne_monitoring' => $this->faker->boolean(),
-            'biological_monitoring' => $this->faker->boolean(),
-
-            //Informing
-            'inform_lab_occupants' => $this->faker->boolean(),
-            'inform_cleaners' => $this->faker->boolean(),
-            'inform_contractors' => $this->faker->boolean(),
-            'inform_other' => $this->faker->sentence(rand(1, 3)),
 
             //Supervisor/Guardian
             'supervisor_id' => function () {
                 return User::factory()->staff()->create()->id;
             },
-            'lab_guardian_id' => function () {
-                return User::factory()->staff()->create()->id;
-            },
         ];
     }
 
-    public function general()
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'type' => 'General',
-            ];
-        })->afterCreating(function (Form $form) {
-            GeneralFormDetails::factory()->create([
-                'form_id' => $form->id,
-            ]);
-        });
-    }
 
     public function chemical()
     {
@@ -111,7 +55,7 @@ class FormFactory extends Factory
                 'type' => 'Chemical',
             ];
         })->afterCreating(function (Form $form) {
-            Risk::factory()->count(rand(0, 4))->create([
+            CoshhFormDetails::factory()->create([
                 'form_id' => $form->id,
             ]);
             Substance::factory()->count(rand(0, 4))->create([
@@ -127,7 +71,7 @@ class FormFactory extends Factory
                 'type' => 'Biological',
             ];
         })->afterCreating(function (Form $form) {
-            Risk::factory()->count(rand(0, 4))->create([
+            CoshhFormDetails::factory()->create([
                 'form_id' => $form->id,
             ]);
             MicroOrganism::factory()->count(rand(0, 4))->create([
@@ -151,8 +95,6 @@ class FormFactory extends Factory
             return [
                 'status' => 'Approved',
                 'supervisor_approval' => true,
-                'lab_guardian_approval' => true,
-                'coshh_admin_approval' => true,
             ];
         });
     }
@@ -163,11 +105,7 @@ class FormFactory extends Factory
             return [
                 'status' => 'Rejected',
                 'supervisor_approval' => false,
-                'lab_guardian_approval' => false,
-                'coshh_admin_approval' => false,
                 'supervisor_comments' => $this->faker->words(3, true),
-                'lab_guardian_comments' => $this->faker->words(3, true),
-                'coshh_admin_comments' => $this->faker->words(3, true),
             ];
         });
     }

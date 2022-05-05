@@ -16,22 +16,16 @@
     @endif
 
     @if ($form->type == 'Biological' || $form->type == 'Chemical')
+
         @include('form.partials.substances')
+        @include('form.partials.protection')
+        @include('form.partials.supervision')
+        @include('form.partials.monitoring')
+        @include('form.partials.contingency')
+        @include('form.partials.emergency')
+        @include('form.partials.informing')
+        @include('form.partials.control')
     @endif
-
-    @include('form.partials.protection')
-
-    @include('form.partials.supervision')
-
-    @include('form.partials.monitoring')
-
-    @include('form.partials.contingency')
-
-    @include('form.partials.emergency')
-
-    @include('form.partials.informing')
-
-    @include('form.partials.control')
 
     @include('form.partials.files')
 

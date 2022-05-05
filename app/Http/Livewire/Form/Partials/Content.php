@@ -19,35 +19,22 @@ class Content extends Component
     use WithFileUploads;
 
     public Form $form;
-
     public $supervisor;
-
-    public $labGuardian;
-
     public $section = [];
-
     public $users = [];
-
     public $userIds = [];
-
     public Collection $risks;
-
     public Collection $substances;
-
     public Collection $microOrganisms;
-
     public $files;
-
     public $newFiles = [];
-
     public $valid = true;
 
     public function mount(Form $form)
     {
         $this->form = $form;
+        $this->coshhSection = $form->coshhSection;
         $this->supervisor = $form->supervisor;
-        $this->labGuardian = $form->labGuardian;
-        $this->section = $form->{Str::lower($form->type).'Section'};
         $this->users = $form->users->toArray();
         $this->risks = $form->risks;
         $this->substances = $form->substances;
@@ -62,55 +49,58 @@ class Content extends Component
         'userUpdated',
         'userDeleted',
         'supervisorUpdated',
-        'labGuardianUpdated',
         'updateSubstanceHazards',
         'updateSubstanceRoutes',
         'updateMicroOrganismRoutes',
     ];
 
     protected $rules = [
-        'form.type' => 'required|string',
         'form.multi_user' => 'boolean',
         'form.user_id' => 'required',
         'form.title' => 'required|string',
+        'form.management_unit' => 'required|string',
         'form.location' => 'required|string',
+        'form.review_date' => 'required|date',
         'form.description' => 'required|string',
-        'form.control_measures' => 'string',
-        'form.work_site' => 'string',
-        'form.further_risks' => 'string',
-        'form.disposal_methods' => 'string',
-        'form.eye_protection' => 'boolean',
-        'form.face_protection' => 'boolean',
-        'form.hand_protection' => 'boolean',
-        'form.foot_protection' => 'boolean',
-        'form.respiratory_protection' => 'boolean',
-        'form.other_protection' => 'string',
+        'form.type' => 'required|string',
+
+        //COSHH
+        'coshhSection.control_measures' => 'string|nullable',
+        'coshhSection.work_site' => 'string|nullable',
+        'coshhSection.further_risks' => 'string|nullable',
+        'coshhSection.disposal_methods' => 'string|nullable',
+        'coshhSection.eye_protection' => 'boolean|nullable',
+        'coshhSection.face_protection' => 'boolean|nullable',
+        'coshhSection.hand_protection' => 'boolean|nullable',
+        'coshhSection.foot_protection' => 'boolean|nullable',
+        'coshhSection.respiratory_protection' => 'boolean|nullable',
+        'coshhSection.other_protection' => 'string|nullable',
 
         //Emergencies
-        'form.instructions' => 'boolean',
-        'form.spill_neutralisation' => 'boolean',
-        'form.eye_irrigation' => 'boolean',
-        'form.body_shower' => 'boolean',
-        'form.first_aid' => 'boolean',
-        'form.breathing_apparatus' => 'boolean',
-        'form.external_services' => 'boolean',
-        'form.poison_antidote' => 'boolean',
-        'form.other_emergency' => 'string',
+        'coshhSection.instructions' => 'boolean|nullable',
+        'coshhSection.spill_neutralisation' => 'boolean|nullable',
+        'coshhSection.eye_irrigation' => 'boolean|nullable',
+        'coshhSection.body_shower' => 'boolean|nullable',
+        'coshhSection.first_aid' => 'boolean|nullable',
+        'coshhSection.breathing_apparatus' => 'boolean|nullable',
+        'coshhSection.external_services' => 'boolean|nullable',
+        'coshhSection.poison_antidote' => 'boolean|nullable',
+        'coshhSection.other_emergency' => 'string|nullable',
 
         //Supervision
-        'form.routine_approval' => 'boolean',
-        'form.specific_approval' => 'boolean',
-        'form.personal_supervision' => 'boolean',
+        'coshhSection.routine_approval' => 'boolean|nullable',
+        'coshhSection.specific_approval' => 'boolean|nullable',
+        'coshhSection.personal_supervision' => 'boolean|nullable',
 
         //Monitoring
-        'form.airborne_monitoring' => 'boolean',
-        'form.biological_monitoring' => 'boolean',
+        'coshhSection.airborne_monitoring' => 'boolean|nullable',
+        'coshhSection.biological_monitoring' => 'boolean|nullable',
 
         //Informing
-        'form.inform_lab_occupants' => 'boolean',
-        'form.inform_cleaners' => 'boolean',
-        'form.inform_contractors' => 'boolean',
-        'form.inform_other' => 'string',
+        'coshhSection.inform_lab_occupants' => 'boolean|nullable',
+        'coshhSection.inform_cleaners' => 'boolean|nullable',
+        'coshhSection.inform_contractors' => 'boolean|nullable',
+        'coshhSection.inform_other' => 'string|nullable',
 
         //Risks
         'risks.*.risk' => 'required',
@@ -126,9 +116,6 @@ class Content extends Component
         'files.*.original_filename' => '',
         'files.*.mimetype' => '',
         'files.*.size' => '',
-
-        //General section
-        'section.chemicals_involved' => '',
 
         //Substances
         'substances.*.substance' => 'required',
@@ -148,12 +135,13 @@ class Content extends Component
 
         //Supervisor + lab guardian
         'form.supervisor_id' => '',
-        'form.lab_guardian_id' => '',
     ];
 
     protected $messages = [
         'form.title.required' => 'Please provide a title',
+        'form.management_unit.required' => 'Please provide a management unit',
         'form.location.required' => 'Please provide a location',
+        'form.review_date.required' => 'Please provide a review date',
         'form.description.required' => 'Please provide a description',
 
         'risks.*.risk.required' => 'Please provide a description',
@@ -252,17 +240,6 @@ class Content extends Component
         }
     }
 
-    public function labGuardianUpdated($user)
-    {
-        if ($user == null) {
-            $this->form->supervisor_id = null;
-            $this->valid = false;
-        } else {
-            $this->form->lab_guardian_id = $user['id'];
-            $this->valid = true;
-        }
-    }
-
     public function save()
     {
         if ($this->validate()) {
@@ -287,13 +264,10 @@ class Content extends Component
         $deletedRisks = $this->form->risks->diff($this->risks);
         $deletedRisks->each(fn ($risk) => $risk->delete());
 
-        //General
-        if ($form->type == 'General') {
-            $form->addGeneralSection($this->section);
-        }
 
         //Substances - Chemical or Biological
         if ($form->type == 'Chemical' || $form->type == 'Biological') {
+            $form->addCoshhSection($this->coshhSection);
             $this->substances->each(fn ($substance) => $form->addSubstance($substance));
             $deletedSubstances = $this->form->substances->diff($this->substances);
             $deletedSubstances->each(fn ($substance) => $form->deleteSubstance($substance));
@@ -317,16 +291,7 @@ class Content extends Component
             $form->supervisor->notify(new FormSubmitted($form));
         }
 
-        if ($form->labGuardian) {
-            $form->labGuardian->notify(new FormSubmitted($form));
-        }
-
-        if (User::coshhAdmin()->first()) {
-            Notification::send(User::coshhAdmin()->first(), new FormSubmitted($form));
-        }
-
         session()->flash('success_message', 'Saved form');
-
         return redirect()->route('home');
     }
 

@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Mail\RejectedForm;
-use App\Models\GeneralFormDetails;
+use App\Models\CoshhFormDetails;
 use App\Models\MicroOrganism;
 use App\Models\User;
 use App\Notifications\ApprovedForm;
@@ -23,56 +23,12 @@ class Form extends Model
 
     protected $casts = [
         'multi_user' => 'boolean',
-        'eye_protection' => 'boolean',
-        'face_protection' => 'boolean',
-        'hand_protection' => 'boolean',
-        'foot_protection' => 'boolean',
-        'respiratory_protection' => 'boolean',
-        'instructions' => 'boolean',
-        'spill_neutralisation' => 'boolean',
-        'eye_irrigation' => 'boolean',
-        'body_shower' => 'boolean',
-        'first_aid' => 'boolean',
-        'breathing_apparatus' => 'boolean',
-        'external_services' => 'boolean',
-        'poison_antidote' => 'boolean',
-        'routine_approval' => 'boolean',
-        'specific_approval' => 'boolean',
-        'personal_supervision' => 'boolean',
-        'airborne_monitoring' => 'boolean',
-        'biological_monitoring' => 'boolean',
-        'inform_lab_occupants' => 'boolean',
-        'inform_cleaners' => 'boolean',
-        'inform_contractors' => 'boolean',
         'supervisor_approval' => 'boolean',
-        'lab_guardian_approval' => 'boolean',
     ];
 
     protected $attributes = [
         'multi_user' => false,
-        'eye_protection' => false,
-        'face_protection' => false,
-        'hand_protection' => false,
-        'foot_protection' => false,
-        'respiratory_protection' => false,
-        'instructions' => false,
-        'spill_neutralisation' => false,
-        'eye_irrigation' => false,
-        'body_shower' => false,
-        'first_aid' => false,
-        'breathing_apparatus' => false,
-        'external_services' => false,
-        'poison_antidote' => false,
-        'routine_approval' => false,
-        'specific_approval' => false,
-        'personal_supervision' => false,
-        'airborne_monitoring' => false,
-        'biological_monitoring' => false,
-        'inform_lab_occupants' => false,
-        'inform_cleaners' => false,
-        'inform_contractors' => false,
         'supervisor_approval' => null,
-        'lab_guardian_approval' => null,
     ];
 
     /**
@@ -135,14 +91,9 @@ class Form extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function labGuardian()
+    public function coshhSection()
     {
-        return $this->belongsTo(User::class);
-    }
-
-    public function generalSection()
-    {
-        return $this->hasOne(GeneralFormDetails::class);
+        return $this->hasOne(CoshhFormDetails::class);
     }
 
     public function users()
@@ -181,9 +132,9 @@ class Form extends Model
         );
     }
 
-    public function addGeneralSection($attributes = [])
+    public function addCoshhSection($attributes = [])
     {
-        GeneralFormDetails::updateOrCreate(
+        CoshhFormDetails::updateOrCreate(
             ['form_id' => $this->id],
             is_array($attributes) ? $attributes : $attributes->toArray()
         );
@@ -248,50 +199,7 @@ class Form extends Model
             $this->user->notify(new ApprovedForm($this, 'supervisor'));
         } else {
             Mail::to($this->user)
-                ->bcc([
-                    $this->labGuardian,
-                    User::coshhAdmin()->first(),
-                ])
                 ->send(new RejectedForm($this, 'supervisor'));
-        }
-    }
-
-    public function labGuardianApproval(bool $verdict, $comments = null)
-    {
-        $this->update([
-            'status' => $verdict ? 'Pending' : 'Rejected',
-            'lab_guardian_approval' => $verdict,
-            'lab_guardian_comments' => $comments,
-        ]);
-        if ($verdict) {
-            $this->user->notify(new ApprovedForm($this, 'lab guardian'));
-        } else {
-            Mail::to($this->user)
-                ->bcc([
-                    $this->supervisor,
-                    User::coshhAdmin()->first(),
-                ])
-                ->send(new RejectedForm($this, 'lab guardian'));
-        }
-    }
-
-    public function coshhAdminApproval(bool $verdict, $comments = null)
-    {
-        $this->update([
-            'status' => $verdict ? 'Approved' : 'Rejected',
-            'coshh_admin_approval' => $verdict,
-            'coshh_admin_comments' => $comments,
-        ]);
-        if ($verdict) {
-            $this->user->notify(new ApprovedForm($this, 'school safety officer'));
-        } else {
-            Mail::to($this->user)
-                ->bcc([
-                    $this->supervisor,
-                    $this->labGuardian,
-                    User::coshhAdmin()->first(),
-                ])
-                ->send(new RejectedForm($this, 'school safety officer'));
         }
     }
 

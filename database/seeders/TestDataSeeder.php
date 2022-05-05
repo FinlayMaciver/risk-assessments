@@ -62,15 +62,15 @@ class TestDataSeeder extends Seeder
             'guid' => 'coshhadmin',
         ]);
 
-        Form::factory()->general()->count(5)->create([
+        Form::factory()->count(5)->create([
             'user_id' => $me->id,
         ]);
-        Form::factory()->general()->approved()->count(5)->create();
-        Form::factory()->general()->rejected()->count(5)->create();
+        Form::factory()->approved()->count(5)->create();
+        Form::factory()->rejected()->count(5)->create();
 
-        Form::factory()->general()->multiuser()->count(5)->create();
-        Form::factory()->general()->multiuser()->approved()->count(5)->create();
-        Form::factory()->general()->multiuser()->rejected()->count(5)->create();
+        Form::factory()->multiuser()->count(5)->create();
+        Form::factory()->multiuser()->approved()->count(5)->create();
+        Form::factory()->multiuser()->rejected()->count(5)->create();
 
         Form::factory()->chemical()->count(5)->create();
         Form::factory()->chemical()->approved()->count(5)->create();

@@ -3,8 +3,6 @@
 namespace App\Http\Livewire\Form;
 
 use App\Models\Form;
-use App\Models\GeneralFormDetails;
-use App\Models\Risk;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -15,7 +13,7 @@ class Create extends Component
     public function mount($type = null)
     {
         $this->form = Form::make([
-            'type' => $type,
+            'type' => 'General',
             'user_id' => Auth::user()->id,
         ]);
     }

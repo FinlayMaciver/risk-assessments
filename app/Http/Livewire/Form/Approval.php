@@ -20,10 +20,6 @@ class Approval extends Component
     {
         if ($this->form->supervisor == auth()->user()) {
             $this->form->supervisorApproval($verdict, $this->comments);
-        } elseif ($this->form->labGuardian == auth()->user()) {
-            $this->form->labGuardianApproval($verdict, $this->comments);
-        } elseif (auth()->user()->is_coshh_admin) {
-            $this->form->coshhAdminApproval($verdict, $this->comments);
         }
 
         session()->flash('success_message', 'Submitted verdict.');

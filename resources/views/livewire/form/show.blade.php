@@ -23,25 +23,15 @@
         </div>
         @endif
         @if ($form->type == 'Biological' || $form->type == 'Chemical')
-        <div class="row mb-3">
-            @include('form.show.substances')
-        </div>
+            <div class="row mb-3">
+                @include('form.show.substances')
+            </div>
+            <div class="row mb-3">
+                @include('form.show.requirements')
+                @include('form.show.information')
+            </div>
         @endif
-        <div class="row mb-3">
-            @include('form.show.requirements')
-            @include('form.show.information')
-        </div>
-        @if(
-            (
-                $form->supervisor == auth()->user()
-                && $form->supervisor_approval === null
-            ) || (
-                $form->labGuardian == auth()->user()
-                && $form->lab_guardian_approval === null
-            ) || (
-                auth()->user()->is_coshh_admin && $form->coshh_admin_approval === null
-            )
-        )
+        @if($form->supervisor == auth()->user() && $form->supervisor_approval === null)
             <hr>
             @livewire('form.approval', [
                 'form' => $form

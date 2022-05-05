@@ -21,32 +21,6 @@
                 </div>
             @endif
 
-            @if($form->labGuardian)
-                <div class="g-0">
-                    <i class="me-2 fas fa-user-cog"></i>
-                    <span class="d-none d-xl-inline-block">Lab guardian - </span>
-                    <span>{{ $form->labGuardian->full_name }}</span>
-                    @if ($form->lab_guardian_approval)
-                        <span class="float-end text-success">Approved</span>
-                    @elseif ($form->lab_guardian_approval === false)
-                        <span class="float-end text-danger">Rejected</span>
-                    @endif
-                </div>
-            @endif
-
-            @if (isset($form->coshh_admin_approval))
-                <div class="g-0 mt-1">
-                    <i class="me-2 fas fa-user-lock"></i>
-                    <span class="d-none d-xl-inline-block">COSHH Admin - </span>
-                    <span>{{ \App\Models\User::coshhAdmin()->first()->full_name }}</span>
-                    @if ($form->coshh_admin_approval)
-                        <span class="float-end text-success">Approved</span>
-                    @else
-                        <span class="float-end text-danger">Rejected</span>
-                    @endif
-                </div>
-            @endif
-
             @if($form->has_comments)
                 <hr>
                 <div class="g-0">

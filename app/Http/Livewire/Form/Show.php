@@ -12,9 +12,9 @@ class Show extends Component
     public function mount($id)
     {
         $this->form = Form::with([
+            'user',
             'supervisor',
-            'labGuardian',
-            'generalSection',
+            'coshhSection',
             'risks',
             'substances.routes',
             'substances.hazards',
