@@ -15,6 +15,7 @@ class UserFactory extends Factory
             'surname' => str_replace("'", '', $this->faker->lastName()),
             'guid' => $this->faker->unique()->userName(),
             'email' => $this->faker->unique()->safeEmail(),
+            'job_title' => $this->faker->jobTitle(),
             'is_staff' => false,
             'is_admin' => false,
             'is_coshh_admin' => false,

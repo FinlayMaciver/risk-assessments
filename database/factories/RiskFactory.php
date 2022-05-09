@@ -3,7 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Form;
-use App\Models\Risk;
+use App\Models\Impact;
+use App\Models\Likelihood;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class RiskFactory extends Factory
@@ -19,26 +20,22 @@ class RiskFactory extends Factory
             'form_id' => function () {
                 return Form::factory()->create()->id;
             },
-            'risk' => $this->faker->sentence(rand(1, 5)),
+            'hazard' => $this->faker->sentence(rand(1, 5)),
+            'consequences' => $this->faker->sentence(rand(1, 5)),
+            'likelihood_without' => function () {
+                return Likelihood::factory()->create()->id;
+            },
+            'impact_without' => function () {
+                return Impact::factory()->create()->id;
+            },
             'control_measures' => $this->faker->sentence(rand(1, 5)),
-            'severity' => $this->faker->randomElement([
-                'Slight',
-                'Moderate',
-                'Very',
-                'Extreme',
-            ]),
-            'likelihood_without' => $this->faker->randomElement([
-                'Improbable',
-                'Unlikely',
-                'Likely',
-                'Very likely',
-            ]),
-            'likelihood_with' => $this->faker->randomElement([
-                'Improbable',
-                'Unlikely',
-                'Likely',
-                'Very likely',
-            ]),
+            'likelihood_with' => function () {
+                return Likelihood::factory()->create()->id;
+            },
+            'impact_with' => function () {
+                return Impact::factory()->create()->id;
+            },
+            'comments' => $this->faker->sentence(rand(1, 5)),
         ];
     }
 }

@@ -91,6 +91,11 @@ class Form extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function reviewers()
+    {
+        return $this->belongsToMany(User::class, 'form_reviewers')->using(FormReviewer::class)->withPivot('approved', 'comments');
+    }
+
     public function coshhSection()
     {
         return $this->hasOne(CoshhFormDetails::class);

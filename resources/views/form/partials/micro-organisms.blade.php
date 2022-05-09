@@ -107,7 +107,7 @@
             <hr>
         @endforeach
         <div class="d-grid">
-            <button wire:click.prevent="addMicroOrganism" class="btn btn-primary">+ Add a micro-organism</button>
+            <button wire:click.prevent="addMicroOrganism" class="btn btn-primary fw-bold">+ Add a micro-organism</button>
         </div>
     </div>
 </div>

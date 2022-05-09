@@ -3,14 +3,14 @@
 namespace App\Http\Livewire\Form\Partials;
 
 use App\Models\Form;
+use App\Models\Impact;
+use App\Models\Likelihood;
 use App\Models\MicroOrganism;
 use App\Models\Risk;
 use App\Models\Substance;
 use App\Models\User;
 use App\Notifications\FormSubmitted;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -21,21 +21,23 @@ class Content extends Component
     public Form $form;
     public $supervisor;
     public $section = [];
-    public $users = [];
-    public $userIds = [];
+    public $reviewers = [];
+    public $reviewerIds = [];
     public Collection $risks;
     public Collection $substances;
     public Collection $microOrganisms;
     public $files;
     public $newFiles = [];
     public $valid = true;
+    public $likelihoods = [];
+    public $impacts = [];
 
     public function mount(Form $form)
     {
         $this->form = $form;
         $this->coshhSection = $form->coshhSection;
         $this->supervisor = $form->supervisor;
-        $this->users = $form->users->toArray();
+        $this->reviewers = $form->reviewers->toArray();
         $this->risks = $form->risks;
         $this->substances = $form->substances;
         $this->microOrganisms = $form->microOrganisms;
@@ -43,11 +45,13 @@ class Content extends Component
         $this->substances->each(fn ($substance) => $substance->hazard_ids = $substance->hazards->pluck('id'));
         $this->substances->each(fn ($substance) => $substance->route_ids = $substance->routes->pluck('id'));
         $this->microOrganisms->each(fn ($substance) => $substance->route_ids = $substance->routes->pluck('id'));
+        $this->likelihoods = Likelihood::all();
+        $this->impacts = Impact::all();
     }
 
     protected $listeners = [
-        'userUpdated',
-        'userDeleted',
+        'reviewerUpdated',
+        'reviewerDeleted',
         'supervisorUpdated',
         'updateSubstanceHazards',
         'updateSubstanceRoutes',
@@ -103,11 +107,14 @@ class Content extends Component
         'coshhSection.inform_other' => 'string|nullable',
 
         //Risks
-        'risks.*.risk' => 'required',
-        'risks.*.severity' => 'required_with:risks.*.risk',
-        'risks.*.control_measures' => 'required_with:risks.*.risk',
-        'risks.*.likelihood_without' => 'required_with:risks.*.risk',
-        'risks.*.likelihood_with' => 'required_with:risks.*.risk',
+        'risks.*.hazard' => 'required',
+        'risks.*.consequences' => 'required',
+        'risks.*.likelihood_without' => 'required',
+        'risks.*.impact_without' => 'required',
+        'risks.*.control_measures' => 'required_with:risks.*.hazard',
+        'risks.*.likelihood_with' => 'required',
+        'risks.*.impact_with' => 'required',
+        'risks.*.comments' => 'string|nullable',
 
         //Files
         'files.*.id' => '',
@@ -144,11 +151,13 @@ class Content extends Component
         'form.review_date.required' => 'Please provide a review date',
         'form.description.required' => 'Please provide a description',
 
-        'risks.*.risk.required' => 'Please provide a description',
-        'risks.*.severity.required_with' => 'Please select a severity',
-        'risks.*.control_measures.required_with' => 'Please describe control measures',
-        'risks.*.likelihood_without.required_with' => 'Please select likelihood without',
-        'risks.*.likelihood_with.required_with' => 'Please select likelihood with',
+        'risks.*.hazard.required' => 'Please provide a description of the hazard',
+        'risks.*.consequences.required' => 'Please provide a description of the consequences',
+        'risks.*.likelihood_without.required' => 'Please select a likelihood',
+        'risks.*.impact_without.required' => 'Please select an impact',
+        'risks.*.control_measures.required_with' => 'Please provide control measures',
+        'risks.*.likelihood_with.required' => 'Please select a likelihood',
+        'risks.*.impact_with.required' => 'Please select an impact',
 
         'substances.*.substance.required' => 'Please provide a substance name',
         'substances.*.quantity.required_with' => 'Please select a quantity',
@@ -167,9 +176,43 @@ class Content extends Component
         return view('livewire.form.partials.content');
     }
 
-    public function addUser()
+    public function updateRiskRating($index)
     {
-        $this->users[] = new User();
+        if ($this->risks[$index]->likelihood_without && $this->risks[$index]->impact_without) {
+            $rating_without = $this->getRiskRating($this->risks[$index]->likelihood_without, $this->risks[$index]->impact_without);
+            $this->risks[$index]->rating_without = $rating_without;
+            $this->risks[$index]->blurb_without = $this->getRiskBlurb($rating_without);
+        }
+        if ($this->risks[$index]->likelihood_with && $this->risks[$index]->impact_with) {
+            $rating_with = $this->getRiskRating($this->risks[$index]->likelihood_with, $this->risks[$index]->impact_with);
+            $this->risks[$index]->rating_with = $rating_with;
+            $this->risks[$index]->blurb_with = $this->getRiskBlurb($rating_with);
+        }
+    }
+
+    public function getRiskRating($likelihood, $impact)
+    {
+        return Likelihood::find($likelihood)->value * Impact::find($impact)->value;
+    }
+
+    public function getRiskBlurb($rating)
+    {
+        if ($rating <= 2) {
+            return 'Very Low Risk: No further action is usually required but ensure that existing controls are maintained and reviewed regularly';
+        } elseif ($rating <= 6) {
+            return 'Low Risk: Look to improve at the next review or if there is a significant change. Monitor the situation periodically to determine if new control measures are required';
+        } elseif ($rating <= 12) {
+            return 'Moderate Risk: Moderate risks may be tolerated for short periods while further control measures to reduce the risk are being planned and implemented. Improvements should be made within the specified timescale, if these are possible.';
+        } elseif ($rating <= 16) {
+            return 'High Risk: Take immediate action and stop the activity if necessary, maintain existing controls rigorously. The continued effectiveness of control measures should be monitored periodically.';
+        } else {
+            return 'Very High Risk: Stop the activity and take immediate action to reduce the risk, a detailed plan should be developed and implemented before work commences or continues. Senior management should monitor the plan.';
+        }
+    }
+
+    public function addReviewer()
+    {
+        $this->reviewers[] = new User();
     }
 
     public function addRisk()
@@ -217,16 +260,18 @@ class Content extends Component
         $this->microOrganisms[$index]->route_ids = $routes;
     }
 
-    public function userUpdated(User $user, $index)
+    public function reviewerUpdated(User $reviewer, $index)
     {
-        $this->users[$index] = $user;
-        $this->userIds[] = $user->id;
+        $this->reviewers[$index] = $reviewer;
+        $this->reviewerIds[] = $reviewer->id;
     }
 
-    public function userDeleted(User $user, $index)
+    public function reviewerDeleted($reviewer, $index)
     {
-        unset($this->users[$index]);
-        $this->userIds = array_diff($this->userIds, [$user->id]);
+        unset($this->reviewers[$index]);
+        if ($reviewer) {
+            $this->reviewerIds = array_diff($this->reviewerIds, [$reviewer['id']]);
+        }
     }
 
     public function supervisorUpdated($user)
@@ -252,12 +297,8 @@ class Content extends Component
             $this->form->attributesToArray()
         );
 
-        //Users
-        if ($form->multi_user) {
-            $form->users()->sync($this->userIds);
-        } else {
-            $form->users()->sync([]);
-        }
+        //Reviewers
+        $form->reviewers()->sync($this->reviewerIds);
 
         //Risks
         $this->risks->each(fn ($risk) => $form->updateRisk($risk));

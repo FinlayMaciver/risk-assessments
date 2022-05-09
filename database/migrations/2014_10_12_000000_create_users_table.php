@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->string('surname');
             $table->string('guid')->unique();
             $table->string('email')->unique();
+            $table->string('job_title')->nullable();
             $table->boolean('is_staff')->default(false);
             $table->boolean('is_admin')->default(false);
             $table->boolean('is_coshh_admin')->default(false);

@@ -15,11 +15,14 @@ return new class extends Migration {
         Schema::create('risks', function (Blueprint $table) {
             $table->id();
             $table->foreignId('form_id')->constrained()->onDelete('cascade');
-            $table->string('risk');
-            $table->string('severity')->nullable();
+            $table->string('hazard');
+            $table->string('consequences');
+            $table->foreignId('likelihood_without')->constrained('likelihoods')->onDelete('cascade');
+            $table->foreignId('impact_without')->constrained('impacts')->onDelete('cascade');
             $table->string('control_measures')->nullable();
-            $table->string('likelihood_with')->nullable();
-            $table->string('likelihood_without')->nullable();
+            $table->foreignId('likelihood_with')->constrained('likelihoods')->onDelete('cascade');
+            $table->foreignId('impact_with')->constrained('impacts')->onDelete('cascade');
+            $table->string('comments')->nullable();
             $table->timestamps();
         });
     }

@@ -72,13 +72,4 @@ class CoshhFormDetailsFactory extends Factory
             'inform_other' => $this->faker->sentence(rand(1, 3)),
         ];
     }
-
-    public function configure()
-    {
-        return $this->afterCreating(function (CoshhFormDetails $details) {
-            Risk::factory()->count(rand(0, 4))->create([
-                'form_id' => $details->form_id,
-            ]);
-        });
-    }
 }

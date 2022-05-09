@@ -1,26 +1,9 @@
 <div class="row justify-content-center">
     <div class="col col-lg-9 mt-3">
         <div class="d-grid d-md-flex justify-content-md-end mb-2">
-            <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            <a href="{{ route('form.create') }}" class="btn btn-success" type="button">
                 + Create
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                <li>
-                    <a class="dropdown-item" href="{{ route('form.create', [
-                        'type' => 'General'
-                    ]) }}">General</a>
-                </li>
-                <li>
-                    <a class="dropdown-item" href="{{ route('form.create', [
-                        'type' => 'Chemical'
-                    ]) }}">Chemical</a>
-                </li>
-                <li>
-                    <a class="dropdown-item" href="{{ route('form.create', [
-                        'type' => 'Biological'
-                    ]) }}">Biological</a>
-                </li>
-            </ul>
+            </a>
         </div>
 
 

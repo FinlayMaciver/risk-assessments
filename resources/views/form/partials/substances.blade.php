@@ -104,7 +104,7 @@
             <hr>
         @endforeach
         <div class="d-grid">
-            <button wire:click.prevent="addSubstance" class="btn btn-primary">+ Add a substance</button>
+            <button wire:click.prevent="addSubstance" class="btn btn-primary fw-bold">+ Add a substance</button>
         </div>
     </div>
 </div>
