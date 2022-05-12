@@ -9,6 +9,7 @@ use App\Models\Risk;
 use App\Models\Substance;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Arr;
 
 class FormFactory extends Factory
 {
@@ -40,7 +41,7 @@ class FormFactory extends Factory
             'status' => 'Pending',
             'title' => $this->faker->sentence(rand(1, 4)),
             'management_unit' => 'School of Engineering',
-            'location' => $this->faker->city(),
+            'location' => $this->getRandomRoom(),
             'review_date' => $this->faker->date(),
             'description' => $this->faker->sentence(rand(10, 20)),
 
@@ -49,6 +50,11 @@ class FormFactory extends Factory
                 return User::factory()->staff()->create()->id;
             },
         ];
+    }
+
+    protected function getRandomRoom()
+    {
+        return Arr::random(['JWS', 'Rankine']) . ' ' . Arr::random(['Room', 'Lab']) . ' ' . $this->faker->numberBetween(100, 700);
     }
 
 

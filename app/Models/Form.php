@@ -23,6 +23,7 @@ class Form extends Model
     protected $casts = [
         'multi_user' => 'boolean',
         'supervisor_approval' => 'boolean',
+        'review_date' => 'datetime',
     ];
 
     protected $attributes = [
