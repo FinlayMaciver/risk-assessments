@@ -20,23 +20,41 @@
 </head>
 
 <body>
-    <div id="app">
+    <div id="app" class="d-flex">
         @auth
-        <nav class="navbar navbar-dark bg-primary">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="/">
-                    <img src="{{asset('images/uogbanner.jpeg')}}" alt="University of Glasgow" class="d-none d-lg-inline-block align-text-center banner-logo">
-                    <span class="ms-2">School of Engineering - Risk Assessment</span>
+            <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-primary vh-100 sticky-top" style="width: 280px;">
+                <a href="/" class="align-items-center mb-3 mb-md-0 me-md-auto text-center text-white text-decoration-none">
+                    <img src="{{asset('images/uogbanner.jpeg')}}" class="w-100 mb-3" alt="..."><br>
+                    <span>
+                        <h5>
+                            School of Engineering<br>
+                            COSHH Risk Assessment
+                        </h5>
+                    </span>
                 </a>
-                <!-- Right Side Of Navbar -->
-                <ul class="navbar-nav ml-auto">
-                    @livewire('logout')
+                <hr>
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <li class="nav-item">
+                        <a href="{{ route('home') }}" class="nav-link active" aria-current="page">
+                            My Forms
+                        </a>
+                        <a href="{{ route('approved-forms') }}" class="nav-link" aria-current="page">
+                            Approved Forms
+                        </a>
+                        <a href="{{ route('signed-forms') }}" class="nav-link" aria-current="page">
+                            Signed Forms
+                        </a>
+                        <a href="{{ route('all-forms') }}" class="nav-link" aria-current="page">
+                            All Forms
+                        </a>
+                    </li>
                 </ul>
+                <hr>
+                @livewire('logout')
             </div>
-        </nav>
-        @include('partials.notifications')
         @endauth
         <div class="container-fluid">
+            @include('partials.notifications')
             {{ $slot }}
         </div>
     </div>

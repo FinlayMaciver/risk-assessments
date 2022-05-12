@@ -19,7 +19,7 @@ class FormReviewerFactory extends Factory
             'form_id' => function () {
                 return Form::factory()->create()->id;
             },
-            'reviewer_id' => function () {
+            'user_id' => function () {
                 return User::factory()->create()->id;
             },
         ];

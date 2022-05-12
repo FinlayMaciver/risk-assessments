@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 
 class Form extends Model
@@ -205,6 +204,24 @@ class Form extends Model
         } else {
             Mail::to($this->user)
                 ->send(new RejectedForm($this, 'supervisor'));
+        }
+    }
+
+    public function reviewerApproval(User $reviewer, bool $verdict, $comments = null)
+    {
+        $this->update([
+            'status' => $verdict ? $this->status : 'Rejected',
+        ]);
+        $this->reviewers()->updateExistingPivot(
+            $reviewer->id,
+            ['approved' => $verdict, 'comments' => $comments]
+        );
+
+        if ($verdict) {
+            $this->user->notify(new ApprovedForm($this, 'reviewer'));
+        } else {
+            Mail::to($this->user)
+                ->send(new RejectedForm($this, 'reviewer'));
         }
     }
 

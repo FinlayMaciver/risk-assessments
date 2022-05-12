@@ -6,20 +6,9 @@
             </a>
         </div>
 
-
         <div class="card">
-            <div class="card-header">
-                <ul class="nav nav-tabs card-header-tabs nav-fill" role="tablist">
-                    <li class="nav-item" role="presentation" wire:ignore>
-                        <button class="nav-link active" id="my-forms-tab" data-bs-toggle="tab" data-bs-target="#my-forms" type="button" role="tab" aria-controls="my-forms" aria-selected="true">My Forms</button>
-                    </li>
-                    <li class="nav-item" role="presentation" wire:ignore>
-                        <button class="nav-link" id="all-forms-tab" data-bs-toggle="tab" data-bs-target="#all-forms" type="button" role="tab" aria-controls="all-forms" aria-selected="true">All Forms</button>
-                    </li>
-                </ul>
-            </div>
+            <div class="card-header">My Forms</div>
             <div class="card-body">
-
                 <div class="input-group mb-2">
                     <div class="input-group-text">
                         <i class="fas fa-filter"></i>
@@ -70,40 +59,20 @@
                     <input id="search" class="form-control" type="text" wire:model="search" placeholder="Search...">
                 </div>
 
-                <div class="tab-content">
-                    <div class="tab-pane fade show active" id="my-forms" role="tabpanel" aria-labelledby="my-forms-tab" wire:ignore.self>
-                        <table class="table table-borderless border rounded-3">
-                            <thead class="table-light">
-                                <tr>
-                                    @if (! $myForms->count())
-                                        <td class="text-center fw-bold" colspan="3">No forms to show.</td>
-                                    @else
-                                        @include('livewire.partials.table-headers')
-                                    @endif
-                                </tr>
-                            </thead>
-                            <tbody class="border">
-                                @include('livewire.partials.table-row', ['forms' => $myForms])
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="tab-pane fade" id="all-forms" role="tabpanel" aria-labelledby="all-forms-tab" wire:ignore.self>
-                        <table class="table table-borderless border rounded-3">
-                            <thead class="table-light">
-                                <tr>
-                                    @if (! $allForms->count())
-                                        <td class="text-center fw-bold" colspan="3">No forms to show.</td>
-                                    @else
-                                        @include('livewire.partials.table-headers')
-                                    @endif
-                                </tr>
-                            </thead>
-                            <tbody class="border">
-                                @include('livewire.partials.table-row', ['forms' => $allForms])
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <table class="table table-borderless border rounded-3">
+                    <thead class="table-light">
+                        <tr>
+                            @if (! $myForms->count())
+                                <td class="text-center fw-bold" colspan="3">No forms to show.</td>
+                            @else
+                                @include('livewire.partials.table-headers')
+                            @endif
+                        </tr>
+                    </thead>
+                    <tbody class="border">
+                        @include('livewire.partials.table-row', ['forms' => $myForms])
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

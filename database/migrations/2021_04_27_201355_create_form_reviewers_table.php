@@ -14,7 +14,7 @@ return new class extends Migration {
     {
         Schema::create('form_reviewers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('reviewers_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('form_id')->constrained()->onDelete('cascade');
             $table->boolean('approved')->nullable()->default(null);
             $table->string('comments')->nullable()->default(null);

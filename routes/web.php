@@ -17,6 +17,9 @@ Route::get('login', App\Http\Livewire\Login::class)->name('login');
 
 Route::middleware('auth')->group(function () {
     Route::get('/', App\Http\Livewire\Home::class)->name('home');
+    Route::get('/signed-forms', App\Http\Livewire\SignedForms::class)->name('signed-forms');
+    Route::get('/approved-forms', App\Http\Livewire\ApprovedForms::class)->name('approved-forms');
+    Route::get('/all-forms', App\Http\Livewire\AllForms::class)->name('all-forms');
 
     Route::get('/form/create', App\Http\Livewire\Form\Create::class)->name('form.create');
     Route::get('/form/{id}', App\Http\Livewire\Form\Show::class)->name('form.show');
