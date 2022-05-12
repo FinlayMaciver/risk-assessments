@@ -24,7 +24,6 @@ class BiologicalFormTest extends TestCase
     {
         $user = User::factory()->create();
         $supervisor = User::factory()->create();
-        $labGuardian = User::factory()->create();
         $form = new Form([
             'type' => 'Biological',
             'user_id' => $user->id,
@@ -303,7 +302,6 @@ class BiologicalFormTest extends TestCase
     {
         $user = User::factory()->create();
         $supervisor = User::factory()->create();
-        $labGuardian = User::factory()->create();
         $form = Form::create([
             'type' => 'Biological',
             'user_id' => $user->id,

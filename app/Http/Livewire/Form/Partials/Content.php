@@ -140,7 +140,7 @@ class Content extends Component
         'microOrganisms.*.repeated_low_effect' => 'required_with:microOrganisms.*.micro_organism',
         'microOrganisms.*.route_ids' => '',
 
-        //Supervisor + lab guardian
+        //Supervisor
         'form.supervisor_id' => '',
     ];
 

@@ -89,12 +89,6 @@ class TestDataSeeder extends Seeder
             'guid' => 'fmi9x',
         ]);
 
-        $coshhAdmin = User::factory()->coshhAdmin()->create([
-            'forenames' => 'Coshh',
-            'surname' => 'Admin',
-            'guid' => 'coshhadmin',
-        ]);
-
         Form::factory()->count(5)->create([
             'user_id' => $me->id,
         ]);

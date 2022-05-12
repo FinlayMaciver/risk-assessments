@@ -21,7 +21,6 @@ return new class extends Migration {
             $table->string('job_title')->nullable();
             $table->boolean('is_staff')->default(false);
             $table->boolean('is_admin')->default(false);
-            $table->boolean('is_coshh_admin')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });

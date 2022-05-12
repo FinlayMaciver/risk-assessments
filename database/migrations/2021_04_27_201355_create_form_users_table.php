@@ -16,8 +16,6 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('form_id')->constrained()->onDelete('cascade');
-            $table->boolean('signed')->default(false);
-            $table->timestamp('signed_at')->nullable();
             $table->timestamps();
         });
     }

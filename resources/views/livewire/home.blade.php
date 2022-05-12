@@ -1,33 +1,8 @@
 <div class="row justify-content-center">
     <div class="col col-lg-9 mt-3">
-        <div class="d-grid d-md-flex justify-content-md-end mb-2">
-            <a href="{{ route('form.create') }}" class="btn btn-success" type="button">
-                + Create
-            </a>
-        </div>
-
+        <h3 class="mt-5 mb-5 text-center">My Forms</h3>
         <div class="card">
-            <div class="card-header">My Forms</div>
             <div class="card-body">
-                <div class="input-group mb-2">
-                    <div class="input-group-text">
-                        <i class="fas fa-filter"></i>
-                        <span class="ml-1 d-none d-lg-block">Type</span>
-                    </div>
-                    <button wire:click.prevent="$set('multiFilter', '')"
-                        class="input-group-text @if($multiFilter === '') bg-primary text-light @else bg-white @endif">
-                        Both
-                    </button>
-                    <button wire:click.prevent="$set('multiFilter', false)"
-                        class="input-group-text @if($multiFilter === false) bg-primary text-light @else bg-white @endif">
-                        Single user
-                    </button>
-                    <button wire:click.prevent="$set('multiFilter', true)"
-                        class="input-group-text @if($multiFilter === true) bg-primary text-light @else bg-white @endif">
-                        Multiple users
-                    </button>
-                </div>
-
                 <div class="input-group mb-2">
                     <div class="input-group-text">
                         <i class="fas fa-filter"></i>

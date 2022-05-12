@@ -30,18 +30,6 @@
                             {{ $form->supervisor_comments }}
                         </p>
                     @endif
-                    @if($form->lab_guardian_comments)
-                        <p>
-                            <b>Lab Guardian Comments:</b><br>
-                            {{ $form->lab_guardian_comments }}
-                        </p>
-                    @endif
-                    @if($form->coshh_admin_comments)
-                        <p>
-                            <b>COSHH Admin Comments:</b><br>
-                            {{ $form->coshh_admin_comments }}
-                        </p>
-                    @endif
                 </div>
             @endif
         </div>
