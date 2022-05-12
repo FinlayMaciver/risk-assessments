@@ -9,6 +9,12 @@ use Tests\TestCase;
 
 class SignFormTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->artisan('db:seed', ['--class' => 'DatabaseSeeder']);
+    }
+
     /** @test */
     public function test_user_can_sign_a_multi_user_form()
     {

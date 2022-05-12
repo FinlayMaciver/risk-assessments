@@ -20,7 +20,7 @@ class Content extends Component
 
     public Form $form;
     public $supervisor;
-    public $section = [];
+    public $coshhSection;
     public $reviewers = [];
     public $reviewerIds = [];
     public Collection $risks;
