@@ -36,7 +36,7 @@
                                     class="form-select @error('risks.*.likelihood_without') is-invalid @enderror">
                                     <option value="" selected>---</option>
                                         @foreach($likelihoods as $likelihood)
-                                            <option value="{{ $likelihood->id }}">{{ $likelihood->title }}</option>
+                                            <option value="{{ $likelihood->id }}">{{ $likelihood->value }} - {{ $likelihood->title }}</option>
                                         @endforeach
                                 </select>
                                 <label for="likelihood_without" class="form-label">Likelihood <b><u>without</u></b> control measures</label>
@@ -53,7 +53,7 @@
                                     class="form-select @error('risks.*.impact_without') is-invalid @enderror">
                                     <option value="" selected>---</option>
                                         @foreach($impacts as $impact)
-                                            <option value="{{ $impact->id }}">{{ $impact->title }}</option>
+                                            <option value="{{ $impact->id }}">{{ $impact->value }} - {{ $impact->title }}</option>
                                         @endforeach
                                 </select>
                                 <label for="impact_without" class="form-label">Impact <b><u>without</u></b> control measures</label>
@@ -94,7 +94,7 @@
                                     class="form-select @error('risks.*.likelihood_with') is-invalid @enderror">
                                     <option value="" selected>---</option>
                                     @foreach($likelihoods as $likelihood)
-                                        <option value="{{ $likelihood->id }}">{{ $likelihood->title }}</option>
+                                        <option value="{{ $likelihood->id }}">{{ $likelihood->value }} - {{ $likelihood->title }}</option>
                                     @endforeach
                                 </select>
                                 <label for="likelihood_with" class="form-label">Likelihood <b><u>with</u></b> control measures</label>
@@ -111,7 +111,7 @@
                                     class="form-select @error('risks.*.impact_with') is-invalid @enderror">
                                     <option value="" selected>---</option>
                                     @foreach($impacts as $impact)
-                                        <option value="{{ $impact->id }}">{{ $impact->title }}</option>
+                                        <option value="{{ $impact->id }}">{{ $impact->value }} - {{ $impact->title }}</option>
                                     @endforeach
                                 </select>
                                 <label for="impact_with" class="form-label">Impact <b><u>with</u></b> control measures</label>
