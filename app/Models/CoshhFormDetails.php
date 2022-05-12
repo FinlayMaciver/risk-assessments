@@ -9,6 +9,8 @@ class CoshhFormDetails extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     protected $casts = [
         'eye_protection' => 'boolean',
         'face_protection' => 'boolean',

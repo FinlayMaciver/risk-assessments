@@ -35,16 +35,23 @@
                 <hr>
                 <ul class="nav nav-pills flex-column mb-auto">
                     <li class="nav-item">
-                        <a href="{{ route('home') }}" class="nav-link active" aria-current="page">
+                        <a href="{{ route('home') }}" class="nav-link
+                            @if(Route::currentRouteName() == 'home') active @endif"
+                            aria-current="page">
                             My Forms
                         </a>
-                        <a href="{{ route('approved-forms') }}" class="nav-link" aria-current="page">
+                        <a href="{{ route('approved-forms') }}" class="nav-link
+                            @if(Route::currentRouteName() == 'approved-forms') active @endif"
+                            aria-current="page">
                             Approved Forms
                         </a>
-                        <a href="{{ route('signed-forms') }}" class="nav-link" aria-current="page">
+                        <a href="{{ route('signed-forms') }}" class="nav-link
+                            @if(Route::currentRouteName() == 'signed-forms') active @endif"
+                            aria-current="page">
                             Signed Forms
                         </a>
-                        <a href="{{ route('all-forms') }}" class="nav-link" aria-current="page">
+                        <a href="{{ route('all-forms') }}" class="nav-link @if(Route::currentRouteName() == 'all-forms') active @endif"
+                            aria-current="page">
                             All Forms
                         </a>
                         @coshhadmin

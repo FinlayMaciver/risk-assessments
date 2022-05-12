@@ -8,6 +8,12 @@ use Tests\TestCase;
 
 class HomeTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->artisan('db:seed', ['--class' => 'DatabaseSeeder']);
+    }
+
     public function testHomePageShowsOnlyLoggedInUsersForms()
     {
         $user = User::factory()->create();
