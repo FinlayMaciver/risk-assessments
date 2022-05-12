@@ -24,8 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Blade::if('coshhadmin', function () {
-            return auth()->check() && auth()->user()->isCoshhAdmin();
+        Blade::if('admin', function () {
+            return auth()->check() && auth()->user()->isAdmin();
         });
     }
 }

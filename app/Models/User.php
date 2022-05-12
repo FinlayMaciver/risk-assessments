@@ -18,7 +18,7 @@ class User extends Authenticatable
     ];
 
     protected $casts = [
-        'is_coshh_admin' => 'boolean',
+        'is_admin' => 'boolean',
     ];
 
     public function scopeCoshhAdmin($query)
@@ -57,8 +57,8 @@ class User extends Authenticatable
         return $user;
     }
 
-    public function isCoshhAdmin(): bool
+    public function isAdmin(): bool
     {
-        return (bool) $this->is_coshh_admin;
+        return (bool) $this->is_admin;
     }
 }

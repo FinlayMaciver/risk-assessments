@@ -25,7 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/form/{id}', App\Http\Livewire\Form\Show::class)->name('form.show');
     Route::get('/form/{formId}/edit', App\Http\Livewire\Form\Edit::class)->name('form.edit');
 
-    Route::group(['middleware' => 'coshh.admin'], function () {
+    Route::group(['middleware' => 'admin'], function () {
         Route::get('/report/expiring', App\Http\Livewire\Report\Expiring::class)->name('report.expiring');
     });
 });

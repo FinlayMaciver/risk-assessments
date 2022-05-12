@@ -101,6 +101,12 @@ class TestDataSeeder extends Seeder
         Form::factory()->approved()->count(5)->create();
         Form::factory()->rejected()->count(5)->create();
 
+        foreach (range(1, 10) as $i) {
+            Form::factory()->create([
+                "review_date" => now()->addDays(rand(1, 40)),
+            ]);
+        }
+
         Form::factory()->multiuser()->count(5)->create();
         Form::factory()->multiuser()->approved()->count(5)->create();
         Form::factory()->multiuser()->rejected()->count(5)->create();

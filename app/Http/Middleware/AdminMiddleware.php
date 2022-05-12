@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class CoshhAdminMiddleware
+class AdminMiddleware
 {
     /**
      * Handle an incoming request.
@@ -21,7 +21,7 @@ class CoshhAdminMiddleware
             abort(Response::HTTP_FORBIDDEN, 'You must be logged in.');
         }
 
-        if (! $request->user()->isCoshhAdmin()) {
+        if (! $request->user()->isAdmin()) {
             abort(Response::HTTP_FORBIDDEN, 'Only admin users can view this page.');
         }
 

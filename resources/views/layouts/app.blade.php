@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="Description" content="University of Glasgow School of Engineering COSHH">
+    <meta name="Description" content="University of Glasgow School of Engineering Risk Assessments">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="{!! asset('images/favicon.ico') !!}" />
 
@@ -28,7 +28,7 @@
                     <span>
                         <h5>
                             School of Engineering<br>
-                            COSHH Risk Assessment
+                            Risk Assessments
                         </h5>
                     </span>
                 </a>
@@ -54,12 +54,12 @@
                             aria-current="page">
                             All Forms
                         </a>
-                        @coshhadmin
+                        @admin
                             <hr />
                             <a href="{{ route('report.expiring') }}" class="nav-link" aria-current="page">
                                 Expiring Forms
                             </a>
-                        @endcoshhadmin
+                        @endadmin
                     </li>
                 </ul>
                 <hr>
