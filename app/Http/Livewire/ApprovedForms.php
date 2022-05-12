@@ -9,22 +9,31 @@ class ApprovedForms extends Component
 {
     public $approvedForms;
     public $search = '';
-    public $statusFilter = '';
-    public $multiFilter = '';
     public $orderBy = [
         'column' => 'forms.created_at',
         'order' => 'asc',
     ];
 
-    public function mount()
+    public function render()
     {
         $this->approvedForms = Form::with('reviewers')
             ->whereHas('reviewers', fn ($q) => $q->where('user_id', auth()->user()->id))
-            ->orWhere('supervisor_id', auth()->user()->id)->get();
-    }
+            ->orWhere('supervisor_id', auth()->user()->id)
+            ->when(
+                $this->search !== '',
+                fn ($query) => $query->where(
+                    fn ($query) => $query->where('title', 'like', "%$this->search%")
+                    ->orWhere('location', 'like', "%$this->search%")
+                    ->orWhere('status', 'like', "%$this->search%")
+                    ->orWhereHas('user', function ($query) {
+                        return $query->whereRaw("CONCAT(`forenames`, ' ', `surname`) LIKE ?", ["%$this->search%"]);
+                    })
+                )
+            )->orderBy(
+                $this->orderBy['column'],
+                $this->orderBy['order']
+            )->get();
 
-    public function render()
-    {
         return view('livewire.approved-forms');
     }
 

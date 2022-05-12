@@ -89,10 +89,13 @@ class TestDataSeeder extends Seeder
             'guid' => 'fmi9x',
         ]);
 
-        Form::factory()->count(5)->create([
+        Form::factory()->count(10)->create([
             'user_id' => $me->id,
         ]);
-        Form::factory()->approved()->count(5)->create();
+
+        Form::factory()->approved()->count(5)->create(['supervisor_id' => $me->id]);
+        $reviewerApproved = Form::factory()->approved()->count(3)->create();
+        $reviewerApproved[0]->reviewers()->syncWithPivotValues($me, ['approved' => true], false);
         Form::factory()->rejected()->count(5)->create();
 
         foreach (range(1, 10) as $i) {
@@ -102,7 +105,10 @@ class TestDataSeeder extends Seeder
         }
 
         Form::factory()->multiuser()->count(5)->create();
-        Form::factory()->multiuser()->approved()->count(5)->create();
+        $approvedMulti = Form::factory()->multiuser()->approved()->count(5)->create();
+        $approvedMulti[0]->users()->attach($me);
+        $approvedMulti[2]->users()->attach($me);
+        $approvedMulti[4]->users()->attach($me);
         Form::factory()->multiuser()->rejected()->count(5)->create();
 
         Form::factory()->chemical()->count(5)->create();

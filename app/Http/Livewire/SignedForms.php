@@ -9,21 +9,30 @@ class SignedForms extends Component
 {
     public $signedForms;
     public $search = '';
-    public $statusFilter = '';
-    public $multiFilter = '';
     public $orderBy = [
         'column' => 'forms.created_at',
         'order' => 'asc',
     ];
 
-    public function mount()
-    {
-        $this->signedForms = Form::with('users')
-            ->whereHas('users', fn ($q) => $q->where('user_id', auth()->user()->id))->get();
-    }
-
     public function render()
     {
+        $this->signedForms = Form::with('users')
+            ->whereHas('users', fn ($q) => $q->where('user_id', auth()->user()->id))
+            ->when(
+                $this->search !== '',
+                fn ($query) => $query->where(
+                    fn ($query) => $query->where('title', 'like', "%$this->search%")
+                    ->orWhere('location', 'like', "%$this->search%")
+                    ->orWhere('status', 'like', "%$this->search%")
+                    ->orWhereHas('user', function ($query) {
+                        return $query->whereRaw("CONCAT(`forenames`, ' ', `surname`) LIKE ?", ["%$this->search%"]);
+                    })
+                )
+            )->orderBy(
+                $this->orderBy['column'],
+                $this->orderBy['order']
+            )->get();
+
         return view('livewire.signed-forms');
     }
 

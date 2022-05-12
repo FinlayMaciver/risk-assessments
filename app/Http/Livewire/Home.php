@@ -3,8 +3,6 @@
 namespace App\Http\Livewire;
 
 use App\Models\Form;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -15,7 +13,6 @@ class Home extends Component
     public $myForms;
     public $search = '';
     public $statusFilter = '';
-    public $multiFilter = '';
     public $orderBy = [
         'column' => 'forms.created_at',
         'order' => 'asc',
@@ -23,14 +20,10 @@ class Home extends Component
 
     public function render()
     {
-        $this->myForms = Form::where('user_id', Auth::user()->id)
+        $this->myForms = Form::where('user_id', auth()->user()->id)
             ->when(
                 $this->statusFilter !== '',
                 fn ($query) => $query->where('status', $this->statusFilter)
-            )
-            ->when(
-                $this->multiFilter !== '',
-                fn ($query) => $query->where('multi_user', $this->multiFilter)
             )
             ->when(
                 $this->search !== '',
