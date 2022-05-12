@@ -13,15 +13,9 @@ class Home extends Component
     use WithPagination;
 
     public $myForms;
-
-    public $allForms;
-
     public $search = '';
-
     public $statusFilter = '';
-
     public $multiFilter = '';
-
     public $orderBy = [
         'column' => 'forms.created_at',
         'order' => 'asc',
@@ -29,7 +23,7 @@ class Home extends Component
 
     public function render()
     {
-        $forms = Form::with('user')
+        $this->myForms = Form::where('user_id', Auth::user()->id)
             ->when(
                 $this->statusFilter !== '',
                 fn ($query) => $query->where('status', $this->statusFilter)
@@ -51,10 +45,8 @@ class Home extends Component
             )->orderBy(
                 $this->orderBy['column'],
                 $this->orderBy['order']
-            );
+            )->get();
 
-        $this->allForms = $forms->get();
-        $this->myForms = $forms->where('user_id', Auth::user()->id)->get();
 
         return view('livewire.home');
     }

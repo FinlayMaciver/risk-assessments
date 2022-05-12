@@ -74,7 +74,7 @@ class Form extends Model
 
     public function getHasCommentsAttribute()
     {
-        return $this->supervisor_comments || $this->lab_guardian_comments || $this->coshh_admin_comments;
+        return $this->supervisor_comments;
     }
 
     /**
@@ -102,7 +102,7 @@ class Form extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'form_users')->using(FormUser::class)->withPivot('signed', 'signed_at');
+        return $this->belongsToMany(User::class, 'form_users')->using(FormUser::class);
     }
 
     public function risks()
@@ -227,6 +227,6 @@ class Form extends Model
 
     public function signForm(User $user)
     {
-        $this->users()->syncWithPivotValues($user, ['signed' => true, 'signed_at' => now()], false);
+        $this->users()->attach($user);
     }
 }

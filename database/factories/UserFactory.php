@@ -18,7 +18,6 @@ class UserFactory extends Factory
             'job_title' => $this->faker->jobTitle(),
             'is_staff' => false,
             'is_admin' => false,
-            'is_coshh_admin' => false,
             'remember_token' => Str::random(10),
         ];
     }
@@ -38,17 +37,6 @@ class UserFactory extends Factory
             return [
                 'is_staff' => true,
                 'is_admin' => true,
-            ];
-        });
-    }
-
-    public function coshhAdmin()
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'is_staff' => true,
-                'is_admin' => true,
-                'is_coshh_admin' => true,
             ];
         });
     }
