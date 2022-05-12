@@ -35,6 +35,11 @@
                 <hr>
                 <ul class="nav nav-pills flex-column mb-auto">
                     <li class="nav-item">
+                        <a href="{{ route('form.create') }}" class="nav-link @if(Route::currentRouteName() == 'form.create') active @endif"
+                            aria-current="page">
+                            + Create Form
+                        </a>
+                        <hr>
                         <a href="{{ route('home') }}" class="nav-link
                             @if(Route::currentRouteName() == 'home') active @endif"
                             aria-current="page">
@@ -54,6 +59,7 @@
                             aria-current="page">
                             All Forms
                         </a>
+
                     </li>
                 </ul>
                 <hr>

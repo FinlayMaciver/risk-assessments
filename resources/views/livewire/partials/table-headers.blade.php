@@ -58,3 +58,15 @@
         <i class="fas fa-sort sort-icon"></i>
     @endif
 </th>
+<th class="d-none d-md-table-cell cursor-pointer" wire:click.prevent="toggleSort('status')">
+    Status
+    @if ($orderBy['column'] == 'status')
+        @if ($orderBy['order'] == 'asc')
+            <i class="fas fa-sort-alpha-down"></i>
+        @else
+            <i class="fas fa-sort-alpha-down-alt"></i>
+        @endif
+    @else
+        <i class="fas fa-sort sort-icon"></i>
+    @endif
+</th>
