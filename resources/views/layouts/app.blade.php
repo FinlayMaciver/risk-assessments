@@ -47,6 +47,12 @@
                         <a href="{{ route('all-forms') }}" class="nav-link" aria-current="page">
                             All Forms
                         </a>
+                        @coshhadmin
+                            <hr />
+                            <a href="{{ route('report.expiring') }}" class="nav-link" aria-current="page">
+                                Expiring Forms
+                            </a>
+                        @endcoshhadmin
                     </li>
                 </ul>
                 <hr>

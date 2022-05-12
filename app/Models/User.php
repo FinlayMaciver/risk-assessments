@@ -8,12 +8,17 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
+    use Notifiable;
 
     protected $guarded = [];
 
     protected $hidden = [
         'remember_token',
+    ];
+
+    protected $casts = [
+        'is_coshh_admin' => 'boolean',
     ];
 
     public function scopeCoshhAdmin($query)
@@ -50,5 +55,10 @@ class User extends Authenticatable
         $user->save();
 
         return $user;
+    }
+
+    public function isCoshhAdmin(): bool
+    {
+        return (bool) $this->is_coshh_admin;
     }
 }
