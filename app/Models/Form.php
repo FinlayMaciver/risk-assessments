@@ -13,10 +13,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Laravel\Scout\Searchable;
 
 class Form extends Model
 {
     use HasFactory;
+    use Searchable;
 
     protected $guarded = [];
 
@@ -229,5 +231,23 @@ class Form extends Model
     public function signForm(User $user)
     {
         $this->users()->attach($user);
+    }
+
+    public function toSearchableArray(): array
+    {
+        $fields = $this->toArray();
+        $fields['user_name'] = $this->user?->full_name;
+        $fields['supervisor_name'] = $this->supervisor?->full_name;
+        foreach ($this->risks as $risk) {
+            $fields['risk_' . $risk->id] = $risk->toArray();
+        }
+        foreach ($this->substances as $substance) {
+            $fields['substance_' . $substance->id] = $substance->toArray();
+        }
+        foreach ($this->microOrganisms as $microOrganism) {
+            $fields['micro_organism_' . $microOrganism->id] = $microOrganism->toArray();
+        }
+
+        return $fields;
     }
 }

@@ -21,29 +21,33 @@ class AllForms extends Component
 
     public function render()
     {
-        $this->allForms = Form::with('user')
-            ->when(
-                $this->statusFilter !== '',
-                fn ($query) => $query->where('status', $this->statusFilter)
-            )
-            ->when(
-                $this->multiFilter !== '',
-                fn ($query) => $query->where('multi_user', $this->multiFilter)
-            )
-            ->when(
-                $this->search !== '',
-                fn ($query) => $query->where(
-                    fn ($query) => $query->where('title', 'like', "%$this->search%")
-                    ->orWhere('location', 'like', "%$this->search%")
-                    ->orWhere('status', 'like', "%$this->search%")
-                    ->orWhereHas('user', function ($query) {
-                        return $query->whereRaw("CONCAT(`forenames`, ' ', `surname`) LIKE ?", ["%$this->search%"]);
-                    })
+        if ($this->search) {
+            $this->allForms = Form::search($this->search)->get(); // add filtering here
+        } else {
+            $this->allForms = Form::with('user')
+                ->when(
+                    $this->statusFilter !== '',
+                    fn ($query) => $query->where('status', $this->statusFilter)
                 )
-            )->orderBy(
-                $this->orderBy['column'],
-                $this->orderBy['order']
-            )->get();
+                ->when(
+                    $this->multiFilter !== '',
+                    fn ($query) => $query->where('multi_user', $this->multiFilter)
+                )
+                ->when(
+                    $this->search !== '',
+                    fn ($query) => $query->where(
+                        fn ($query) => $query->where('title', 'like', "%$this->search%")
+                        ->orWhere('location', 'like', "%$this->search%")
+                        ->orWhere('status', 'like', "%$this->search%")
+                        ->orWhereHas('user', function ($query) {
+                            return $query->whereRaw("CONCAT(`forenames`, ' ', `surname`) LIKE ?", ["%$this->search%"]);
+                        })
+                    )
+                )->orderBy(
+                    $this->orderBy['column'],
+                    $this->orderBy['order']
+                )->get();
+        }
 
         return view('livewire.all-forms');
     }
