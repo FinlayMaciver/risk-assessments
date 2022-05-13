@@ -13,7 +13,7 @@ class ApprovedForms extends Component
     public function render()
     {
         return view('livewire.approved-forms', [
-            'approvedForms' => $this->findAllMatchingForms(),
+            'forms' => $this->findAllMatchingForms(),
         ]);
     }
 }

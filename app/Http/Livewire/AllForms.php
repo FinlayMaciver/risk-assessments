@@ -15,7 +15,7 @@ class AllForms extends Component
     public function render()
     {
         return view('livewire.all-forms', [
-            'allForms' => $this->findAllMatchingForms(),
+            'forms' => $this->findAllMatchingForms(),
         ]);
     }
 }

@@ -12,10 +12,15 @@ class Home extends Component
     use WithPagination;
     use CanFilterForms;
 
+    public function mount()
+    {
+        $this->authUserOnly = 1;
+    }
+
     public function render()
     {
         return view('livewire.home', [
-            'myForms' => $this->findAllMatchingForms(),
+            'forms' => $this->findAllMatchingForms(),
         ]);
     }
 }

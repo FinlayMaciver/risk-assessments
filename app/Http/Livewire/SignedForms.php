@@ -13,7 +13,7 @@ class SignedForms extends Component
     public function render()
     {
         return view('livewire.signed-forms', [
-            'signedForms' => $this->findAllMatchingForms(),
+            'forms' => $this->findAllMatchingForms(),
         ]);
     }
 }
