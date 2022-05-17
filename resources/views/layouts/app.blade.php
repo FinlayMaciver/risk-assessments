@@ -40,17 +40,17 @@
                             + Create Form
                         </a>
                         <hr>
-                        <a href="{{ route('home') }}" class="nav-link
+                        <a href="{{ route('home') }}/?authUserOnly=1" class="nav-link
                             @if(Route::currentRouteName() == 'home') active @endif"
                             aria-current="page">
                             My Forms
                         </a>
-                        <a href="{{ route('approved-forms') }}" class="nav-link
+                        <a href="{{ route('approved-forms') }}/?statusFilter=approved&inReviewers=1" class="nav-link
                             @if(Route::currentRouteName() == 'approved-forms') active @endif"
                             aria-current="page">
                             Approved Forms
                         </a>
-                        <a href="{{ route('signed-forms') }}" class="nav-link
+                        <a href="{{ route('signed-forms') }}/?signedUserOnly=1" class="nav-link
                             @if(Route::currentRouteName() == 'signed-forms') active @endif"
                             aria-current="page">
                             Signed Forms
@@ -61,7 +61,7 @@
                         </a>
                         @admin
                             <hr />
-                            <a href="{{ route('report.expiring') }}" class="nav-link" aria-current="page">
+                            <a href="{{ route('report.expiring') }}/?expiresInDays=30" class="nav-link" aria-current="page">
                                 Expiring Forms
                             </a>
                         @endadmin

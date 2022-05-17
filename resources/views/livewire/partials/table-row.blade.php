@@ -1,5 +1,5 @@
 @foreach ($forms as $form)
-<tr>
+<tr id="form-row-{{ $form->id }}">
     <td class="d-block d-md-table-cell">
         <a title="{{$form->title}}" data-toggle="tooltip" data-placement="top" href="{{ route('form.show', $form->id) }}">{{ Str::limit($form->title, 70, "(...)") }}</a>
     </td>
