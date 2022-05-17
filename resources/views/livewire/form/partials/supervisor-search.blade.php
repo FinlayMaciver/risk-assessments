@@ -8,7 +8,7 @@
             @elseif($valid === false)
                 is-invalid
             @endif" placeholder="{{ Illuminate\Support\Str::ucfirst($type) }}'s email">
-        <button wire:click="search" class="btn btn-outline-primary" type="button"><i class="fas fa-search"></i> Confirm</button>
+        <button wire:click="search" class="btn btn-outline-primary" type="button"><i class="fa-solid fa-search"></i> Confirm</button>
     </div>
     @if($valid === false)
     <div class="text-danger">

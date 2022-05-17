@@ -20,7 +20,7 @@
     <div class="alert alert-danger" role="alert">
         <div class="container">
             @foreach(Session::get('error_message') as $error)
-                <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+                <i class="fa-solid fa-exclamation-triangle" aria-hidden="true"></i>
                 <span class="sr-only">Error:</span>
                 {{ $error }}<br>
             @endforeach

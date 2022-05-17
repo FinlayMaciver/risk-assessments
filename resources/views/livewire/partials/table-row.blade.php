@@ -11,21 +11,21 @@
         @if ($form->status == 'Approved')
             <span class="badge bg-success fw-bold" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $form->status }}">
                 <span class="icon-spacing">
-                    <i class="fas fa-check"></i>
+                    <i class="fa-solid fa-check"></i>
                 </span>
                 Approved
             </span>
         @elseif ($form->status == 'Rejected')
             <span class="badge bg-danger fw-bold" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $form->status }}">
                 <span class="icon-spacing">
-                    <i class="fas fa-times"></i>
+                    <i class="fa-solid fa-times"></i>
                 </span>
                 Rejected
             </span>
         @elseif ($form->status == 'Pending')
             <span class="badge bg-info fw-bold" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $form->status }}">
                 <span class="icon-spacing">
-                    <i class="fas fa-hourglass-half"></i>
+                    <i class="fa-solid fa-hourglass-half"></i>
                 </span>
                 Pending
             </span>

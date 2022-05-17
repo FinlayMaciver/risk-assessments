@@ -5,14 +5,14 @@
         @if (auth()->user() == $form->user)
             <div class="d-grid d-md-flex justify-content-md-end mb-2">
                 <a href="{{ route('form.edit', $form->id) }}" class="btn btn-primary" type="button">
-                    <i class="fas fa-edit me-1"></i> Edit
+                    <i class="fa-solid fa-edit me-1"></i> Edit
                 </a>
             </div>
         @endif
 
         <div class="row mb-3">
-            @include('form.show.users')
             @include('form.show.details')
+            @include('form.show.users')
         </div>
         <div class="row mb-3">
             @include('form.show.risks')

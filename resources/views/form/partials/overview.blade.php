@@ -40,7 +40,7 @@
                 @error('form.description') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
             <div class="col-md-12">
-                <label for="type" class="form-label">Form Type</label><br>
+                <label for="type" class="form-label">Hazard Type</label><br>
                 <div class="form-check form-check-inline">
                     <input wire:model="form.type" class="form-check-input" type="radio" name="type" id="general" value="General">
                     <label class="form-check-label" for="general">General</label>

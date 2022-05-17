@@ -6,7 +6,7 @@
                 <div class="card-header fw-bold">
                     Risk {{ $index+1 }}
                     <div wire:click="deleteRisk({{$index}})" class="float-end cursor-pointer">
-                        <span class="fas fa-times text-danger"></span>
+                        <span class="fa-solid fa-times text-danger"></span>
                     </div>
                 </div>
                 <div class="card-body">
@@ -61,16 +61,16 @@
                             </div>
                         </div>
 
-                        @if ($risk->rating_without)
+                        @if ($risk->risk_rating_without)
                             <div class="col-md-12">
                                 <div
                                     class="alert
-                                        @if($risk->rating_without <= 6) alert-success
-                                        @elseif($risk->rating_without <= 12) alert-warning
+                                        @if($risk->risk_rating_without <= 6) alert-success
+                                        @elseif($risk->risk_rating_without <= 12) alert-warning
                                         @else alert-danger
                                         @endif"
                                     role="alert">
-                                    <b>Risk rating: {{ $risk->rating_without }}</b> - {{ $risk->blurb_without }}
+                                    <b>Risk rating: {{ $risk->risk_rating_without }}</b> - {{ $risk->blurb_without }}
                                 </div>
                             </div>
                         @endif
@@ -119,16 +119,16 @@
                             </div>
                         </div>
 
-                        @if ($risk->rating_with)
+                        @if ($risk->risk_rating_with)
                             <div class="col-md-12">
                                 <div
                                     class="alert
-                                        @if($risk->rating_with <= 6) alert-success
-                                        @elseif($risk->rating_with <= 12) alert-warning
+                                        @if($risk->risk_rating_with <= 6) alert-success
+                                        @elseif($risk->risk_rating_with <= 12) alert-warning
                                         @else alert-danger
                                         @endif"
                                     role="alert">
-                                    <b>Risk rating: {{ $risk->rating_with }}</b> - {{ $risk->blurb_with }}
+                                    <b>Risk rating: {{ $risk->risk_rating_with }}</b> - {{ $risk->blurb_with }}
                                 </div>
                             </div>
                         @endif

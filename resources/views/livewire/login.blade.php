@@ -14,7 +14,7 @@
                 <form wire:submit.prevent="login">
                     <div class="input-group mb-3">
                         <div class="input-group-text">
-                            <i class="fas fa-user"></i>
+                            <i class="fa-solid fa-user"></i>
                         </div>
                         <label class="sr-only" for="guid">GUID</label>
                         <input id="guid" wire:model="guid" placeholder="GUID" class="form-control @error('guid') is-invalid @enderror" required autofocus autocomplete="off">
@@ -26,7 +26,7 @@
                     </div>
 
                     <div class="input-group mb-3">
-                        <div class="input-group-text"><i class="fas fa-key"></i></div>
+                        <div class="input-group-text"><i class="fa-solid fa-key"></i></div>
                         <label class="sr-only" for="password">Password</label>
                         <input id="password" wire:model="password" type="password" placeholder="Password" class="form-control @error('password') is-invalid @enderror" required autocomplete="off">
                         @error('password')

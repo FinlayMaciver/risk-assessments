@@ -5,7 +5,7 @@
             <div class="card-body">
                 <div class="input-group mb-2">
                     <div class="input-group-text">
-                        <i class="fas fa-filter"></i>
+                        <i class="fa-solid fa-filter"></i>
                         <span class="ml-1 d-none d-lg-block">Type</span>
                     </div>
                     <button wire:click.prevent="$set('multiFilter', '')"
@@ -24,7 +24,7 @@
 
                 <div class="input-group mb-2">
                     <div class="input-group-text">
-                        <i class="fas fa-filter"></i>
+                        <i class="fa-solid fa-filter"></i>
                         <span class="ml-1 d-none d-lg-block">Status</span>
                     </div>
                     <button wire:click.prevent="$set('statusFilter', '')"
@@ -47,7 +47,7 @@
 
                 <div class="d-inline-flex input-group mb-2">
                     <div class="input-group-text">
-                        <i class="fas fa-search"></i>
+                        <i class="fa-solid fa-search"></i>
                     </div>
                     <label class="sr-only" for="search">Search</label>
                     <input id="search" class="form-control" type="text" wire:model="search" placeholder="Search...">

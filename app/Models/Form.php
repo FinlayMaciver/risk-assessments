@@ -34,6 +34,11 @@ class Form extends Model
     /**
      * Additional attributes
      */
+    public function getFormattedReviewDateAttribute()
+    {
+        return Carbon::createFromFormat('Y-m-d H:i:s', $this->review_date)->format('d/m/y');
+    }
+
     public function getFormattedCreatedAtAttribute()
     {
         return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->format('d/m/y g:ma');

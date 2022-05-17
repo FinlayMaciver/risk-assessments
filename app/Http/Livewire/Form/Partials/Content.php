@@ -179,14 +179,14 @@ class Content extends Component
     public function updateRiskRating($index)
     {
         if ($this->risks[$index]->likelihood_without && $this->risks[$index]->impact_without) {
-            $rating_without = $this->getRiskRating($this->risks[$index]->likelihood_without, $this->risks[$index]->impact_without);
-            $this->risks[$index]->rating_without = $rating_without;
-            $this->risks[$index]->blurb_without = $this->getRiskBlurb($rating_without);
+            $risk_rating_without = $this->getRiskRating($this->risks[$index]->likelihood_without, $this->risks[$index]->impact_without);
+            $this->risks[$index]->risk_rating_without = $risk_rating_without;
+            $this->risks[$index]->blurb_without = $this->getRiskBlurb($risk_rating_without);
         }
         if ($this->risks[$index]->likelihood_with && $this->risks[$index]->impact_with) {
-            $rating_with = $this->getRiskRating($this->risks[$index]->likelihood_with, $this->risks[$index]->impact_with);
-            $this->risks[$index]->rating_with = $rating_with;
-            $this->risks[$index]->blurb_with = $this->getRiskBlurb($rating_with);
+            $risk_rating_with = $this->getRiskRating($this->risks[$index]->likelihood_with, $this->risks[$index]->impact_with);
+            $this->risks[$index]->risk_rating_with = $risk_rating_with;
+            $this->risks[$index]->blurb_with = $this->getRiskBlurb($risk_rating_with);
         }
     }
 

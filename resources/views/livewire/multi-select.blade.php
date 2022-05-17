@@ -2,7 +2,7 @@
     <div class="d-inline-block mb-1">
         @foreach ($selected as $selectedItem)
             <span wire:click.prevent="update({{$selectedItem->id}})" class="badge rounded-pill bg-success">
-                <span class="fas fa-times"></span>
+                <span class="fa-solid fa-times"></span>
                 @foreach ($descriptors as $index=>$descriptor)
                     {{ $selectedItem->$descriptor }}
                     @if ($index < count($descriptors) - 1)

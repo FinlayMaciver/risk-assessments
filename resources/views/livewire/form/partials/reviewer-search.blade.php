@@ -7,8 +7,8 @@
             @elseif($valid === false)
                 is-invalid
             @endif" placeholder="Reviewer's email">
-        <button wire:click="delete" class="btn btn-outline-danger" type="button"><i class="fas fa-times"></i> Delete</button>
-        <button wire:click="search" class="btn btn-outline-primary" type="button"><i class="fas fa-search"></i> Confirm</button>
+        <button wire:click="delete" class="btn btn-outline-danger" type="button"><i class="fa-solid fa-times"></i> Delete</button>
+        <button wire:click="search" class="btn btn-outline-primary" type="button"><i class="fa-solid fa-search"></i> Confirm</button>
     </div>
     @if($valid === false)
     <div class="text-danger">

@@ -6,7 +6,7 @@
                 <div class="card-header fw-bold">
                     Micro-organism {{ $index+1 }}
                     <div wire:click="deleteMicroOrganism({{$index}})" class="float-end cursor-pointer">
-                        <span class="fas fa-times text-danger"></span>
+                        <span class="fa-solid fa-times text-danger"></span>
                     </div>
                 </div>
                 <div class="card-body">

@@ -5,7 +5,7 @@
             <div class="card-body">
                 <div class="d-inline-flex input-group mb-2">
                     <div class="input-group-text">
-                        <i class="fas fa-search"></i>
+                        <i class="fa-solid fa-search"></i>
                     </div>
                     <label class="sr-only" for="search">Search</label>
                     <input id="search" class="form-control" type="text" wire:model="search" placeholder="Search...">

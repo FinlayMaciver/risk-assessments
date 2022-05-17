@@ -22,7 +22,7 @@
 <body>
     <div id="app" class="d-flex">
         @auth
-            <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-primary vh-100 sticky-top" style="width: 280px;">
+            <div class="d-none d-md-flex flex-column flex-shrink-0 p-3 text-white bg-primary vh-100 sticky-top" style="width: 280px;">
                 <a href="/" class="align-items-center mb-3 mb-md-0 me-md-auto text-center text-white text-decoration-none">
                     <img src="{{asset('images/uogbanner.jpeg')}}" class="w-100 mb-3" alt="..."><br>
                     <span>
