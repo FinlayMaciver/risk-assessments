@@ -10,7 +10,7 @@ class Create extends Component
 {
     public Form $form;
 
-    public function mount($type = null)
+    public function mount()
     {
         $this->form = Form::make([
             'type' => 'General',

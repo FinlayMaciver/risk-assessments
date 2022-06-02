@@ -68,7 +68,7 @@ class FormFactory extends Factory
             CoshhFormDetails::factory()->create([
                 'form_id' => $form->id,
             ]);
-            Substance::factory()->count(rand(0, 4))->create([
+            Substance::factory()->count(rand(1, 4))->create([
                 'form_id' => $form->id,
             ]);
         });
@@ -84,7 +84,7 @@ class FormFactory extends Factory
             CoshhFormDetails::factory()->create([
                 'form_id' => $form->id,
             ]);
-            MicroOrganism::factory()->count(rand(0, 4))->create([
+            MicroOrganism::factory()->count(rand(1, 4))->create([
                 'form_id' => $form->id,
             ]);
         });

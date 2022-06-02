@@ -22,8 +22,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/all-forms', App\Http\Livewire\AllForms::class)->name('all-forms');
 
     Route::get('/form/create', App\Http\Livewire\Form\Create::class)->name('form.create');
+    Route::get('/form/replicate/{id}', App\Http\Livewire\Form\Replicate::class)->name('form.replicate');
     Route::get('/form/{id}', App\Http\Livewire\Form\Show::class)->name('form.show');
-    Route::get('/form/{formId}/edit', App\Http\Livewire\Form\Edit::class)->name('form.edit');
+    Route::get('/form/{id}/edit', App\Http\Livewire\Form\Edit::class)->name('form.edit');
 
     Route::group(['middleware' => 'admin'], function () {
         Route::get('/report/expiring', App\Http\Livewire\Report\Expiring::class)->name('report.expiring');

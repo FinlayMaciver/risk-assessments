@@ -7,13 +7,20 @@ use Livewire\Component;
 
 class Edit extends Component
 {
-    public $formId;
-
     public Form $form;
 
-    public function mount()
+    public function mount($id)
     {
-        $this->form = Form::with('substances.hazards')->findOrFail($this->formId);
+        $this->form = Form::with(
+            'user',
+            'supervisor',
+            'coshhSection',
+            'risks',
+            'substances.routes',
+            'substances.hazards',
+            'microOrganisms.routes',
+            'files',
+        )->findOrFail($id);
     }
 
     public function render()

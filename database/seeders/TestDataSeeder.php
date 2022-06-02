@@ -89,7 +89,15 @@ class TestDataSeeder extends Seeder
             'guid' => 'fmi9x',
         ]);
 
-        Form::factory()->count(10)->create([
+        Form::factory()->count(5)->create([
+            'user_id' => $me->id,
+        ]);
+
+        Form::factory()->chemical()->count(5)->create([
+            'user_id' => $me->id,
+        ]);
+
+        Form::factory()->biological()->count(5)->create([
             'user_id' => $me->id,
         ]);
 
