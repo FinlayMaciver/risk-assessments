@@ -8,7 +8,14 @@
     <td class="d-none d-md-table-cell">{{ $form->formatted_updated_at }}</td>
     <td class="d-none d-md-table-cell">{{ $form->user->forenames }} {{ $form->user->surname }}</td>
     <td class="d-block d-md-table-cell">
-        @if ($form->status == 'Approved')
+        @if ($form->is_archived)
+            <span class="badge bg-secondary fw-bold" data-bs-toggle="tooltip" data-bs-placement="top" title="Archived">
+                <span class="icon-spacing">
+                    <i class="fa-solid fa-lock"></i>
+                </span>
+                Archived
+            </span>
+        @elseif ($form->status == 'Approved')
             <span class="badge bg-success fw-bold" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $form->status }}">
                 <span class="icon-spacing">
                     <i class="fa-solid fa-check"></i>

@@ -13,13 +13,6 @@ use Tests\TestCase;
 
 class ReportTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->artisan('db:seed', ['--class' => 'DatabaseSeeder']);
-    }
-
-    /** @test */
     public function regular_users_cant_see_the_report_pages()
     {
         $user = User::factory()->create();
@@ -29,7 +22,6 @@ class ReportTest extends TestCase
         };
     }
 
-    /** @test */
     public function admins_can_see_the_report_pages()
     {
         $admin = User::factory()->admin()->create();
@@ -39,7 +31,6 @@ class ReportTest extends TestCase
         };
     }
 
-    /** @test */
     public function the_expiring_report_shows_the_correct_data_and_can_be_filtered()
     {
         $admin = User::factory()->admin()->create();

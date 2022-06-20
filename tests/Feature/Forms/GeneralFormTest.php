@@ -15,12 +15,6 @@ use Tests\TestCase;
 
 class GeneralFormTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->artisan('db:seed', ['--class' => 'DatabaseSeeder']);
-    }
-
     public function testUserCanStartSubmittingANewGeneralForm()
     {
         $user = User::factory()->create();
@@ -188,7 +182,6 @@ class GeneralFormTest extends TestCase
         $content->set('files', $files->forget(1));
 
         $content->set('form.title', 'New title')
-            ->set('form.supervisor_id', null)
             ->call('save');
 
         $this->assertEquals($form->fresh()->risks->count(), 1);
@@ -201,7 +194,6 @@ class GeneralFormTest extends TestCase
             'title' => 'New title',
             'location' => 'Form location',
             'description' => 'Form description',
-            'supervisor_id' => null,
         ]);
 
         $this->assertDatabaseHas('risks', [

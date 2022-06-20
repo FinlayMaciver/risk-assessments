@@ -1,14 +1,36 @@
 <div class="row justify-content-center">
     <div class="col col-lg-9 mt-3">
-        <h2 class="text-center mb-2">{{ $form->title }}</h2>
+        <h2 class="text-center mb-2">@if($form->is_archived) <i>(Archived)</i> - @endif{{ $form->title }}</h2>
 
-        @if (auth()->user() == $form->user)
-            <div class="d-grid d-md-flex justify-content-md-end mb-2">
-                <a href="{{ route('form.edit', $form->id) }}" class="btn btn-primary" type="button">
-                    <i class="fa-solid fa-edit me-1"></i> Edit
-                </a>
+
+        <div class="d-print-none d-grid d-md-flex justify-content-md-end mb-2">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    More...
+                </button>
+                <ul class="dropdown-menu">
+                    @can('edit-form', $form)
+                    <li>
+                        <a href="{{ route('form.edit', $form->id) }}" class="dropdown-item" type="button">
+                            <i class="fa-solid fa-edit me-1"></i> Edit
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    @endcan
+                    <li>
+                        <a href="{{ route('form.replicate', $form->id) }}" class="dropdown-item" type="button">
+                            <i class="fa-solid fa-copy"></i> Replicate
+                        </a>
+                    </li>
+                    <li>
+                        <button onCLick="window.print()" class="dropdown-item" type="button">
+                            <i class="fa-solid fa-print"></i> Print
+                        </button>
+                    </li>
+                </ul>
             </div>
-        @endif
+
+        </div>
 
         <div class="row mb-3">
             @include('form.show.details')

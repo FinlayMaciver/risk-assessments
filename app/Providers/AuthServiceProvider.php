@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Form;
+use App\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -25,6 +27,8 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::define('edit-form', function (User $user, Form $form) {
+            return ($user->isAdmin() || $user->id === $form->user_id) && $form->status != 'Approved' && !$form->is_archived;
+        });
     }
 }

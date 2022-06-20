@@ -5,6 +5,7 @@ namespace Tests\Feature\Form;
 use App\Models\Form;
 use App\Models\Risk;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
@@ -12,12 +13,6 @@ use Tests\TestCase;
 
 class SaveAsNewTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->artisan('db:seed', ['--class' => 'DatabaseSeeder']);
-    }
-
     public function testUserCanReplicateAGeneralForm()
     {
         Storage::fake('coshh');
@@ -30,7 +25,7 @@ class SaveAsNewTest extends TestCase
             'multi_user' => false,
             'title' => 'Form title',
             'management_unit' => 'Form unit',
-            'review_date' => '2022-01-01',
+            'review_date' => now()->format('Y-m-d'),
             'location' => 'Form location',
             'description' => 'Form description',
             'supervisor_id' => $supervisor->id,
@@ -78,9 +73,7 @@ class SaveAsNewTest extends TestCase
             ->assertSet('form.risks.1.id', null)
             ->assertSet('form.files.0.id', null)
             ->assertSet('form.files.1.id', null)
-            ->assertSet('form.files.0.name', 'test1.jpg')
-            ->assertSet('form.files.1.name', 'test2.jpg');
-
-        // $response = $this->actingAs($user)->get(route('forms.replicate', $form));
+            ->assertSet('form.files.0.original_filename', 'test1.jpg')
+            ->assertSet('form.files.1.original_filename', 'test2.jpg');
     }
 }

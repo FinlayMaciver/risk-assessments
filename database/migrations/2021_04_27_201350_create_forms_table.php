@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->string('title');
             $table->string('management_unit');
             $table->string('location');
-            $table->timestamp('review_date');
+            $table->date('review_date');
             $table->string('description');
             $table->string('type');
             $table->string('status')->default('Pending');
@@ -31,6 +31,8 @@ return new class extends Migration {
             $table->boolean('supervisor_approval')->nullable()->default(null);
             $table->string('supervisor_comments')->nullable();
 
+            //Archive
+            $table->boolean('is_archived')->default(false);
             $table->timestamps();
         });
     }

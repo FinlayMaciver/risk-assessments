@@ -119,4 +119,13 @@ class FormFactory extends Factory
             ];
         });
     }
+
+    public function archived()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'is_archived' => true,
+            ];
+        });
+    }
 }

@@ -64,7 +64,7 @@ class Content extends Component
         'form.title' => 'required|string',
         'form.management_unit' => 'required|string',
         'form.location' => 'required|string',
-        'form.review_date' => 'required|date',
+        'form.review_date' => 'required|date:Y-m-d',
         'form.description' => 'required|string',
         'form.type' => 'required|string',
 
@@ -117,8 +117,6 @@ class Content extends Component
         'risks.*.comments' => 'string|nullable',
 
         //Files
-        'files.*.id' => '',
-        'files.*.form_id' => '',
         'files.*.filename' => '',
         'files.*.original_filename' => '',
         'files.*.mimetype' => '',
@@ -328,8 +326,10 @@ class Content extends Component
         $deletedFiles = $this->form->files->diff($this->files);
         $deletedFiles->each(fn ($file) => $form->deleteFile($file));
 
-        if ($form->supervisor) {
+        if (!$form->reviewers->count()) {
             $form->supervisor->notify(new FormSubmitted($form));
+        } else {
+            $form->reviewers->each(fn ($reviewer) => $reviewer->notify(new FormSubmitted($form)));
         }
 
         session()->flash('success_message', 'Saved form');

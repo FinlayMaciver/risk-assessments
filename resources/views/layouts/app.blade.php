@@ -22,7 +22,7 @@
 <body>
     <div id="app" class="d-flex">
         @auth
-            <div class="d-none d-md-flex flex-column flex-shrink-0 p-3 text-white bg-primary vh-100 sticky-top" style="width: 280px;">
+            <div class="d-print-none d-none d-md-flex flex-column flex-shrink-0 p-3 text-white bg-primary vh-100 sticky-top" style="width: 280px;">
                 <a href="/" class="align-items-center mb-3 mb-md-0 me-md-auto text-center text-white text-decoration-none">
                     <img src="{{asset('images/uogbanner.jpeg')}}" class="w-100 mb-3" alt="..."><br>
                     <span>
@@ -64,6 +64,9 @@
                             <a href="{{ route('report.expiring') }}/?expiresInDays=30" class="nav-link" aria-current="page">
                                 Expiring Forms
                             </a>
+                            <a href="{{ route('form.archived') }}" class="nav-link" aria-current="page">
+                                Archived Forms
+                            </a>
                         @endadmin
                     </li>
                 </ul>
@@ -74,6 +77,11 @@
         <div class="container-fluid">
             @include('partials.notifications')
             {{ $slot }}
+            @guest
+                @if (Route::currentRouteName() != 'login')
+                    @include('partials.login_toast')
+                @endif
+            @endguest
         </div>
     </div>
 

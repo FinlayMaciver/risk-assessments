@@ -40,7 +40,11 @@ trait CanFilterForms
 
     protected function getFormsViaScout()
     {
-        return Form::search($this->search)->get()
+        return Form::search($this->search)
+            ->query(function ($query) {
+                return $query->current();
+            })
+            ->get()
             ->when(
                 $this->multiFilter !== '',
                 fn ($forms) => $forms->filter(
@@ -79,7 +83,7 @@ trait CanFilterForms
 
     protected function getFormsViaEloquent()
     {
-        return Form::with(['user', 'supervisor'])
+        return Form::current()->with(['user', 'supervisor'])
                 ->when(
                     $this->statusFilter !== '',
                     fn ($query) => $query->where('status', $this->statusFilter)

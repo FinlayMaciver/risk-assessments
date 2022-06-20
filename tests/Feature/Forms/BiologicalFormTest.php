@@ -14,12 +14,6 @@ use Tests\TestCase;
 
 class BiologicalFormTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->artisan('db:seed', ['--class' => 'DatabaseSeeder']);
-    }
-
     public function testUserCanSubmitANewBiologicalForm()
     {
         $user = User::factory()->create();
@@ -469,7 +463,6 @@ class BiologicalFormTest extends TestCase
 
         $content
             ->set('form.title', 'New title')
-            ->set('form.supervisor_id', null)
             ->call('save');
 
         $this->assertEquals($form->fresh()->risks->count(), 1);
@@ -485,7 +478,6 @@ class BiologicalFormTest extends TestCase
             'review_date' => '2023-01-01',
             'location' => 'Form location',
             'description' => 'Form description',
-            'supervisor_id' => null,
         ]);
 
         $this->assertDatabaseHas('coshh_form_details', [

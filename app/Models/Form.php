@@ -2,17 +2,17 @@
 
 namespace App\Models;
 
-use App\Mail\RejectedForm;
 use App\Models\CoshhFormDetails;
 use App\Models\MicroOrganism;
 use App\Models\User;
 use App\Notifications\ApprovedForm;
+use App\Notifications\FormSubmitted;
+use App\Notifications\RejectedForm;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Scout\Searchable;
 
@@ -26,7 +26,8 @@ class Form extends Model
     protected $casts = [
         'multi_user' => 'boolean',
         'supervisor_approval' => 'boolean',
-        'review_date' => 'datetime',
+        'is_archived' => 'boolean',
+        'review_date' => 'date:Y-m-d',
     ];
 
     protected $attributes = [
@@ -35,11 +36,36 @@ class Form extends Model
     ];
 
     /**
+     * Scopes
+     */
+    public function scopeArchived($query)
+    {
+        return $query->where('is_archived', true);
+    }
+
+    public function scopeCurrent($query)
+    {
+        return $query->where('is_archived', false);
+    }
+
+    public function scopeAwaitingReviewerApprovalFrom($query, User $user)
+    {
+        return $query->whereHas('reviewers', function ($query) use ($user) {
+            $query->where('user_id', $user->id)->where('approved', null);
+        });
+    }
+
+    public function scopeAwaitingSupervisorApprovalFrom($query, User $user)
+    {
+        return $query->where('supervisor_id', $user->id)->where('supervisor_approval', null);
+    }
+
+    /**
      * Additional attributes
      */
     public function getFormattedReviewDateAttribute()
     {
-        return Carbon::createFromFormat('Y-m-d H:i:s', $this->review_date)->format('d/m/y');
+        return $this->review_date->format('d/m/y');
     }
 
     public function getFormattedCreatedAtAttribute()
@@ -50,6 +76,14 @@ class Form extends Model
     public function getFormattedUpdatedAtAttribute()
     {
         return Carbon::createFromFormat('Y-m-d H:i:s', $this->updated_at)->format('d/m/y g:ma');
+    }
+
+    public function awaitingReviewerApproval()
+    {
+        if ($this->reviewers()->wherePivot('approved', null)->exists()) {
+            return true;
+        }
+        return false;
     }
 
     public function getNoRequirementsAttribute()
@@ -137,6 +171,12 @@ class Form extends Model
     /**
      * Methods
      */
+    public function archive()
+    {
+        $this->is_archived = true;
+        $this->save();
+    }
+
     public function updateRisk($risk)
     {
         $this->risks()->updateOrCreate(
@@ -204,15 +244,14 @@ class Form extends Model
     public function supervisorApproval(bool $verdict, $comments = null)
     {
         $this->update([
-            'status' => $verdict ? 'Pending' : 'Rejected',
+            'status' => $verdict ? 'Approved' : 'Rejected',
             'supervisor_approval' => $verdict,
             'supervisor_comments' => $comments,
         ]);
         if ($verdict) {
             $this->user->notify(new ApprovedForm($this, 'supervisor'));
         } else {
-            Mail::to($this->user)
-                ->send(new RejectedForm($this, 'supervisor'));
+            $this->user->notify(new RejectedForm($this, 'supervisor'));
         }
     }
 
@@ -223,14 +262,19 @@ class Form extends Model
         ]);
         $this->reviewers()->updateExistingPivot(
             $reviewer->id,
-            ['approved' => $verdict, 'comments' => $comments]
+            [
+                'approved' => $verdict,
+                'comments' => $comments
+            ]
         );
 
         if ($verdict) {
             $this->user->notify(new ApprovedForm($this, 'reviewer'));
+            if ($this->reviewers()->wherePivot('approved', true)->count() == $this->reviewers->count()) {
+                $this->supervisor->notify(new FormSubmitted($this, 'supervisor'));
+            }
         } else {
-            Mail::to($this->user)
-                ->send(new RejectedForm($this, 'reviewer'));
+            $this->user->notify(new RejectedForm($this, 'reviewer'));
         }
     }
 

@@ -11,7 +11,7 @@ class Replicate extends Component
 
     public function mount($id)
     {
-        $this->form = Form::with([
+        $originalForm = Form::with([
             'coshhSection',
             'risks',
             'substances.routes',
@@ -19,24 +19,43 @@ class Replicate extends Component
             'microOrganisms.routes',
             'files',
         ])->findOrFail($id);
-        $this->form->id = null;
-        $this->form->review_date = null;
+
+        $this->form = $originalForm;
+        unset($this->form->id);
+        unset($this->form->review_date);
+        unset($this->form->supervisor_id);
         $this->form->user_id = auth()->user()->id;
-        $this->form->supervisor_id = null;
         if ($this->form->coshhSection) {
-            $this->form->coshhSection->id = null;
+            unset($this->form->coshhSection->id);
+            unset($this->form->coshhSection->form_id);
         }
         if ($this->form->risks) {
-            $this->form->risks->each(fn ($risk) => $risk->id = null);
+            $this->form->risks->each(function ($risk) {
+                unset($risk->id);
+                unset($risk->form_id);
+            });
         }
         if ($this->form->substances) {
-            $this->form->substances->each(fn ($substance) => $substance->id = null);
+            $this->form->substances->each(function ($substance) {
+                unset($substance->id);
+                unset($substance->form_id);
+            });
+            $this->form->substances->each(function ($substance) {
+                unset($substance->id);
+                unset($substance->form_id);
+            });
         }
         if ($this->form->microOrganisms) {
-            $this->form->microOrganisms->each(fn ($microOrganism) => $microOrganism->id = null);
+            $this->form->microOrganisms->each(function ($microOrganism) {
+                unset($microOrganism->id);
+                unset($microOrganism->form_id);
+            });
         }
         if ($this->form->files) {
-            $this->form->files->each(fn ($file) => $file->id = null);
+            $this->form->files->each(function ($file) {
+                unset($file->id);
+                unset($file->form_id);
+            });
         }
     }
 

@@ -1,9 +1,27 @@
 <div class="row justify-content-center">
     <div class="col col-lg-9 mt-3">
-        <h3 class="mt-5 mb-3 text-center">My Forms</h3>
-        @include('partials.approvals')
+        <h3 class="mt-5 mb-5 text-center">Archived Forms</h3>
         <div class="card">
             <div class="card-body">
+                <div class="input-group mb-2">
+                    <div class="input-group-text">
+                        <i class="fa-solid fa-filter"></i>
+                        <span class="ml-1 d-none d-lg-block">Type</span>
+                    </div>
+                    <button wire:click.prevent="$set('multiFilter', '')"
+                        class="input-group-text @if($multiFilter === '') bg-primary text-light @else bg-white @endif">
+                        Both
+                    </button>
+                    <button wire:click.prevent="$set('multiFilter', false)"
+                        class="input-group-text @if($multiFilter === false) bg-primary text-light @else bg-white @endif">
+                        Single user
+                    </button>
+                    <button wire:click.prevent="$set('multiFilter', true)"
+                        class="input-group-text @if($multiFilter === true) bg-primary text-light @else bg-white @endif">
+                        Multiple users
+                    </button>
+                </div>
+
                 <div class="input-group mb-2">
                     <div class="input-group-text">
                         <i class="fa-solid fa-filter"></i>

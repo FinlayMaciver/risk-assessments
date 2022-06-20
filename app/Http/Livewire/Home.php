@@ -2,10 +2,10 @@
 
 namespace App\Http\Livewire;
 
+use App\Http\Livewire\Concerns\CanFilterForms;
 use App\Models\Form;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Http\Livewire\Concerns\CanFilterForms;
 
 class Home extends Component
 {
@@ -21,6 +21,10 @@ class Home extends Component
     {
         return view('livewire.home', [
             'forms' => $this->findAllMatchingForms(),
+            'formsAwaitingApproval' => Form::current()->with('reviewers', 'user')
+                ->awaitingReviewerApprovalFrom(auth()->user())
+                ->orWhere(fn ($q) => $q->awaitingSupervisorApprovalFrom(auth()->user()))
+                ->get(),
         ]);
     }
 }

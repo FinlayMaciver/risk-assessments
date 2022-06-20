@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Mail;
+namespace App\Notifications;
 
 use App\Models\Form;
 use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
-use Illuminate\Queue\SerializesModels;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 use Illuminate\Support\Str;
 
-class RejectedForm extends Mailable
+class RejectedForm extends Notification
 {
-    use Queueable, SerializesModels;
+    use Queueable;
 
-    public $form;
+    public Form $form;
 
     public $rejectedBy;
 
@@ -22,13 +22,25 @@ class RejectedForm extends Mailable
         $this->rejectedBy = $rejectedBy;
     }
 
-    public function build()
+    public function via($notifiable)
     {
-        return $this
+        return ['mail'];
+    }
+
+    public function toMail($notifiable)
+    {
+        return (new MailMessage)
             ->subject('COSHH Risk Assessment - Form Rejected By '.Str::title($this->rejectedBy))
             ->markdown('emails.form.rejected', [
                 'rejectedBy' => $this->rejectedBy,
                 'form' => $this->form,
             ]);
+    }
+
+    public function toArray($notifiable)
+    {
+        return [
+            //
+        ];
     }
 }

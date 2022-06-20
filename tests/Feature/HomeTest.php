@@ -8,12 +8,6 @@ use Tests\TestCase;
 
 class HomeTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->artisan('db:seed', ['--class' => 'DatabaseSeeder']);
-    }
-
     public function testHomePageShowsOnlyLoggedInUsersForms()
     {
         $user = User::factory()->create();
@@ -50,7 +44,7 @@ class HomeTest extends TestCase
         $signedForm = Form::factory()->create();
         $signedForm->users()->attach($user);
 
-        $response = $this->actingAs($user)->get(route('approved-forms'));
+        $response = $this->actingAs($user)->get(route('approved-forms').'/?inReviewers=1');
 
         $response->assertStatus(200);
         $response->assertDontSee($personalForms[0]->title);
@@ -73,7 +67,7 @@ class HomeTest extends TestCase
         $signedForm = Form::factory()->create();
         $signedForm->users()->attach($user);
 
-        $response = $this->actingAs($user)->get(route('signed-forms'));
+        $response = $this->actingAs($user)->get(route('signed-forms').'/?signedUserOnly=1');
 
         $response->assertStatus(200);
         $response->assertDontSee($personalForms[0]->title);
