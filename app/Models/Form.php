@@ -88,31 +88,34 @@ class Form extends Model
 
     public function getNoRequirementsAttribute()
     {
+        if (!$this->coshhSection) {
+            return false;
+        }
         return
-            ! $this->eye_protection &&
-            ! $this->face_protection &&
-            ! $this->hand_protection &&
-            ! $this->foot_protection &&
-            ! $this->respiratory_protection &&
-            ! $this->instructions &&
-            ! $this->spill_neutralisation &&
-            ! $this->eye_irrigation &&
-            ! $this->body_shower &&
-            ! $this->first_aid &&
-            ! $this->breathing_apparatus &&
-            ! $this->external_services &&
-            ! $this->poison_antidote &&
-            ! $this->routine_approval &&
-            ! $this->specific_approval &&
-            ! $this->personal_supervision &&
-            ! $this->airborne_monitoring &&
-            ! $this->biological_monitoring &&
-            ! $this->inform_lab_occupants &&
-            ! $this->inform_cleaners &&
-            ! $this->inform_contractors &&
-            ! $this->inform_other &&
-            ! $this->other_emergency &&
-            ! $this->other_protection;
+            ! $this->coshhSection->eye_protection &&
+            ! $this->coshhSection->face_protection &&
+            ! $this->coshhSection->hand_protection &&
+            ! $this->coshhSection->foot_protection &&
+            ! $this->coshhSection->respiratory_protection &&
+            ! $this->coshhSection->instructions &&
+            ! $this->coshhSection->spill_neutralisation &&
+            ! $this->coshhSection->eye_irrigation &&
+            ! $this->coshhSection->body_shower &&
+            ! $this->coshhSection->first_aid &&
+            ! $this->coshhSection->breathing_apparatus &&
+            ! $this->coshhSection->external_services &&
+            ! $this->coshhSection->poison_antidote &&
+            ! $this->coshhSection->routine_approval &&
+            ! $this->coshhSection->specific_approval &&
+            ! $this->coshhSection->personal_supervision &&
+            ! $this->coshhSection->airborne_monitoring &&
+            ! $this->coshhSection->biological_monitoring &&
+            ! $this->coshhSection->inform_lab_occupants &&
+            ! $this->coshhSection->inform_cleaners &&
+            ! $this->coshhSection->inform_contractors &&
+            ! $this->coshhSection->inform_other &&
+            ! $this->coshhSection->other_emergency &&
+            ! $this->coshhSection->other_protection;
     }
 
     public function getHasCommentsAttribute()

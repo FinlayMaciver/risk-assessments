@@ -7,85 +7,85 @@
         @else
             <ul class="mb-0">
                 <!-- Protection -->
-                @if ($form->eye_protection)
+                @if ($form->coshhSection->eye_protection)
                     <li>Eye protection</li>
                 @endif
-                @if ($form->face_protection)
+                @if ($form->coshhSection->face_protection)
                     <li>Face protection</li>
                 @endif
-                @if ($form->hand_protection)
+                @if ($form->coshhSection->hand_protection)
                     <li>Hand protection</li>
                 @endif
-                @if ($form->foot_protection)
+                @if ($form->coshhSection->foot_protection)
                     <li>Foot protection</li>
                 @endif
-                @if ($form->respiratory_protection)
+                @if ($form->coshhSection->respiratory_protection)
                     <li>Respiratory protection</li>
                 @endif
-                @if ($form->other_protection)
-                    <li>{{ $form->other_protection }}</li>
+                @if ($form->coshhSection->other_protection)
+                    <li>{{ $form->coshhSection->other_protection }}</li>
                 @endif
 
                 <!-- Emergency -->
-                @if ($form->instructions)
+                @if ($form->coshhSection->instructions)
                     <li>Written emergency instructions</li>
                 @endif
-                @if ($form->spill_neutralisation)
+                @if ($form->coshhSection->spill_neutralisation)
                     <li>Spill neutralisation chemicals</li>
                 @endif
-                @if ($form->eye_irrigation)
+                @if ($form->coshhSection->eye_irrigation)
                     <li>Eye irrigation point</li>
                 @endif
-                @if ($form->body_shower)
+                @if ($form->coshhSection->body_shower)
                     <li>Body shower</li>
                 @endif
-                @if ($form->first_aid)
+                @if ($form->coshhSection->first_aid)
                     <li>First aid provisions</li>
                 @endif
-                @if ($form->breathing_apparatus)
+                @if ($form->coshhSection->breathing_apparatus)
                     <li>Breathing apparatus (with trained operator)</li>
                 @endif
-                @if ($form->external_services)
+                @if ($form->coshhSection->external_services)
                     <li>External emergency services</li>
                 @endif
-                @if ($form->poison_antidote)
+                @if ($form->coshhSection->poison_antidote)
                     <li>Poison antidote</li>
                 @endif
-                @if ($form->other_emergency)
-                    <li>{{ $form->other_emergency }}</li>
+                @if ($form->coshhSection->other_emergency)
+                    <li>{{ $form->coshhSection->other_emergency }}</li>
                 @endif
 
                 <!-- Supervision -->
-                @if ($form->routine_approval)
+                @if ($form->coshhSection->routine_approval)
                     <li>Supervisor approves straightforward and routine work</li>
                 @endif
-                @if ($form->specific_approval)
+                @if ($form->coshhSection->specific_approval)
                     <li>Supervisor will specifically approve the scheme of work outlined above</li>
                 @endif
-                @if ($form->personal_supervision)
+                @if ($form->coshhSection->personal_supervision)
                     <li>Supervisor will provide personal supervision to control and oversee the work</li>
                 @endif
 
                 <!-- Monitoring -->
-                @if ($form->airborne_monitoring)
+                @if ($form->coshhSection->airborne_monitoring)
                     <li>Monitoring of airborne contaminents</li>
                 @endif
-                @if ($form->biological_monitoring)
+                @if ($form->coshhSection->biological_monitoring)
                     <li>Biological monitoring of workers</li>
                 @endif
 
                 <!-- Informing -->
-                @if ($form->inform_lab_occupants)
+                @if ($form->coshhSection->inform_lab_occupants)
                     <li>Inform others working in the lab</li>
                 @endif
-                @if ($form->inform_cleaners)
+                @if ($form->coshhSection->inform_cleaners)
                     <li>Inform cleaners</li>
                 @endif
-                @if ($form->inform_contractors)
+                @if ($form->coshhSection->inform_contractors)
                     <li>Inform contractors</li>
                 @endif
-                @if ($form->inform_other)
-                    <li>{{ $form->inform_other }}
+                @if ($form->coshhSection->inform_other)
+                    <li>{{ $form->coshhSection->inform_other }}
                 @endif
             </ul>
         @endif

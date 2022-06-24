@@ -48,6 +48,8 @@
             <div class="row mb-3">
                 @include('form.show.substances')
             </div>
+        @endif
+        @if ($form->coshhSection)
             <div class="row mb-3">
                 @include('form.show.requirements')
                 @include('form.show.information')
@@ -60,7 +62,7 @@
             ])
         @endif
         @if ($form->multi_user && !$form->users->contains(auth()->user()))
-                balegdeh
+                <!-- TODO: multi user sign off -->
         @endif
     </div>
 </div>

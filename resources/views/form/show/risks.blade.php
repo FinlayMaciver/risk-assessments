@@ -67,10 +67,10 @@
                     </div>
                 </div>
                 @endforeach
-                @if (! $form->risks->count())
-                    <div class="fst-italic text-muted text-center">No risks</div>
-                @endif
             </div>
+            @if (! $form->risks->count())
+                <div class="fst-italic text-muted text-center mt-4">No risks</div>
+            @endif
         </div>
     </div>
 </div>

@@ -26,6 +26,7 @@ class Content extends Component
     public Collection $risks;
     public Collection $substances;
     public Collection $microOrganisms;
+    public $showCoshhSection = 'hide';
     public $files;
     public $newFiles = [];
     public $valid = true;
@@ -302,6 +303,10 @@ class Content extends Component
         $this->risks->each(fn ($risk) => $form->updateRisk($risk));
         $deletedRisks = $this->form->risks->diff($this->risks);
         $deletedRisks->each(fn ($risk) => $risk->delete());
+
+        if ($form->type == 'General' && $this->showCoshhSection == 'show') {
+            $form->addCoshhSection($this->coshhSection);
+        }
 
 
         //Substances - Chemical or Biological

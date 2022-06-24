@@ -14,8 +14,9 @@
     @endif
 
     @if ($form->type == 'Biological' || $form->type == 'Chemical')
-
         @include('form.partials.substances')
+    @endif
+    @if ($form->type == 'Biological' || $form->type == 'Chemical' || $showCoshhSection == 'show')
         @include('form.partials.protection')
         @include('form.partials.supervision')
         @include('form.partials.monitoring')

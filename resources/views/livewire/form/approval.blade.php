@@ -1,4 +1,4 @@
-<div class="row justify-content-center mb-3">
+<div class="d-print-none row justify-content-center mb-3">
     <div class="col-md-6">
         <div class="card">
             <div class="card-header text-center fw-bold">Approval</div>

@@ -54,8 +54,20 @@
                     <label class="form-check-label" for="bio">Biological</label>
                 </div>
             </div>
+            @if ($form->type == "General")
+            <div class="col-md-12">
+                <label for="type" class="form-label">Additional COSHH Requirements?</label><br>
+                <div class="form-check form-check-inline">
+                    <input wire:model="showCoshhSection" class="form-check-input" type="radio" name="showCoshhSection" id="show" value="show">
+                    <label class="form-check-label" for="show">True</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input wire:model="showCoshhSection" class="form-check-input" type="radio" name="showCoshhSection" id="hide" value="hide">
+                    <label class="form-check-label" for="hide">False</label>
+                </div>
+            </div>
+            @endif
         </div>
     </div>
 </div>
-
 <br>
