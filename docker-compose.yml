@@ -50,16 +50,6 @@ services:
     secrets:
       - source: dotenv
         target: .env
-
-  meilisearch:
-    type: compose
-    app_mount: false
-    services:
-      image: getmeili/meilisearch:v0.27.0
-      command: tini -- /bin/meilisearch
-      volumes:
-        - ./storage/meilisearch:/meili_data
-
   queue:
     image: ${IMAGE_NAME}
     environment:
