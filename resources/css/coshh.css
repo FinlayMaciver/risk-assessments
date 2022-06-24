@@ -1,0 +1,14 @@
+.icon-spacing {
+    display: inline-block;
+    text-align: center;
+    width: 15px !important;
+}
+.cursor-pointer {
+    cursor: pointer;
+}
+.banner-logo {
+    height: 40px;
+}
+input#file {
+    visibility: hidden; position: absolute; overflow: hidden; width: 0px; height:0px;border:none;margin:0; padding:0;
+}
