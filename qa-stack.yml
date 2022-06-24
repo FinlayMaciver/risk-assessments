@@ -135,8 +135,8 @@ services:
       - "8025"
     networks:
       proxy:
-        private:
-          aliases: ["mailhog.service"]
+      private:
+        aliases: ["mailhog.service"]
   meilisearch:
     type: compose
     app_mount: false
