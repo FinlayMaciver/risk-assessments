@@ -13,7 +13,7 @@ CMD ["tini", "--", "/usr/local/bin/app-start"]
 
 
 ### Build JS/css assets
-FROM node:10 as frontend
+FROM node:14 as frontend
 
 # workaround for mix.version() webpack bug
 RUN ln -s /home/node/public /public
@@ -126,5 +126,4 @@ COPY --from=qa-composer /var/www/html/vendor /var/www/html/vendor
 RUN composer global require enlightn/security-checker && \
     curl -OL -o /usr/local/bin/phpcs https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar && \
     php /var/www/html/artisan view:clear && \
-    php /var/www/html/artisan optimize:clear && \
     php /var/www/html/artisan cache:clear

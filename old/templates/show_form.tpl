@@ -1,3 +1,0 @@
-{* Smarty *}
-{include file=$form}
-
