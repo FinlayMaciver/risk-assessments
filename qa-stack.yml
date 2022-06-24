@@ -138,13 +138,11 @@ services:
       # private:
         # aliases: ["mailhog.service"]
   meilisearch:
-    type: compose
-    app_mount: false
-    services:
-      image: getmeili/meilisearch:v0.27.0
-      command: tini -- /bin/meilisearch
-      volumes:
-        - ./storage/meilisearch:/meili_data
+    image: getmeili/meilisearch:latest
+    ports:
+      - "7700:7700"
+    environment:
+      - MEILI_MASTER_KEY=mmk
   minio:
     image: minio/minio:RELEASE.2019-10-12T01-39-57Z
     deploy:
