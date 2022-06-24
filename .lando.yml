@@ -94,7 +94,7 @@ tooling:
     service: node
     description: "Run npm run watch"
     cmd: npm run watch
-   testmysql:
+  testmysql:
     service: appserver
     description: "Run phpunit against mysql"
     env:
