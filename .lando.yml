@@ -5,6 +5,12 @@ config:
   php: '8.1'
   cache: redis
 services:
+  testdb:
+    type: mysql:5.7
+    creds:
+      user: laravel
+      password: laravel
+      database: laravel
   mail:
     type: mailhog
     portforward: true
@@ -88,3 +94,13 @@ tooling:
     service: node
     description: "Run npm run watch"
     cmd: npm run watch
+   testmysql:
+    service: appserver
+    description: "Run phpunit against mysql"
+    env:
+      DB_CONNECTION: mysql
+      DB_HOST: testdb
+      DB_USERNAME: laravel
+      DB_PASSWORD: laravel
+      DB_DATABASE: laravel
+    cmd: CI=1 ./vendor/bin/phpunit

@@ -3,6 +3,8 @@
 namespace Tests\Feature\Forms;
 
 use App\Models\Form;
+use App\Models\Impact;
+use App\Models\Likelihood;
 use App\Models\Risk;
 use App\Models\User;
 use App\Notifications\FormSubmitted;
@@ -42,20 +44,20 @@ class GeneralFormTest extends TestCase
             1 => new Risk([
                 'hazard' => 'Risk 1 hazard',
                 'consequences' => 'Risk 1 consequences',
-                'likelihood_without' => 1,
-                'impact_without' => 1,
+                'likelihood_without' => Likelihood::inRandomOrder()->first()->id,
+                'impact_without' => Impact::inRandomOrder()->first()->id,
                 'control_measures' => 'Risk 1 control measures',
-                'likelihood_with' => 1,
-                'impact_with' => 1,
+                'likelihood_with' => Likelihood::inRandomOrder()->first()->id,
+                'impact_with' => Impact::inRandomOrder()->first()->id,
             ]),
             2 => new Risk([
                 'hazard' => 'Risk 2 hazard',
                 'consequences' => 'Risk 2 consequences',
-                'likelihood_without' => 1,
-                'impact_without' => 1,
+                'likelihood_without' => Likelihood::inRandomOrder()->first()->id,
+                'impact_without' => Impact::inRandomOrder()->first()->id,
                 'control_measures' => 'Risk 2 control measures',
-                'likelihood_with' => 1,
-                'impact_with' => 1,
+                'likelihood_with' => Likelihood::inRandomOrder()->first()->id,
+                'impact_with' => Impact::inRandomOrder()->first()->id,
             ]),
         ]);
 
@@ -93,30 +95,22 @@ class GeneralFormTest extends TestCase
             'form_id' => $savedForm->id,
             'hazard' => 'Risk 1 hazard',
             'consequences' => 'Risk 1 consequences',
-            'likelihood_without' => 1,
-            'impact_without' => 1,
             'control_measures' => 'Risk 1 control measures',
-            'likelihood_with' => 1,
-            'impact_with' => 1,
         ]);
 
         $this->assertDatabaseHas('risks', [
             'form_id' => $savedForm->id,
             'hazard' => 'Risk 2 hazard',
             'consequences' => 'Risk 2 consequences',
-            'likelihood_without' => 1,
-            'impact_without' => 1,
             'control_measures' => 'Risk 2 control measures',
-            'likelihood_with' => 1,
-            'impact_with' => 1,
         ]);
 
         $this->assertDatabaseHas('files', [
             'form_id' => $savedForm->id,
             'original_filename' => 'test.jpg',
         ]);
-
-        Storage::disk('coshh')->assertExists('form_1/file_1.dat');
+        $formId = $savedForm->id;
+        Storage::disk('coshh')->assertExists("form_{$formId}/file_1.dat");
         Notification::assertSentTo($supervisor, FormSubmitted::class);
     }
 
@@ -141,21 +135,21 @@ class GeneralFormTest extends TestCase
             'form_id' => $form->id,
             'hazard' => 'Risk 1 hazard',
             'consequences' => 'Risk 1 consequences',
-            'likelihood_without' => 1,
-            'impact_without' => 1,
+            'likelihood_without' => Likelihood::inRandomOrder()->first()->id,
+            'impact_without' => Impact::inRandomOrder()->first()->id,
             'control_measures' => 'Risk 1 control measures',
-            'likelihood_with' => 1,
-            'impact_with' => 1,
+            'likelihood_with' => Likelihood::inRandomOrder()->first()->id,
+            'impact_with' => Impact::inRandomOrder()->first()->id,
         ]);
         $risk2 = Risk::create([
             'form_id' => $form->id,
             'hazard' => 'Risk 2 hazard',
             'consequences' => 'Risk 2 consequences',
-            'likelihood_without' => 1,
-            'impact_without' => 1,
+            'likelihood_without' => Likelihood::inRandomOrder()->first()->id,
+            'impact_without' => Impact::inRandomOrder()->first()->id,
             'control_measures' => 'Risk 2 control measures',
-            'likelihood_with' => 1,
-            'impact_with' => 1,
+            'likelihood_with' => Likelihood::inRandomOrder()->first()->id,
+            'impact_with' => Impact::inRandomOrder()->first()->id,
         ]);
 
         $file1 = UploadedFile::fake()->image('test1.jpg');
@@ -200,22 +194,14 @@ class GeneralFormTest extends TestCase
             'form_id' => $form->id,
             'hazard' => 'Risk 1 hazard',
             'consequences' => 'Risk 1 consequences',
-            'likelihood_without' => 1,
-            'impact_without' => 1,
             'control_measures' => 'Risk 1 control measures',
-            'likelihood_with' => 1,
-            'impact_with' => 1,
         ]);
 
         $this->assertDatabaseMissing('risks', [
             'form_id' => $form->id,
             'hazard' => 'Risk 2 hazard',
             'consequences' => 'Risk 2 consequences',
-            'likelihood_without' => 1,
-            'impact_without' => 1,
             'control_measures' => 'Risk 2 control measures',
-            'likelihood_with' => 1,
-            'impact_with' => 1,
         ]);
 
         $this->assertDatabaseHas('files', [
@@ -228,8 +214,9 @@ class GeneralFormTest extends TestCase
             'original_filename' => 'test2.jpg',
         ]);
 
-        Storage::disk('coshh')->assertExists('form_1/file_1.dat');
-        Storage::disk('coshh')->assertMissing('form_1/file_2.dat');
+        $formId = $form->id;
+        Storage::disk('coshh')->assertExists("form_{$formId}/file_1.dat");
+        Storage::disk('coshh')->assertMissing("form_{$formId}/file_2.dat");
     }
 
     /** @test */
@@ -254,21 +241,21 @@ class GeneralFormTest extends TestCase
             'form_id' => $form->id,
             'hazard' => 'Risk 1 hazard',
             'consequences' => 'Risk 1 consequences',
-            'likelihood_without' => 1,
-            'impact_without' => 1,
+            'likelihood_without' => Likelihood::inRandomOrder()->first()->id,
+            'impact_without' => Impact::inRandomOrder()->first()->id,
             'control_measures' => 'Risk 1 control measures',
-            'likelihood_with' => 1,
-            'impact_with' => 1,
+            'likelihood_with' => Likelihood::inRandomOrder()->first()->id,
+            'impact_with' => Impact::inRandomOrder()->first()->id,
         ]);
         $risk2 = Risk::create([
             'form_id' => $form->id,
             'hazard' => 'Risk 2 hazard',
             'consequences' => 'Risk 2 consequences',
-            'likelihood_without' => 1,
-            'impact_without' => 1,
+            'likelihood_without' => Likelihood::inRandomOrder()->first()->id,
+            'impact_without' => Impact::inRandomOrder()->first()->id,
             'control_measures' => 'Risk 2 control measures',
-            'likelihood_with' => 1,
-            'impact_with' => 1,
+            'likelihood_with' => Likelihood::inRandomOrder()->first()->id,
+            'impact_with' => Impact::inRandomOrder()->first()->id,
         ]);
 
         $response = $this->actingAs($user)->get(route('form.show', $form->id));

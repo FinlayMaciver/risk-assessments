@@ -4,7 +4,11 @@ namespace Tests\Feature\Forms;
 
 use App\Models\CoshhFormDetails;
 use App\Models\Form;
+use App\Models\Hazard;
+use App\Models\Impact;
+use App\Models\Likelihood;
 use App\Models\Risk;
+use App\Models\Route;
 use App\Models\Substance;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
@@ -27,20 +31,20 @@ class ChemicalFormTest extends TestCase
             1 => new Risk([
                 'hazard' => 'Risk 1 hazard',
                 'consequences' => 'Risk 1 consequences',
-                'likelihood_without' => 1,
-                'impact_without' => 1,
+                'likelihood_without' => Likelihood::inRandomOrder()->first()->id,
+                'impact_without' => Impact::inRandomOrder()->first()->id,
                 'control_measures' => 'Risk 1 control measures',
-                'likelihood_with' => 1,
-                'impact_with' => 1,
+                'likelihood_with' => Likelihood::inRandomOrder()->first()->id,
+                'impact_with' => Impact::inRandomOrder()->first()->id,
             ]),
             2 => new Risk([
                 'hazard' => 'Risk 2 hazard',
                 'consequences' => 'Risk 2 consequences',
-                'likelihood_without' => 1,
-                'impact_without' => 1,
+                'likelihood_without' => Likelihood::inRandomOrder()->first()->id,
+                'impact_without' => Impact::inRandomOrder()->first()->id,
                 'control_measures' => 'Risk 2 control measures',
-                'likelihood_with' => 1,
-                'impact_with' => 1,
+                'likelihood_with' => Likelihood::inRandomOrder()->first()->id,
+                'impact_with' => Impact::inRandomOrder()->first()->id,
             ]),
         ]);
 
@@ -102,13 +106,7 @@ class ChemicalFormTest extends TestCase
             ->set('coshhSection.inform_contractors', true)
             ->set('coshhSection.inform_other', 'Form inform other')
 
-            ->set('form.supervisor_id', $supervisor->id)
-
-            ->set('substances.0.hazard_ids', [1, 2])
-            ->set('substances.0.route_ids', [1, 2])
-
-            ->set('substances.1.hazard_ids', [3, 5])
-            ->set('substances.1.route_ids', [3, 5]);
+            ->set('form.supervisor_id', $supervisor->id);
 
         $content->call('save');
 
@@ -170,23 +168,6 @@ class ChemicalFormTest extends TestCase
             'repeated_low_effect' => 'Substance 1 repeated low effect',
         ]);
 
-        $this->assertDatabaseHas('substance_hazards', [
-            'substance_id' => Substance::where('substance', 'Substance 1')->first()->id,
-            'hazard_id' => 1,
-        ]);
-        $this->assertDatabaseHas('substance_hazards', [
-            'substance_id' => Substance::where('substance', 'Substance 1')->first()->id,
-            'hazard_id' => 2,
-        ]);
-        $this->assertDatabaseHas('substance_routes', [
-            'substance_id' => Substance::where('substance', 'Substance 1')->first()->id,
-            'route_id' => 1,
-        ]);
-        $this->assertDatabaseHas('substance_routes', [
-            'substance_id' => Substance::where('substance', 'Substance 1')->first()->id,
-            'route_id' => 2,
-        ]);
-
         $this->assertDatabaseHas('substances', [
             'form_id' => $savedForm->id,
             'substance' => 'Substance 2',
@@ -195,43 +176,18 @@ class ChemicalFormTest extends TestCase
             'repeated_low_effect' => 'Substance 2 repeated low effect',
         ]);
 
-        $this->assertDatabaseHas('substance_hazards', [
-            'substance_id' => Substance::where('substance', 'Substance 2')->first()->id,
-            'hazard_id' => 3,
-        ]);
-        $this->assertDatabaseHas('substance_hazards', [
-            'substance_id' => Substance::where('substance', 'Substance 2')->first()->id,
-            'hazard_id' => 5,
-        ]);
-        $this->assertDatabaseHas('substance_routes', [
-            'substance_id' => Substance::where('substance', 'Substance 2')->first()->id,
-            'route_id' => 3,
-        ]);
-        $this->assertDatabaseHas('substance_routes', [
-            'substance_id' => Substance::where('substance', 'Substance 2')->first()->id,
-            'route_id' => 5,
-        ]);
-
         $this->assertDatabaseHas('risks', [
             'form_id' => $savedForm->id,
             'hazard' => 'Risk 1 hazard',
             'consequences' => 'Risk 1 consequences',
-            'likelihood_without' => 1,
-            'impact_without' => 1,
             'control_measures' => 'Risk 1 control measures',
-            'likelihood_with' => 1,
-            'impact_with' => 1,
         ]);
 
         $this->assertDatabaseHas('risks', [
             'form_id' => $savedForm->id,
             'hazard' => 'Risk 2 hazard',
             'consequences' => 'Risk 2 consequences',
-            'likelihood_without' => 1,
-            'impact_without' => 1,
             'control_measures' => 'Risk 2 control measures',
-            'likelihood_with' => 1,
-            'impact_with' => 1,
         ]);
     }
 
@@ -291,21 +247,21 @@ class ChemicalFormTest extends TestCase
             'form_id' => $form->id,
             'hazard' => 'Risk 1 hazard',
             'consequences' => 'Risk 1 consequences',
-            'likelihood_without' => 1,
-            'impact_without' => 1,
+            'likelihood_without' => Likelihood::inRandomOrder()->first()->id,
+            'impact_without' => Impact::inRandomOrder()->first()->id,
             'control_measures' => 'Risk 1 control measures',
-            'likelihood_with' => 1,
-            'impact_with' => 1,
+            'likelihood_with' => Likelihood::inRandomOrder()->first()->id,
+            'impact_with' => Impact::inRandomOrder()->first()->id,
         ]);
         $risk2 = Risk::create([
             'form_id' => $form->id,
             'hazard' => 'Risk 2 hazard',
             'consequences' => 'Risk 2 consequences',
-            'likelihood_without' => 1,
-            'impact_without' => 1,
+            'likelihood_without' => Likelihood::inRandomOrder()->first()->id,
+            'impact_without' => Impact::inRandomOrder()->first()->id,
             'control_measures' => 'Risk 2 control measures',
-            'likelihood_with' => 1,
-            'impact_with' => 1,
+            'likelihood_with' => Likelihood::inRandomOrder()->first()->id,
+            'impact_with' => Impact::inRandomOrder()->first()->id,
         ]);
 
         $substance1 = Substance::create([
@@ -315,8 +271,8 @@ class ChemicalFormTest extends TestCase
             'single_acute_effect' => 'Substance 1 single acute effect',
             'repeated_low_effect' => 'Substance 1 repeated low effect',
         ]);
-        $substance1->hazards()->attach([1, 2]);
-        $substance1->routes()->attach([1, 2]);
+        $substance1->hazards()->attach(Hazard::inRandomOrder()->first());
+        $substance1->routes()->attach(Route::inRandomOrder()->first());
 
         $substance2 = Substance::create([
             'form_id' => $form->id,
@@ -325,8 +281,8 @@ class ChemicalFormTest extends TestCase
             'single_acute_effect' => 'Substance 2 single acute effect',
             'repeated_low_effect' => 'Substance 2 repeated low effect',
         ]);
-        $substance2->hazards()->attach([3, 5]);
-        $substance2->routes()->attach([3, 5]);
+        $substance2->hazards()->attach(Hazard::inRandomOrder()->first());
+        $substance2->routes()->attach(Route::inRandomOrder()->first());
 
         $content = Livewire::actingAs($user)
             ->test(\App\Http\Livewire\Form\Partials\Content::class, [
@@ -441,24 +397,6 @@ class ChemicalFormTest extends TestCase
             'repeated_low_effect' => 'Substance 1 repeated low effect',
         ]);
 
-        $this->assertDatabaseHas('substance_hazards', [
-            'substance_id' => Substance::where('substance', 'Substance 1')->first()->id,
-            'hazard_id' => 1,
-        ]);
-        $this->assertDatabaseHas('substance_hazards', [
-            'substance_id' => Substance::where('substance', 'Substance 1')->first()->id,
-            'hazard_id' => 2,
-        ]);
-
-        $this->assertDatabaseHas('substance_routes', [
-            'substance_id' => Substance::where('substance', 'Substance 1')->first()->id,
-            'route_id' => 1,
-        ]);
-        $this->assertDatabaseHas('substance_routes', [
-            'substance_id' => Substance::where('substance', 'Substance 1')->first()->id,
-            'route_id' => 2,
-        ]);
-
         $this->assertDatabaseMissing('substances', [
             'form_id' => $form->id,
             'substance' => 'Substance 2',
@@ -471,22 +409,14 @@ class ChemicalFormTest extends TestCase
             'form_id' => $form->id,
             'hazard' => 'Risk 1 hazard',
             'consequences' => 'Risk 1 consequences',
-            'likelihood_without' => 1,
-            'impact_without' => 1,
             'control_measures' => 'Risk 1 control measures',
-            'likelihood_with' => 1,
-            'impact_with' => 1,
         ]);
 
         $this->assertDatabaseMissing('risks', [
             'form_id' => $form->id,
             'hazard' => 'Risk 2 hazard',
             'consequences' => 'Risk 2 consequences',
-            'likelihood_without' => 1,
-            'impact_without' => 1,
             'control_measures' => 'Risk 2 control measures',
-            'likelihood_with' => 1,
-            'impact_with' => 1,
         ]);
     }
 
@@ -546,21 +476,21 @@ class ChemicalFormTest extends TestCase
             'form_id' => $form->id,
             'hazard' => 'Risk 1 hazard',
             'consequences' => 'Risk 1 consequences',
-            'likelihood_without' => 1,
-            'impact_without' => 1,
+            'likelihood_without' => Likelihood::inRandomOrder()->first()->id,
+            'impact_without' => Impact::inRandomOrder()->first()->id,
             'control_measures' => 'Risk 1 control measures',
-            'likelihood_with' => 1,
-            'impact_with' => 1,
+            'likelihood_with' => Likelihood::inRandomOrder()->first()->id,
+            'impact_with' => Impact::inRandomOrder()->first()->id,
         ]);
         $risk2 = Risk::create([
             'form_id' => $form->id,
             'hazard' => 'Risk 2 hazard',
             'consequences' => 'Risk 2 consequences',
-            'likelihood_without' => 1,
-            'impact_without' => 1,
+            'likelihood_without' => Likelihood::inRandomOrder()->first()->id,
+            'impact_without' => Impact::inRandomOrder()->first()->id,
             'control_measures' => 'Risk 2 control measures',
-            'likelihood_with' => 1,
-            'impact_with' => 1,
+            'likelihood_with' => Likelihood::inRandomOrder()->first()->id,
+            'impact_with' => Impact::inRandomOrder()->first()->id,
         ]);
 
         $substance1 = Substance::create([
@@ -570,8 +500,6 @@ class ChemicalFormTest extends TestCase
             'single_acute_effect' => 'Substance 1 single acute effect',
             'repeated_low_effect' => 'Substance 1 repeated low effect',
         ]);
-        $substance1->hazards()->attach([1, 2]);
-        $substance1->routes()->attach([1, 2]);
 
         $substance2 = Substance::create([
             'form_id' => $form->id,
@@ -580,8 +508,6 @@ class ChemicalFormTest extends TestCase
             'single_acute_effect' => 'Substance 2 single acute effect',
             'repeated_low_effect' => 'Substance 2 repeated low effect',
         ]);
-        $substance2->hazards()->attach([3, 5]);
-        $substance2->routes()->attach([3, 5]);
 
         $response = $this->actingAs($user)->get(route('form.show', $form->id));
 

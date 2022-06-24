@@ -4,6 +4,8 @@ namespace Database\Factories;
 
 use App\Models\CoshhFormDetails;
 use App\Models\Form;
+use App\Models\Impact;
+use App\Models\Likelihood;
 use App\Models\MicroOrganism;
 use App\Models\Risk;
 use App\Models\Substance;
@@ -18,10 +20,10 @@ class FormFactory extends Factory
         return $this->afterCreating(function (Form $form) {
             Risk::factory()->count(rand(1, 4))->create([
                 'form_id' => $form->id,
-                'likelihood_without' => $this->faker->numberBetween(1, 5),
-                'impact_without' => $this->faker->numberBetween(1, 5),
-                'likelihood_with' => $this->faker->numberBetween(1, 5),
-                'impact_with' => $this->faker->numberBetween(1, 5),
+                'likelihood_without' => Likelihood::inRandomOrder()->first()->id,
+                'impact_without' => Impact::inRandomOrder()->first()->id,
+                'likelihood_with' => Likelihood::inRandomOrder()->first()->id,
+                'impact_with' => Impact::inRandomOrder()->first()->id,
             ]);
         });
     }

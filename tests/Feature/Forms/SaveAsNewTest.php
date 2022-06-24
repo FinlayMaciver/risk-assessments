@@ -3,6 +3,8 @@
 namespace Tests\Feature\Form;
 
 use App\Models\Form;
+use App\Models\Impact;
+use App\Models\Likelihood;
 use App\Models\Risk;
 use App\Models\User;
 use Carbon\Carbon;
@@ -35,21 +37,21 @@ class SaveAsNewTest extends TestCase
             'form_id' => $form->id,
             'hazard' => 'Risk 1 hazard',
             'consequences' => 'Risk 1 consequences',
-            'likelihood_without' => 1,
-            'impact_without' => 1,
+            'likelihood_without' => Likelihood::inRandomOrder()->first()->id,
+            'impact_without' => Impact::inRandomOrder()->first()->id,
             'control_measures' => 'Risk 1 control measures',
-            'likelihood_with' => 1,
-            'impact_with' => 1,
+            'likelihood_with' => Likelihood::inRandomOrder()->first()->id,
+            'impact_with' => Impact::inRandomOrder()->first()->id,
         ]);
         $risk2 = Risk::create([
             'form_id' => $form->id,
             'hazard' => 'Risk 2 hazard',
             'consequences' => 'Risk 2 consequences',
-            'likelihood_without' => 1,
-            'impact_without' => 1,
+            'likelihood_without' => Likelihood::inRandomOrder()->first()->id,
+            'impact_without' => Impact::inRandomOrder()->first()->id,
             'control_measures' => 'Risk 2 control measures',
-            'likelihood_with' => 1,
-            'impact_with' => 1,
+            'likelihood_with' => Likelihood::inRandomOrder()->first()->id,
+            'impact_with' => Impact::inRandomOrder()->first()->id,
         ]);
 
         $file1 = UploadedFile::fake()->image('test1.jpg');

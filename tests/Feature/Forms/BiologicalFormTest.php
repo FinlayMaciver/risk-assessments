@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\CoshhFormDetails;
 use App\Models\Form;
+use App\Models\Impact;
+use App\Models\Likelihood;
 use App\Models\MicroOrganism;
 use App\Models\Risk;
 use App\Models\Substance;
@@ -28,20 +30,20 @@ class BiologicalFormTest extends TestCase
             1 => new Risk([
                 'hazard' => 'Risk 1 hazard',
                 'consequences' => 'Risk 1 consequences',
-                'likelihood_without' => 1,
-                'impact_without' => 1,
+                'likelihood_without' => Likelihood::inRandomOrder()->first()->id,
+                'impact_without' => Impact::inRandomOrder()->first()->id,
                 'control_measures' => 'Risk 1 control measures',
-                'likelihood_with' => 1,
-                'impact_with' => 1,
+                'likelihood_with' => Likelihood::inRandomOrder()->first()->id,
+                'impact_with' => Impact::inRandomOrder()->first()->id,
             ]),
             2 => new Risk([
                 'hazard' => 'Risk 2 hazard',
                 'consequences' => 'Risk 2 consequences',
-                'likelihood_without' => 1,
-                'impact_without' => 1,
+                'likelihood_without' => Likelihood::inRandomOrder()->first()->id,
+                'impact_without' => Impact::inRandomOrder()->first()->id,
                 'control_measures' => 'Risk 2 control measures',
-                'likelihood_with' => 1,
-                'impact_with' => 1,
+                'likelihood_with' => Likelihood::inRandomOrder()->first()->id,
+                'impact_with' => Impact::inRandomOrder()->first()->id,
             ]),
         ]);
 
@@ -120,16 +122,7 @@ class BiologicalFormTest extends TestCase
             ->set('coshhSection.inform_contractors', true)
             ->set('coshhSection.inform_other', 'Form inform other')
 
-            ->set('form.supervisor_id', $supervisor->id)
-
-            ->set('substances.0.hazard_ids', [1, 2])
-            ->set('substances.0.route_ids', [1, 2])
-
-            ->set('substances.1.hazard_ids', [3, 5])
-            ->set('substances.1.route_ids', [3, 5])
-
-            ->set('microOrganisms.0.route_ids', [1, 2])
-            ->set('microOrganisms.1.route_ids', [3, 5]);
+            ->set('form.supervisor_id', $supervisor->id);
 
         $content->call('save');
 
@@ -191,46 +184,12 @@ class BiologicalFormTest extends TestCase
             'repeated_low_effect' => 'Substance 1 repeated low effect',
         ]);
 
-        $this->assertDatabaseHas('substance_hazards', [
-            'substance_id' => Substance::where('substance', 'Substance 1')->first()->id,
-            'hazard_id' => 1,
-        ]);
-        $this->assertDatabaseHas('substance_hazards', [
-            'substance_id' => Substance::where('substance', 'Substance 1')->first()->id,
-            'hazard_id' => 2,
-        ]);
-        $this->assertDatabaseHas('substance_routes', [
-            'substance_id' => Substance::where('substance', 'Substance 1')->first()->id,
-            'route_id' => 1,
-        ]);
-        $this->assertDatabaseHas('substance_routes', [
-            'substance_id' => Substance::where('substance', 'Substance 1')->first()->id,
-            'route_id' => 2,
-        ]);
-
         $this->assertDatabaseHas('substances', [
             'form_id' => $savedForm->id,
             'substance' => 'Substance 2',
             'quantity' => 'Substance 2 quantity',
             'single_acute_effect' => 'Substance 2 single acute effect',
             'repeated_low_effect' => 'Substance 2 repeated low effect',
-        ]);
-
-        $this->assertDatabaseHas('substance_hazards', [
-            'substance_id' => Substance::where('substance', 'Substance 2')->first()->id,
-            'hazard_id' => 3,
-        ]);
-        $this->assertDatabaseHas('substance_hazards', [
-            'substance_id' => Substance::where('substance', 'Substance 2')->first()->id,
-            'hazard_id' => 5,
-        ]);
-        $this->assertDatabaseHas('substance_routes', [
-            'substance_id' => Substance::where('substance', 'Substance 2')->first()->id,
-            'route_id' => 3,
-        ]);
-        $this->assertDatabaseHas('substance_routes', [
-            'substance_id' => Substance::where('substance', 'Substance 2')->first()->id,
-            'route_id' => 5,
         ]);
 
         $this->assertDatabaseHas('micro_organisms', [
@@ -242,15 +201,6 @@ class BiologicalFormTest extends TestCase
             'repeated_low_effect' => 'Micro-organism 1 repeated low effect',
         ]);
 
-        $this->assertDatabaseHas('substance_routes', [
-            'substance_id' => MicroOrganism::where('micro_organism', 'Micro-organism 1')->first()->id,
-            'route_id' => 1,
-        ]);
-        $this->assertDatabaseHas('substance_routes', [
-            'substance_id' => MicroOrganism::where('micro_organism', 'Micro-organism 1')->first()->id,
-            'route_id' => 2,
-        ]);
-
         $this->assertDatabaseHas('micro_organisms', [
             'form_id' => $savedForm->id,
             'micro_organism' => 'Micro-organism 2',
@@ -260,35 +210,18 @@ class BiologicalFormTest extends TestCase
             'repeated_low_effect' => 'Micro-organism 2 repeated low effect',
         ]);
 
-        $this->assertDatabaseHas('substance_routes', [
-            'substance_id' => MicroOrganism::where('micro_organism', 'Micro-organism 2')->first()->id,
-            'route_id' => 3,
-        ]);
-        $this->assertDatabaseHas('substance_routes', [
-            'substance_id' => MicroOrganism::where('micro_organism', 'Micro-organism 2')->first()->id,
-            'route_id' => 5,
-        ]);
-
         $this->assertDatabaseHas('risks', [
             'form_id' => $savedForm->id,
             'hazard' => 'Risk 1 hazard',
             'consequences' => 'Risk 1 consequences',
-            'likelihood_without' => 1,
-            'impact_without' => 1,
             'control_measures' => 'Risk 1 control measures',
-            'likelihood_with' => 1,
-            'impact_with' => 1,
         ]);
 
         $this->assertDatabaseHas('risks', [
             'form_id' => $savedForm->id,
             'hazard' => 'Risk 2 hazard',
             'consequences' => 'Risk 2 consequences',
-            'likelihood_without' => 1,
-            'impact_without' => 1,
             'control_measures' => 'Risk 2 control measures',
-            'likelihood_with' => 1,
-            'impact_with' => 1,
         ]);
     }
 
@@ -348,21 +281,21 @@ class BiologicalFormTest extends TestCase
             'form_id' => $form->id,
             'hazard' => 'Risk 1 hazard',
             'consequences' => 'Risk 1 consequences',
-            'likelihood_without' => 1,
-            'impact_without' => 1,
+            'likelihood_without' => Likelihood::inRandomOrder()->first()->id,
+            'impact_without' => Impact::inRandomOrder()->first()->id,
             'control_measures' => 'Risk 1 control measures',
-            'likelihood_with' => 1,
-            'impact_with' => 1,
+            'likelihood_with' => Likelihood::inRandomOrder()->first()->id,
+            'impact_with' => Impact::inRandomOrder()->first()->id,
         ]);
         $risk2 = Risk::create([
             'form_id' => $form->id,
             'hazard' => 'Risk 2 hazard',
             'consequences' => 'Risk 2 consequences',
-            'likelihood_without' => 1,
-            'impact_without' => 1,
+            'likelihood_without' => Likelihood::inRandomOrder()->first()->id,
+            'impact_without' => Impact::inRandomOrder()->first()->id,
             'control_measures' => 'Risk 2 control measures',
-            'likelihood_with' => 1,
-            'impact_with' => 1,
+            'likelihood_with' => Likelihood::inRandomOrder()->first()->id,
+            'impact_with' => Impact::inRandomOrder()->first()->id,
         ]);
 
         $substance1 = Substance::create([
@@ -372,8 +305,6 @@ class BiologicalFormTest extends TestCase
             'single_acute_effect' => 'Substance 1 single acute effect',
             'repeated_low_effect' => 'Substance 1 repeated low effect',
         ]);
-        $substance1->hazards()->attach([1, 2]);
-        $substance1->routes()->attach([1, 2]);
 
         $substance2 = Substance::create([
             'form_id' => $form->id,
@@ -382,8 +313,6 @@ class BiologicalFormTest extends TestCase
             'single_acute_effect' => 'Substance 2 single acute effect',
             'repeated_low_effect' => 'Substance 2 repeated low effect',
         ]);
-        $substance2->hazards()->attach([3, 5]);
-        $substance2->routes()->attach([3, 5]);
 
         $microOrganism1 = MicroOrganism::create([
             'form_id' => $form->id,
@@ -393,7 +322,6 @@ class BiologicalFormTest extends TestCase
             'single_acute_effect' => 'Micro-organism 1 single acute effect',
             'repeated_low_effect' => 'Micro-organism 1 repeated low effect',
         ]);
-        $microOrganism1->routes()->attach([1, 2]);
 
         $microOrganism2 = MicroOrganism::create([
             'form_id' => $form->id,
@@ -403,7 +331,6 @@ class BiologicalFormTest extends TestCase
             'single_acute_effect' => 'Micro-organism 2 single acute effect',
             'repeated_low_effect' => 'Micro-organism 2 repeated low effect',
         ]);
-        $microOrganism2->routes()->attach([3, 5]);
 
         $content = Livewire::actingAs($user)
             ->test(\App\Http\Livewire\Form\Partials\Content::class, [
@@ -524,24 +451,6 @@ class BiologicalFormTest extends TestCase
             'repeated_low_effect' => 'Substance 1 repeated low effect',
         ]);
 
-        $this->assertDatabaseHas('substance_hazards', [
-            'substance_id' => Substance::where('substance', 'Substance 1')->first()->id,
-            'hazard_id' => 1,
-        ]);
-        $this->assertDatabaseHas('substance_hazards', [
-            'substance_id' => Substance::where('substance', 'Substance 1')->first()->id,
-            'hazard_id' => 2,
-        ]);
-
-        $this->assertDatabaseHas('substance_routes', [
-            'substance_id' => Substance::where('substance', 'Substance 1')->first()->id,
-            'route_id' => 1,
-        ]);
-        $this->assertDatabaseHas('substance_routes', [
-            'substance_id' => Substance::where('substance', 'Substance 1')->first()->id,
-            'route_id' => 2,
-        ]);
-
         $this->assertDatabaseMissing('substances', [
             'form_id' => $form->id,
             'substance' => 'Substance 2',
@@ -559,15 +468,6 @@ class BiologicalFormTest extends TestCase
             'repeated_low_effect' => 'Micro-organism 1 repeated low effect',
         ]);
 
-        $this->assertDatabaseHas('substance_routes', [
-            'substance_id' => MicroOrganism::where('micro_organism', 'Micro-organism 1')->first()->id,
-            'route_id' => 1,
-        ]);
-        $this->assertDatabaseHas('substance_routes', [
-            'substance_id' => MicroOrganism::where('micro_organism', 'Micro-organism 1')->first()->id,
-            'route_id' => 2,
-        ]);
-
         $this->assertDatabaseMissing('micro_organisms', [
             'form_id' => $form->id,
             'micro_organism' => 'Micro-organism 2',
@@ -581,22 +481,14 @@ class BiologicalFormTest extends TestCase
             'form_id' => $form->id,
             'hazard' => 'Risk 1 hazard',
             'consequences' => 'Risk 1 consequences',
-            'likelihood_without' => 1,
-            'impact_without' => 1,
             'control_measures' => 'Risk 1 control measures',
-            'likelihood_with' => 1,
-            'impact_with' => 1,
         ]);
 
         $this->assertDatabaseMissing('risks', [
             'form_id' => $form->id,
             'hazard' => 'Risk 2 hazard',
             'consequences' => 'Risk 2 consequences',
-            'likelihood_without' => 1,
-            'impact_without' => 1,
             'control_measures' => 'Risk 2 control measures',
-            'likelihood_with' => 1,
-            'impact_with' => 1,
         ]);
     }
 }

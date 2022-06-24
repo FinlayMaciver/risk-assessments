@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Models\Form;
+use App\Models\Likelihood;
 use App\Models\User;
 use App\Notifications\ApprovedForm;
 use App\Notifications\FormSubmitted;
