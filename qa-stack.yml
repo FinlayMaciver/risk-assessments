@@ -142,7 +142,7 @@ services:
     ports:
       - "7700:7700"
     environment:
-      - MEILI_MASTER_KEY=mmk
+      - MEILI_MASTER_KEY=secretkey
   minio:
     image: minio/minio:RELEASE.2019-10-12T01-39-57Z
     deploy:
