@@ -139,6 +139,9 @@ services:
         # aliases: ["mailhog.service"]
   meilisearch:
     image: getmeili/meilisearch:latest
+    deploy: *default-deploy
+    networks:
+      - private
     ports:
       - "7700:7700"
     environment:
