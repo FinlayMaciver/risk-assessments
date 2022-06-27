@@ -1,4 +1,4 @@
-@if ($formsAwaitingApproval)
+@if ($formsAwaitingApproval->count())
 <div class="alert alert-info mb-3" role="alert">
     There are forms awaiting your approval.<hr>
     @foreach($formsAwaitingApproval as $form)
