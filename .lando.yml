@@ -85,15 +85,15 @@ tooling:
   npmd:
     service: node
     description: "Run npm run dev"
-    cmd: npm run development
+    cmd: npm run dev
   npmp:
     service: node
-    description: "Run npm run prod"
-    cmd: npm run production
+    description: "Run npm run build"
+    cmd: npm run build
   npmw:
     service: node
-    description: "Run npm run watch"
-    cmd: npm run watch
+    description: "Run npm run dev"
+    cmd: npm run dev
   testmysql:
     service: appserver
     description: "Run phpunit against mysql"
