@@ -12,7 +12,7 @@
         "brianium/paratest": "^6.4",
         "guzzlehttp/guzzle": "^7.2",
         "http-interop/http-factory-guzzle": "^1.2",
-        "laravel/framework": "^9.11",
+        "laravel/framework": "^9.19",
         "laravel/horizon": "^5.9",
         "laravel/scout": "^9.4",
         "laravel/tinker": "^2.7",
