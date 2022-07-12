@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8ceca27cfe2f6e65e5cf2c2ecec31266",
+    "content-hash": "412891f349cb2b9efaeec8e83cae602a",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -2297,16 +2297,16 @@
         },
         {
             "name": "meilisearch/meilisearch-php",
-            "version": "v0.23.3",
+            "version": "v0.24.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/meilisearch/meilisearch-php.git",
-                "reference": "e993256ff7c5be7fe760392145830c9defab8214"
+                "reference": "072d43019b7ade2fe9592a078da99d1ab8521086"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/meilisearch/meilisearch-php/zipball/e993256ff7c5be7fe760392145830c9defab8214",
-                "reference": "e993256ff7c5be7fe760392145830c9defab8214",
+                "url": "https://api.github.com/repos/meilisearch/meilisearch-php/zipball/072d43019b7ade2fe9592a078da99d1ab8521086",
+                "reference": "072d43019b7ade2fe9592a078da99d1ab8521086",
                 "shasum": ""
             },
             "require": {
@@ -2358,9 +2358,9 @@
             ],
             "support": {
                 "issues": "https://github.com/meilisearch/meilisearch-php/issues",
-                "source": "https://github.com/meilisearch/meilisearch-php/tree/v0.23.3"
+                "source": "https://github.com/meilisearch/meilisearch-php/tree/v0.24.0"
             },
-            "time": "2022-06-21T15:55:00+00:00"
+            "time": "2022-07-11T15:50:51+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -3125,16 +3125,16 @@
         },
         {
             "name": "php-http/discovery",
-            "version": "1.14.2",
+            "version": "1.14.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/discovery.git",
-                "reference": "c8d48852fbc052454af42f6de27635ddd916b959"
+                "reference": "31d8ee46d0215108df16a8527c7438e96a4d7735"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/discovery/zipball/c8d48852fbc052454af42f6de27635ddd916b959",
-                "reference": "c8d48852fbc052454af42f6de27635ddd916b959",
+                "url": "https://api.github.com/repos/php-http/discovery/zipball/31d8ee46d0215108df16a8527c7438e96a4d7735",
+                "reference": "31d8ee46d0215108df16a8527c7438e96a4d7735",
                 "shasum": ""
             },
             "require": {
@@ -3186,9 +3186,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-http/discovery/issues",
-                "source": "https://github.com/php-http/discovery/tree/1.14.2"
+                "source": "https://github.com/php-http/discovery/tree/1.14.3"
             },
-            "time": "2022-05-25T07:26:05+00:00"
+            "time": "2022-07-11T14:04:40+00:00"
         },
         {
             "name": "php-http/httplug",
@@ -6126,7 +6126,7 @@
         },
         {
             "name": "symfony/deprecation-contracts",
-            "version": "v3.1.0",
+            "version": "v3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
@@ -6173,7 +6173,7 @@
             "description": "A generic function and convention to trigger deprecation notices",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.1.0"
+                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.1.1"
             },
             "funding": [
                 {
@@ -9435,5 +9435,5 @@
         "php": "^7.3|^8.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.3.0"
 }
